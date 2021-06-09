@@ -121,7 +121,6 @@ export default {
         },
         buttonsStyling: false,
       })
-
       this.$router.push({
         name: 'transaksi-penjualan-invoice',
       })

@@ -155,12 +155,6 @@ export default {
           loader.hide()
           if (res.status === 200) {
             console.info(res)
-            // this.dataOrder.nomorTransaksi = res.data.nomor_transaksi
-            // this.dataOrder.tanggalTransaksi = res.data.created_at
-            // store.commit('app-transaksi-penjualan/SET_DATA_INVOICE', this.dataOrder)
-            // if (router.currentRoute.params.nomor !== undefined) {
-            //   store.commit('app-transaksi-penjualan/REMOVE_DRAFT_PENJUALAN', router.currentRoute.params.nomor)
-            // }
             this.success()
           } else {
             console.info(res)
