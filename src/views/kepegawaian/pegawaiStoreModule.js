@@ -3,12 +3,15 @@ import axios from '@axios'
 export default {
   namespaced: true,
   state: {
-    listJabatan: [],
+    detailData: {},
+    detailPresensi: [],
     listDivisi: [],
     listPegawai: [],
     listSales: [],
   },
   getters: {
+    getDetailData: state => state.detailData,
+    getDetailPresensi: state => state.detailPresensi,
     getListPegawai: state => state.listPegawai,
     getListSales: state => state.listSales,
   },
@@ -16,6 +19,13 @@ export default {
     SET_LIST_PEGAWAI(state, data) {
       state.listPegawai = data
       state.listSales = state.listPegawai.filter(x => x.jabatan_id === 5)
+    },
+    SET_DETAIL_DATA(state, data) {
+      const index = state.listPegawai.findIndex(x => x.id === data)
+      state.detailData = state.listPegawai[index]
+    },
+    SET_DETAIL_PRESENSI(state, data) {
+      state.detailPresensi = data
     },
   },
   actions: {
@@ -25,6 +35,16 @@ export default {
           .get(`${axios.defaults.baseURL}pegawai/`, {
             params: queryParams,
           })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchListPresensi(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}pegawai/presensi/${data.pegawai_id}/bulan/${data.bulan}`)
           .then(response => {
             resolve(response)
           })

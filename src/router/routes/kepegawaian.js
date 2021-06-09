@@ -14,4 +14,23 @@ export default [
       ],
     },
   },
+  {
+    path: '/kepegawaian/detail/:id',
+    name: 'kepegawaian-detail',
+    component: () => import('@/views/kepegawaian/Detail.vue'),
+    meta: {
+      resource: 'ACL',
+      pageTitle: 'Pegawai',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/kepegawaian/daftar/',
+        },
+        {
+          text: 'Detail',
+          active: true,
+        },
+      ],
+    },
+  },
 ]

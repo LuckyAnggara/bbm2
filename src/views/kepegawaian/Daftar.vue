@@ -53,9 +53,9 @@
             </template>
 
             <!-- Column: Id -->
-            <template #cell(age)>
+            <template #cell(age)="data">
               <span>
-                {{ umur() }}
+                {{ `${data.item.lama_bekerja.y} TAHUN ${data.item.lama_bekerja.m} BULAN` }}
               </span>
             </template>
 
@@ -69,7 +69,7 @@
                   class="mx-1"
                   @click="
                     $router.push({
-                      name: 'master-pegawai-detail',
+                      name: 'kepegawaian-detail',
                       params: { id: data.item.id },
                     })
                   "
@@ -199,12 +199,6 @@ export default {
         store.commit('app-pegawai/SET_LIST_PEGAWAI', res.data)
         this.dataPegawai = store.getters['app-pegawai/getListPegawai']
       })
-      // store.dispatch('app-pegawai/fetchListDivisi').then(res => {
-      //   store.commit('app-pegawai/SET_LIST_DIVISI', res.data)
-      // })
-      // store.dispatch('app-pegawai/fetchListJabatan').then(res => {
-      //   store.commit('app-pegawai/SET_LIST_JABATAN', res.data)
-      // })
     },
     del(id) {
       this.$swal({
@@ -246,10 +240,10 @@ export default {
     this.loadpegawai()
   },
   setup() {
-    const filterOptions = ['Lunas', 'COD', 'Kredit']
     const tableColumns = [
       { key: 'id', label: '#', sortable: true },
       { key: 'nama', sortable: true },
+      { key: 'cabang', sortable: true },
       { label: 'jabatan', key: 'jabatan', sortable: true },
       { label: 'divisi', key: 'divisi', sortable: true },
       { label: 'lama bekerja', key: 'age', sortable: true },
@@ -265,7 +259,6 @@ export default {
     const statusFilter = ref(null)
 
     return {
-      filterOptions,
       tableColumns,
       perPage,
       isSortDirDesc,
