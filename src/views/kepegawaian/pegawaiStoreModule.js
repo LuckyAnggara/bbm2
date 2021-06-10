@@ -37,6 +37,9 @@ export default {
     SET_DETAIL_PRESENSI(state, data) {
       state.detailPresensi = data
     },
+    UPDATE_DATA_LIST_PEGAWAI(state, data) {
+      state.listPegawai.push(data)
+    },
   },
   actions: {
     fetchListJabatanDivisiCabang(ctx, data) {
@@ -65,6 +68,16 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .put(`${axios.defaults.baseURL}pegawai/edit/${data.id}`, data.data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    addPegawai(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}pegawai/store`, data)
           .then(response => {
             resolve(response)
           })

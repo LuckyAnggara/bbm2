@@ -15,6 +15,21 @@ export default [
     },
   },
   {
+    path: '/kepegawaian/tambah',
+    name: 'kepegawaian-tambah',
+    component: () => import('@/views/kepegawaian/Tambah.vue'),
+    meta: {
+      resource: 'ACL',
+      pageTitle: 'Pegawai',
+      breadcrumb: [
+        {
+          text: 'Tambah',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/kepegawaian/detail/:id',
     name: 'kepegawaian-detail',
     component: () => import('@/views/kepegawaian/Detail.vue'),

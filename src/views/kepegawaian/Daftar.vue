@@ -13,7 +13,7 @@
               <b-col cols="12" md="6" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
                 <label>Entries</label>
                 <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class="per-page-selector d-inline-block ml-50 mr-1" />
-                <b-button variant="primary" :to="{ name: 'master-pegawai-tambah' }">
+                <b-button variant="primary" :to="{ name: 'kepegawaian-tambah' }">
                   Tambah Data
                 </b-button>
               </b-col>
