@@ -6,10 +6,12 @@
           <b-card>
             <b-col lg="12" cols="12">
               <div class="mt-2">
-                <b-form @submit="simpan" @submit.prevent>
-                  <b-form-group label="Nomor KTP" label-cols-md="4">
-                    <b-form-input v-model="dataPegawai.ktp" />
-                  </b-form-group>
+                <b-form @submit="onSubmit" @reset="onReset">
+                  <b-col cols="12">
+                    <b-form-group label="Nomor KTP" label-cols-md="4">
+                      <b-form-input v-model="dataPegawai.ktp" />
+                    </b-form-group>
+                  </b-col>
                   <b-form-group label="Nama Lengkap" label-cols-md="4">
                     <b-form-input v-model="dataPegawai.nama" />
                   </b-form-group>
@@ -94,15 +96,6 @@
                       class="per-page-selector d-inline-block mr-1"
                     />
                   </b-form-group>
-                  <!-- Styled -->
-                  <b-form-group label="Photo Profile" label-cols-md="4">
-                    <!-- <b-form-file
-                      v-model="dataPegawai.avatar"
-                      :state="Boolean(dataPegawai.avatar)"
-                      placeholder="Choose a file or drop it here..."
-                      drop-placeholder="Drop file here..."
-                    /> -->
-                  </b-form-group>
                   <b-col offset-md="4">
                     <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" type="submit" variant="primary" class="mr-1">
                       Submit
@@ -125,23 +118,13 @@
 import store from '@/store'
 import { ref } from '@vue/composition-api'
 
-import {
-  // BFormFile,
-  BButton,
-  BRow,
-  BCol,
-  BForm,
-  BFormInput,
-  BFormGroup,
-  BCard,
-} from 'bootstrap-vue'
+import { BButton, BRow, BCol, BForm, BFormInput, BFormGroup, BCard } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import vSelect from 'vue-select'
 import flatPickr from 'vue-flatpickr-component'
 
 export default {
   components: {
-    // BFormFile,
     BButton,
     BForm,
     BFormInput,
@@ -158,7 +141,6 @@ export default {
   data() {
     return {
       dataPegawai: {
-        avatar: '',
         ktp: '',
         nama: '',
         jenis_kelamin: '',

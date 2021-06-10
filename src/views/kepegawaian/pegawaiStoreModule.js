@@ -84,6 +84,16 @@ export default {
           .catch(error => reject(error))
       })
     },
+    uploadFoto(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}pegawai/store`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
     fetchListPresensi(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
