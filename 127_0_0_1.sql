@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 09, 2021 at 07:25 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.6
+-- Generation Time: Jun 15, 2021 at 10:43 AM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 7.4.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `keuangan`
 --
-DROP DATABASE IF EXISTS `keuangan`;
 CREATE DATABASE IF NOT EXISTS `keuangan` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `keuangan`;
 
@@ -132,7 +131,8 @@ INSERT INTO `master_akun` (`id`, `jenis_akun_id`, `kode_akun`, `nama`, `saldo_no
 (46, '1', '1.1.2-1', 'KAS KECIL KASIR LUCKY ANGGARA', 'DEBIT', 0, '1.1.2', 0, NULL, NULL, NULL),
 (47, '5', '5.5.1-1', 'BEBAN OPERASIONAL LISTRIK', 'DEBIT', 0, '5.5.1', 0, '2021-05-23 13:30:49', NULL, NULL),
 (48, '5', '5.5.1-2', 'BEBAN OPERASIONAL AIR', 'DEBIT', 0, '5.5.1', 0, '2021-05-23 13:30:49', NULL, NULL),
-(49, '5', '5.5.1-3', 'BEBAN OPERASIONAL BENSIN MOBIL', 'DEBIT', 0, '5.5.1', 1, '2021-05-23 13:30:49', NULL, NULL);
+(49, '5', '5.5.1-3', 'BEBAN OPERASIONAL BENSIN MOBIL', 'DEBIT', 0, '5.5.1', 1, '2021-05-23 13:30:49', NULL, NULL),
+(51, '1', '1.1.3-1', 'BANK BCA - 123123123', 'DEBIT', 1, '1.1.3', 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -152,20 +152,6 @@ CREATE TABLE `master_beban` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `master_beban`
---
-
-INSERT INTO `master_beban` (`id`, `master_akun_id`, `nominal`, `catatan`, `user_id`, `cabang_id`, `nomor_jurnal`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 47, 20000, 'dfsfs', 1, 1, '8', '2021-05-25 14:35:50', '2021-05-26 13:10:38', '2021-05-26 13:10:38'),
-(3, 48, 100000, 'asdasdasdasdas', 1, 1, '2105278', '2021-05-26 13:11:54', '2021-05-26 14:12:25', '2021-05-26 14:12:25'),
-(4, 48, 2000, 'dfgdfgd', 1, 1, '2105279', '2021-05-26 13:30:12', '2021-05-26 13:30:12', NULL),
-(5, 49, 20000, 'asdasdasd', 1, 1, '21052710', '2021-05-26 13:33:19', '2021-05-26 13:33:19', NULL),
-(6, 47, 50000, 'dsfsdfsdfsdfsdf', 1, 1, '21052711', '2021-05-26 13:40:15', '2021-05-26 14:29:30', '2021-05-26 14:29:30'),
-(7, 47, 10000, 'sdfsdfsdf', 1, 1, '21052712', '2021-05-26 13:45:31', '2021-05-26 13:50:32', '2021-05-26 13:50:32'),
-(8, 48, 100000, 'BEBAN OPERASIONAL AIR - ghjghjghj', 1, 1, '21052712', '2021-05-27 22:00:00', '2021-05-26 14:28:44', '2021-05-26 14:28:44'),
-(9, 47, 100000, 'BEBAN OPERASIONAL LISTRIK - kghkghkgk', 1, 1, '21052713', '2021-05-04 22:00:00', '2021-05-26 13:52:20', NULL);
 
 -- --------------------------------------------------------
 
@@ -193,58 +179,10 @@ CREATE TABLE `master_jurnal` (
 --
 
 INSERT INTO `master_jurnal` (`id`, `reff`, `nomor_jurnal`, `master_akun_id`, `nominal`, `jenis`, `keterangan`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '2105201', '2105201', '3', 2500000, 'DEBIT', 'Setor Modal Usaha', 1, 1, '2021-05-19 05:14:54', '2021-05-19 17:15:16', NULL),
-(2, '2105201', '2105201', '28', 2500000, 'KREDIT', 'Setor Modal Usaha', 1, 1, '2021-05-19 05:14:54', '2021-05-19 17:15:16', NULL),
-(3, '2105202', '2105202', '3', 2350000, 'KREDIT', 'KAS KELUAR PEMBELIAN NOMOR TRANSAKSI #1', 1, 1, '2021-05-19 05:29:56', '2021-05-19 17:29:58', NULL),
-(4, '2105202', '2105202', '6', 2000000, 'DEBIT', 'PEMBELIAN NOMOR TRANSAKSI #1', 1, 1, '2021-05-19 05:29:56', '2021-05-19 17:29:58', NULL),
-(5, '2105202', '2105202', '9', 200000, 'DEBIT', 'PAJAK MASUKAN PEMBELIAN NOMOR TRANSAKSI #1', 1, 1, '2021-05-19 05:29:56', '2021-05-19 17:29:58', NULL),
-(6, '2105202', '2105202', '43', 150000, 'DEBIT', 'ONGKIR PEMBELIAN NOMOR TRANSAKSI #1', 1, 1, '2021-05-19 05:29:56', '2021-05-19 17:29:58', NULL),
-(7, '2105203', '2105203', '46', 301000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 05:31:53', '2021-05-19 17:31:54', NULL),
-(8, '2105203', '2105203', '32', 250000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 05:31:53', '2021-05-19 17:31:54', NULL),
-(9, '2105203', '2105203', '26', 21000, 'KREDIT', 'PAJAK KELUARAN PENJUALAN NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 05:31:53', '2021-05-19 17:31:54', NULL),
-(10, '2105203', '2105203', '33', 50000, 'KREDIT', 'ONGKIR PENJUALAN NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 05:31:53', '2021-05-19 17:31:54', NULL),
-(11, '2105203', '2105203', '35', 20000, 'DEBIT', 'DISKON PENJUALAN NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 05:31:53', '2021-05-19 17:31:54', NULL),
-(12, '2105203', '2105203', '44', 200000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 05:31:54', '2021-05-19 17:31:54', NULL),
-(13, '2105203', '2105203', '6', 200000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 05:31:54', '2021-05-19 17:31:54', NULL),
-(14, '2105204', '2105204', '46', 235000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 06:14:26', '2021-05-22 17:32:32', '2021-05-22 17:32:32'),
-(15, '2105204', '2105204', '32', 250000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 06:14:26', '2021-05-22 17:32:32', '2021-05-22 17:32:32'),
-(16, '2105204', '2105204', '26', 15000, 'KREDIT', 'PAJAK KELUARAN PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 06:14:26', '2021-05-22 17:32:32', '2021-05-22 17:32:32'),
-(17, '2105204', '2105204', '33', 20000, 'KREDIT', 'ONGKIR PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 06:14:26', '2021-05-22 17:32:32', '2021-05-22 17:32:32'),
-(18, '2105204', '2105204', '35', 50000, 'DEBIT', 'DISKON PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 06:14:26', '2021-05-22 17:32:32', '2021-05-22 17:32:32'),
-(19, '2105204', '2105204', '44', 200000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 06:14:28', '2021-05-22 17:32:32', '2021-05-22 17:32:32'),
-(20, '2105204', '2105204', '6', 200000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 06:14:28', '2021-05-22 17:32:32', '2021-05-22 17:32:32'),
-(21, '2105234', '2105234', '46', 30000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-230521-1', 1, 1, '2021-05-22 05:34:10', '2021-05-22 17:34:10', NULL),
-(22, '2105234', '2105234', '32', 30000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-230521-1', 1, 1, '2021-05-22 05:34:10', '2021-05-22 17:34:10', NULL),
-(23, '2105234', '2105234', '44', 15000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-230521-1', 1, 1, '2021-05-22 05:34:10', '2021-05-22 17:34:11', NULL),
-(24, '2105234', '2105234', '6', 15000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-230521-1', 1, 1, '2021-05-22 05:34:10', '2021-05-22 17:34:11', NULL),
-(25, '2105235', '2105235', '46', 200000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-230521-2', 1, 1, '2021-05-22 05:39:49', '2021-05-22 17:39:49', NULL),
-(26, '2105235', '2105235', '32', 200000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-230521-2', 1, 1, '2021-05-22 05:39:49', '2021-05-22 17:39:49', NULL),
-(27, '2105235', '2105235', '44', 40000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-230521-2', 1, 1, '2021-05-22 05:39:49', '2021-05-22 17:39:49', NULL),
-(28, '2105235', '2105235', '6', 40000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-230521-2', 1, 1, '2021-05-22 05:39:49', '2021-05-22 17:39:49', NULL),
-(29, '2105236', '2105236', '46', 251000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 05:45:15', '2021-05-22 17:45:15', NULL),
-(30, '2105236', '2105236', '32', 250000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 05:45:15', '2021-05-22 17:45:15', NULL),
-(31, '2105236', '2105236', '33', 1000, 'KREDIT', 'ONGKIR PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 05:45:15', '2021-05-22 17:45:15', NULL),
-(53, '2105237', '2105237', '46', 361000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 06:15:19', '2021-05-22 18:15:19', NULL),
-(54, '2105237', '2105237', '32', 360000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 06:15:19', '2021-05-22 18:15:19', NULL),
-(55, '2105237', '2105237', '33', 1000, 'KREDIT', 'ONGKIR PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 06:15:19', '2021-05-22 18:15:19', NULL),
-(56, '2105237', '2105237', '44', 210000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 06:15:19', '2021-05-22 18:15:19', NULL),
-(57, '2105237', '2105237', '6', 210000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 06:15:19', '2021-05-22 18:15:19', NULL),
-(58, '8', '8', '47', 20000, 'DEBIT', 'DEBIT', 1, 1, '2021-05-25 14:35:50', '2021-05-26 13:10:08', '2021-05-26 13:10:08'),
-(59, '8', '8', '4', 20000, 'KREDIT', 'KREDIT', 1, 1, '2021-05-25 14:35:50', '2021-05-26 13:10:08', '2021-05-26 13:10:08'),
-(60, '2105278', '2105278', '48', 100000, 'DEBIT', 'BEBAN OPERASIONAL AIR - asdasdasdasdas', 1, 1, '2021-05-26 13:11:54', '2021-05-26 14:12:25', '2021-05-26 14:12:25'),
-(61, '2105278', '2105278', '4', 100000, 'KREDIT', 'BEBAN OPERASIONAL AIR - asdasdasdasdas', 1, 1, '2021-05-26 13:11:54', '2021-05-26 14:12:25', '2021-05-26 14:12:25'),
-(62, '2105279', '2105279', '48', 2000, 'DEBIT', 'BEBAN OPERASIONAL AIR - dfgdfgd', 1, 1, '2021-05-26 13:30:12', '2021-05-26 13:30:12', NULL),
-(63, '2105279', '2105279', '4', 2000, 'KREDIT', 'BEBAN OPERASIONAL AIR - dfgdfgd', 1, 1, '2021-05-26 13:30:12', '2021-05-26 13:30:12', NULL),
-(64, '21052710', '21052710', '49', 20000, 'DEBIT', 'BEBAN OPERASIONAL BENSIN MOBIL - asdasdasd', 1, 1, '2021-05-26 13:33:19', '2021-05-26 13:33:19', NULL),
-(65, '21052710', '21052710', '4', 20000, 'KREDIT', 'BEBAN OPERASIONAL BENSIN MOBIL - asdasdasd', 1, 1, '2021-05-26 13:33:19', '2021-05-26 13:33:19', NULL),
-(66, '21052711', '21052711', '47', 50000, 'DEBIT', 'BEBAN OPERASIONAL LISTRIK - dsfsdfsdfsdfsdf', 1, 1, '2021-05-26 13:40:15', '2021-05-26 14:29:31', '2021-05-26 14:29:31'),
-(67, '21052711', '21052711', '4', 50000, 'KREDIT', 'BEBAN OPERASIONAL LISTRIK - dsfsdfsdfsdfsdf', 1, 1, '2021-05-26 13:40:15', '2021-05-26 14:29:31', '2021-05-26 14:29:31'),
-(68, '21052712', '21052712', '47', 10000, 'DEBIT', 'BEBAN OPERASIONAL LISTRIK - sdfsdfsdf', 1, 1, '2021-05-26 13:45:31', '2021-05-26 13:50:32', '2021-05-26 13:50:32'),
-(69, '21052712', '21052712', '4', 10000, 'KREDIT', 'BEBAN OPERASIONAL LISTRIK - sdfsdfsdf', 1, 1, '2021-05-26 13:45:31', '2021-05-26 13:50:32', '2021-05-26 13:50:32'),
-(70, '21052712', '21052712', '48', 100000, 'DEBIT', 'BEBAN OPERASIONAL AIR - ghjghjghj', 1, 1, '2021-05-26 13:52:05', '2021-05-26 14:28:45', '2021-05-26 14:28:45'),
-(71, '21052712', '21052712', '4', 100000, 'KREDIT', 'BEBAN OPERASIONAL AIR - ghjghjghj', 1, 1, '2021-05-26 13:52:05', '2021-05-26 14:28:45', '2021-05-26 14:28:45'),
-(72, '21052713', '21052713', '47', 100000, 'DEBIT', 'BEBAN OPERASIONAL LISTRIK - kghkghkgk', 1, 1, '2021-05-26 13:52:20', '2021-05-26 13:52:20', NULL),
-(73, '21052713', '21052713', '4', 100000, 'KREDIT', 'BEBAN OPERASIONAL LISTRIK - kghkghkgk', 1, 1, '2021-05-26 13:52:20', '2021-05-26 13:52:20', NULL);
+(1, '2106151', '2106151', '46', 100000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:27', NULL),
+(2, '2106151', '2106151', '32', 100000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:27', NULL),
+(3, '2106151', '2106151', '44', 2000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:28', NULL),
+(4, '2106151', '2106151', '6', 2000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -375,19 +313,19 @@ ALTER TABLE `jenis_akun`
 -- AUTO_INCREMENT for table `master_akun`
 --
 ALTER TABLE `master_akun`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `master_beban`
 --
 ALTER TABLE `master_beban`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `master_jurnal`
 --
 ALTER TABLE `master_jurnal`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -403,7 +341,6 @@ ALTER TABLE `users`
 --
 -- Database: `persediaan`
 --
-DROP DATABASE IF EXISTS `persediaan`;
 CREATE DATABASE IF NOT EXISTS `persediaan` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `persediaan`;
 
@@ -490,6 +427,34 @@ CREATE TABLE `detail_opname` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_pembayaran`
+--
+
+CREATE TABLE `detail_pembayaran` (
+  `id` int(11) NOT NULL,
+  `penjualan_id` varchar(255) DEFAULT NULL,
+  `pembelian_id` varchar(255) DEFAULT NULL,
+  `nominal` double NOT NULL DEFAULT 0,
+  `cara_pembayaran` enum('TUNAI','TRANSFER','','') NOT NULL,
+  `catatan` text DEFAULT NULL,
+  `nomor_jurnal` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  `cabang_id` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `detail_pembayaran`
+--
+
+INSERT INTO `detail_pembayaran` (`id`, `penjualan_id`, `pembelian_id`, `nominal`, `cara_pembayaran`, `catatan`, `nomor_jurnal`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '1', NULL, 100000, 'TUNAI', 'LUNAS', '2106151', '1', '1', '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `detail_pembelian`
 --
 
@@ -505,13 +470,6 @@ CREATE TABLE `detail_pembelian` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `detail_pembelian`
---
-
-INSERT INTO `detail_pembelian` (`id`, `master_pembelian_id`, `kode_barang_id`, `jumlah`, `harga`, `diskon`, `total`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'S00001', 100, 20000, 0, 2000000, '2021-05-19 17:29:58', '2021-05-19 17:29:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -537,12 +495,25 @@ CREATE TABLE `detail_penjualan` (
 --
 
 INSERT INTO `detail_penjualan` (`id`, `master_penjualan_id`, `kode_barang_id`, `jumlah`, `harga`, `diskon`, `total`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'S00001', 10, 25000, 20000, 230000, '2021-05-19 17:31:54', '2021-05-19 17:31:54', NULL),
-(2, 2, 'S00001', 10, 25000, 50000, 200000, '2021-05-19 18:14:28', '2021-05-22 18:15:19', '2021-05-22 18:15:19'),
-(3, 3, 'X00008', 3, 10000, 0, 30000, '2021-05-22 17:34:10', '2021-05-22 17:34:10', NULL),
-(4, 4, 'S00001', 2, 100000, 0, 200000, '2021-05-22 17:39:49', '2021-05-22 17:39:49', NULL),
-(12, 2, 'S00001', 10, 25000, 50000, 200000, '2021-05-22 18:15:19', '2021-05-22 18:15:19', NULL),
-(13, 2, '100009', 5, 5000, 0, 25000, '2021-05-22 18:15:19', '2021-05-22 18:15:19', NULL);
+(1, 1, 'S00001', 1, 100000, 0, 100000, '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail_piutang`
+--
+
+CREATE TABLE `detail_piutang` (
+  `id` int(11) NOT NULL,
+  `penjualan_id` varchar(255) NOT NULL,
+  `nominal` double NOT NULL DEFAULT 0,
+  `cara_pembayaran` enum('TUNAI','TRANSFER','','') NOT NULL,
+  `catatan` text DEFAULT NULL,
+  `nomor_jurnal` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -681,12 +652,7 @@ CREATE TABLE `kartu_persediaan` (
 --
 
 INSERT INTO `kartu_persediaan` (`id`, `nomor_transaksi`, `master_barang_id`, `jenis`, `jumlah`, `harga`, `catatan`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '1', '1', 'DEBIT', 100, 20000, 'PEMBELIAN BARANG NOMOR TRANSAKSI #1', 1, 1, '2021-05-19 17:29:58', '2021-05-19 17:29:58', NULL),
-(2, 'BBM-200521-1', '1', 'KREDIT', 10, 20000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-200521-1', 1, 1, '2021-05-19 17:31:54', '2021-05-19 17:31:54', NULL),
-(3, 'BBM-200521-2', '1', 'KREDIT', 10, 20000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-19 18:14:28', '2021-05-22 18:15:19', '2021-05-22 18:15:19'),
-(4, 'BBM-230521-1', '8', 'KREDIT', 3, 5000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-230521-1', 1, 1, '2021-05-22 17:34:10', '2021-05-22 17:34:10', NULL),
-(8, 'BBM-200521-2', '1', 'KREDIT', 10, 20000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 18:15:19', '2021-05-22 18:15:19', NULL),
-(9, 'BBM-200521-2', '9', 'KREDIT', 5, 2000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-200521-2', 1, 1, '2021-05-22 18:15:19', '2021-05-22 18:15:19', NULL);
+(1, 'BBM-150621-1', '1', 'KREDIT', 1, 2000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
 
 -- --------------------------------------------------------
 
@@ -698,6 +664,7 @@ CREATE TABLE `master_bank` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `nomor_rekening` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nama_bank` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_akun_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `catatan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -708,8 +675,8 @@ CREATE TABLE `master_bank` (
 -- Dumping data for table `master_bank`
 --
 
-INSERT INTO `master_bank` (`id`, `nomor_rekening`, `nama_bank`, `catatan`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '129084091840', 'BCA', 'sadasd', NULL, NULL, NULL);
+INSERT INTO `master_bank` (`id`, `nomor_rekening`, `nama_bank`, `kode_akun_id`, `catatan`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '129084091840', 'BCA', '51', 'sadasd', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -770,7 +737,7 @@ INSERT INTO `master_divisi` (`id`, `nama`, `created_at`, `updated_at`, `deleted_
 --
 
 CREATE TABLE `master_jabatan` (
-  `id` int(11) NOT NULL,
+  `id` bigint(11) NOT NULL,
   `nama` varchar(255) NOT NULL,
   `grade` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -872,7 +839,6 @@ CREATE TABLE `master_opname` (
 
 CREATE TABLE `master_pegawai` (
   `id` int(11) NOT NULL,
-  `nip` varchar(255) NOT NULL,
   `ktp` varchar(255) DEFAULT NULL,
   `nama` varchar(255) NOT NULL,
   `jenis_kelamin` enum('LAKI - LAKI','PEREMPUAN','','') NOT NULL DEFAULT 'LAKI - LAKI',
@@ -903,62 +869,61 @@ CREATE TABLE `master_pegawai` (
 -- Dumping data for table `master_pegawai`
 --
 
-INSERT INTO `master_pegawai` (`id`, `nip`, `ktp`, `nama`, `jenis_kelamin`, `alamat`, `kelurahan`, `kecamatan`, `kota`, `tanggal_lahir`, `tanggal_masuk`, `pendidikan_terakhir`, `nomor_telepon`, `nomor_rekening`, `npwp`, `status_gaji`, `gaji_pokok`, `uang_makan`, `avatar`, `divisi_id`, `jabatan_id`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '1001', '3205385412020000', 'NURLELA', 'PEREMPUAN', 'Kp.Banen RT01/RW 11 ', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '2002-12-14', '2020-01-01', 'SMP', '085524742774', NULL, NULL, 0, 45000, 10000, 'default.jpg', 1, '1', 0, 2, '2021-05-27 00:05:25', NULL, NULL),
-(2, '1002', '3205385711990001', 'ASRI NOVIYANTI', 'PEREMPUAN', 'Kp.Ciseureuh RT01/RW14 ', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1999-11-17', '2020-01-01', 'SMA', '083862098237', NULL, NULL, 1, 40000, 10000, 'default.jpg', 1, '7', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
-(3, '1003', '3205124505940001', 'SITI NURAENI', 'PEREMPUAN', 'Kp.Wedasari RT05/RW04', 'Mekarsari', 'Cibatu', 'Garut', '1994-05-05', '2020-01-01', 'SMP', '082295499430', NULL, NULL, 1, 66000, 10000, 'default.jpg', 1, '15', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
-(4, '1004', '3671071311910004', 'ASEP SUPRIATNA', 'LAKI - LAKI', 'Kp.Wedasari RT01/RW04 ', 'Mekarsari', 'Cibatu', 'Garut', '1991-11-13', '2020-01-01', 'SMA', '082310193408', NULL, NULL, 0, 70000, 10000, 'default.jpg', 1, '3', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(5, '1005', '332916170190004', 'FADLI', 'LAKI - LAKI', 'Kp.Sasak Beusi RT04/RW11', 'Sindang Suka', 'Cibatu', 'Garut', '1990-01-17', '2020-01-01', 'SMP', '089636039353', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(6, '1006', '3205401502830001', 'PAK USMAN', 'LAKI - LAKI', 'Kp.Lembur Kulon RT02/RW02', 'Cipareaun', 'Cibiuk', 'Garut', '1963-02-15', '2020-01-01', 'SMA', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '1', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(7, '1007', NULL, 'HERI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(8, '1008', '3205122210910001', 'USEP SOPANDI', 'LAKI - LAKI', 'Kp.Kopeng RT03/RW01 ', 'Sindang Suka', 'Cibatu', 'Garut', '1991-10-22', '2020-01-01', 'SMP', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(9, '1009', '3205380506860001', 'YADI SURYADI', 'LAKI - LAKI', 'Kp.Cangkudu RT02/RW01', 'Galihpakuwon', 'BL. Limbangan', 'Garut', '1979-04-08', '2020-01-01', 'SD', '082317205594', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(10, '1010', '3205120205750002', 'ENANG PARDINA', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10 ', 'Mekarsari', 'Cibatu', 'Garut', '1975-02-05', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 55000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(11, '1011', '1971040510690001', 'SYARIP', 'LAKI - LAKI', 'Kp.Kopeng RT02/RW01', 'Sindang Suka', 'Cibatu', 'Garut', '1969-05-10', '2020-01-01', 'SD', '085383297672', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(12, '1012', '3205120808720001', 'AGUS SUDRAJAT', 'LAKI - LAKI', 'Kp.Cipacing Hilir RT01/RW02 ', 'Mekarsari', 'Cibatu', 'Garut', '1972-07-15', '2020-01-01', 'SMP', '082315038766', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(13, '1013', '3204050101650082', 'NANA SUMEGA', 'LAKI - LAKI', 'Kp.Tagog Wetan RT03/RW04 ', 'Cangkudu', 'BL. Limbangan', 'Garut', '1965-01-01', '2020-01-01', 'SD', '082149467379', NULL, NULL, 1, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(14, '1014', '3207341008800004', 'ENDE HAMDAN', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1980-10-08', '2020-01-01', 'SMP', '083825534209', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(15, '1015', NULL, 'MANG JAJA', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(16, '1016', '3205380111930001', 'CECEP KURNIAWAN', 'LAKI - LAKI', 'Kp.Sasak Beusi RT02/RW11', 'Sindang Suka', 'Cibatu', 'Garut', '1992-12-08', '2020-01-01', 'SMA', '085721638437', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '1', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(17, '1017', '3205120202830003', 'MASNEN', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt01.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1983-02-02', '2020-01-01', 'SD', '089603740487', NULL, NULL, 0, 55000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(18, '1018', '1971043006810004', 'ASEP SUBARJAH', 'LAKI - LAKI', 'Kp.Cigalumpit RT01/RW10', 'Sindang Suka', 'Cibatu', 'Garut', '1981-06-30', '2020-01-01', 'SD', '089603740487', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(19, '1019', '3205122205910001', 'RUHIAT ARDIANSYAH', 'LAKI - LAKI', 'Kp.Cipeujeuh RT01/RW06', 'Sukemarang', 'Kersamanah', 'Garut', '1991-05-22', '2020-01-01', 'SMP', '088247093509', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(20, '1020', '1971041401990002', 'FAISAL RAMDAN', 'LAKI - LAKI', 'Kp.Kopeng RT02/RW01', 'Sindang Suka', 'Cibatu', 'Garut', '1999-01-14', '2020-01-01', 'SMA', '082119230932', NULL, NULL, 1, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(21, '1021', '3205121401980004', 'ARIYANTO', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt01.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1998-01-14', '2020-01-01', 'SMP', '083861568665', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(22, '1022', '3205120505010003', 'ADI SAPUTRA', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt01.RW10', 'Mekarsari', 'Cibatu', 'Garut', '2001-05-05', '2020-01-01', 'SD', '083120459934', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(23, '1023', NULL, 'ARIF RUSMANA', 'LAKI - LAKI', 'Kp.Cikelepu RT01/RW07', 'Dunguswiru', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, '082216187889', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(24, '1024', '3205120501930002', 'AGUS RUHIAT', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10 ', 'Mekarsari', 'Cibatu', 'Garut', '1993-05-01', '2020-01-01', 'SD', '089632543495', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(25, '1025', NULL, 'HAMDANI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, '085798201353', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(26, '1026', NULL, 'MANG ACENG', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(27, '1027', '3205122803980001', 'DENI RUSTANDI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1998-03-28', '2020-01-01', 'SMP', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(28, '1028', NULL, 'MANG IIN', 'LAKI - LAKI', 'Kp.Gadog Hilir RT/RW', 'Sindang Suka', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, '081321262451', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(29, '1029', '3205140407800010', 'IMAM SARIPUDIN', 'LAKI - LAKI', 'Kp.Cibitung Kulon RT03/RW02', 'Cibunar', 'Malangbong', 'Garut', '1980-04-07', '2020-01-01', 'SMP', '082321433259', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
-(30, '1030', NULL, 'MANG MAMAT', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(31, '1031', NULL, 'ASEP IRAWAN', 'LAKI - LAKI', 'Kp.Salam', 'Cibunar', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, '08990675737', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(32, '1032', '3205120801840001', 'ANDI ROHENDI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1984-08-01', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(33, '1033', NULL, 'HERMAN', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(34, '1034', NULL, 'RIZKI', 'LAKI - LAKI', 'Kp.Salam', 'Cibunar', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(35, '1035', NULL, 'A REPI', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(36, '1036', '3205385903930002', 'ERSAN SUKMAYA', 'LAKI - LAKI', 'Kp.Pulosari RT01/RW0', 'Cijolang', 'BL. Limbangan', 'Garut', '1993-03-19', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(37, '1037', NULL, 'ABAH.HOLID', 'LAKI - LAKI', 'Kp.Cikurantung RT09/RW02', 'Cirapuhan', 'Selaawi', 'Garut', '1963-08-08', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(38, '1038', '3205385302950004', 'LINDA AMELIA RAMDANI', 'PEREMPUAN', 'Kp.Banen RT01/RW 11', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1995-02-13', '2020-01-01', 'SMK', NULL, NULL, NULL, 0, 30000, 10000, 'default.jpg', 1, '6', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
-(39, '1039', '3205384506970009', 'NENG YULIANTIN', 'LAKI - LAKI', 'KP. WEDA SARI', 'MEKARSARI', 'CIBATU', 'GARUT', '1997-06-05', '2020-06-01', NULL, NULL, NULL, '943769190443000', 0, 0, 0, 'default.jpg', 1, '9', 0, 1, '2021-05-27 00:02:48', NULL, NULL),
-(40, '1040', '3205121506690003', 'SARWONO', 'LAKI - LAKI', 'KP.BABAKAN LOA RT02/RW03 ', 'CIBATU', 'CIBATU', 'GARUT', '1969-03-06', '2018-01-07', 'SMA', '082315521016', NULL, NULL, 1, 2000000, 40000, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:01:10', NULL, NULL),
-(41, '1041', '3273200110860003', 'PURWIDI SAKTI.S.SOS', 'LAKI - LAKI', 'JL KAWALI 3 NO 20 RT05/RW17', 'ANTAPANI', 'ANTAPANI', 'BANDUNG', '1986-01-10', '2020-05-28', 'SARJANA', NULL, NULL, NULL, 1, 1500000, 20000, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(42, '1042', '00', 'NENG', 'PEREMPUAN', 'KP BATUKARUT LIMBANGAN TIMUR', 'LIMBANGAN', 'BL LIMBANGAN', 'GARUT', '1997-05-06', '2020-06-06', 'SMP', NULL, NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
-(43, '043', '3205131703730003', 'TETEN', 'LAKI - LAKI', 'KP.BINUANG RT01/RW11', 'KERSAMANAH', 'KERSAMANAH', 'GARUT', '1973-05-03', '2017-01-14', NULL, '081224582086', NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:02:48', NULL, NULL),
-(44, '1043', '3205126607990001', 'KAMILA JULIANTI', 'PEREMPUAN', 'KP.WEDASARI RT05/RW04', 'MEKARSARI', 'CIBATU', 'GARUT', '1999-02-07', '2020-06-30', NULL, '083825953726', NULL, NULL, 1, 40000, 10000, 'default.jpg', 1, '6', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
-(45, '1044', '320512250578003', 'ATEN ARIPIN', 'LAKI - LAKI', 'KP.WEDASARI RT005/RW 004', 'MEKARSARI', 'CIBATU', 'GARUT', '1978-05-25', '2020-06-30', 'SD', '085324884799', 'BCA - 1480980570', '55.485.291.3-443.000', 0, 0, 0, 'default.jpg', 1, '8', 0, 1, '2021-05-26 23:58:52', NULL, NULL),
-(46, '1045', '3205122012990003', 'RIDWAN RAMDANI SONJAYA', 'LAKI - LAKI', 'KP.PULO RT 004/ RW 001 ', 'SINDANG SUKA', 'CIBATU', 'GARUT', '0199-12-20', '2020-07-03', 'SMP', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(47, '1046', '3205120708020002', 'ALDI JAELANI', 'LAKI - LAKI', 'KP CADAS BODAS RT 002/RW 010', 'MEKARSARI', 'CIBATU', 'GARUT', '2002-08-07', '2020-07-03', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:48', NULL, NULL),
-(48, '1047', NULL, 'NCENG SUKMANA', 'LAKI - LAKI', 'KP.CADAS BODAS  RT 001/RW 010\r\n', 'MEKARSARI', 'CIBATU', 'GARUT', '1973-08-05', '2020-07-03', 'SD', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
-(49, '1048', '3204100401810003', 'RURI JANUAR WIJAYA', 'LAKI - LAKI', 'KOMP. MARGAHAYU PERMAI JLN PERMAI 26 NO 7 RT010/ RW 009', 'MEKAR RAHAYU', 'MARGAASIH', 'BANDUNG', '1981-01-04', '2018-02-08', 'SMA', '085694955601', NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:01:10', NULL, NULL),
-(50, '1049', '3273052908700002', 'H.WAGIA AGUSDIYANA SE ', 'LAKI - LAKI', 'JL.JATI HANAP RT 004/ RW 010', 'JATIHANDAP', 'MANDALA JATI', 'BANDUNG', '1970-08-29', '2019-12-01', 'SARJANA', '081809252630', NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:01:10', NULL, NULL),
-(51, '1050', '3205121903750001', 'BASIRIN', 'LAKI - LAKI', 'KP.CADAS BODAS RT001/RW010', 'MEKARSARI', 'CIBATU', 'GARUT', '1975-03-19', '2020-07-04', 'SD', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(52, '1051', '3205144508010005', 'AJENG WIDI', 'PEREMPUAN', 'KP SUKARESMI, RT02/RW01', 'CIBUNAR', 'MALAMBONG', 'GARUT', '2001-05-08', '2020-08-03', NULL, '085722847834', NULL, NULL, 1, 50000, 10000, 'default.jpg', 1, '6', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
-(53, '1052', '3205122804840004', 'IDAN SOLIHIN', 'LAKI - LAKI', 'KP.CADAS BODAS, RT02/RW10 DS.MEKARSARI KEC CIBATU', 'MEKARSARI', 'CIBATU', 'GARUT', '1984-04-04', '2021-01-11', 'SD', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(54, '1053', '3205120410000003', 'REZA RIFKI ARFAREZA', 'LAKI - LAKI', 'KP CADAS BODAS, RT01/RW10 ', 'MEKARSARI', 'CIBATU', 'GARUT', '2000-04-10', '2021-01-11', 'SMP', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
-(55, '1054', '3205386812970001', 'ASTRI RACHMAWATI', 'PEREMPUAN', 'KP BANEN, RT001/RW011', 'LIMBANGAN TIMUR', 'LIMBANGAN', 'GARUT', '1998-12-22', '2021-02-08', 'SMA', NULL, NULL, NULL, 0, 30000, 10000, 'default.jpg', 1, '1', 0, 1, '2021-05-27 00:05:25', NULL, NULL);
+INSERT INTO `master_pegawai` (`id`, `ktp`, `nama`, `jenis_kelamin`, `alamat`, `kelurahan`, `kecamatan`, `kota`, `tanggal_lahir`, `tanggal_masuk`, `pendidikan_terakhir`, `nomor_telepon`, `nomor_rekening`, `npwp`, `status_gaji`, `gaji_pokok`, `uang_makan`, `avatar`, `divisi_id`, `jabatan_id`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '3205385412020000', 'NURLELA', 'PEREMPUAN', 'Kp.Banen RT01/RW 11 ', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '2002-12-14', '2020-01-01', 'SMP', '085524742774', NULL, NULL, 0, 45000, 10000, 'default.jpg', 1, '1', 0, 2, '2021-05-27 00:05:25', NULL, NULL),
+(2, '3205385711990001', 'ASRI NOVIYANTI', 'PEREMPUAN', 'Kp.Ciseureuh RT01/RW14 ', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1999-11-17', '2020-01-01', 'SMA', '083862098237', NULL, NULL, 1, 40000, 10000, 'default.jpg', 1, '7', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
+(3, '3205124505940001', 'SITI NURAENI', 'PEREMPUAN', 'Kp.Wedasari RT05/RW04', 'Mekarsari', 'Cibatu', 'Garut', '1994-05-05', '2020-01-01', 'SMP', '082295499430', NULL, NULL, 1, 66000, 10000, 'default.jpg', 1, '15', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
+(4, '3671071311910004', 'ASEP SUPRIATNA', 'LAKI - LAKI', 'Kp.Wedasari RT01/RW04 ', 'Mekarsari', 'Cibatu', 'Garut', '1991-11-13', '2020-01-01', 'SMA', '082310193408', NULL, NULL, 0, 70000, 10000, 'default.jpg', 1, '3', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(5, '332916170190004', 'FADLI', 'LAKI - LAKI', 'Kp.Sasak Beusi RT04/RW11', 'Sindang Suka', 'Cibatu', 'Garut', '1990-01-17', '2020-01-01', 'SMP', '089636039353', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(6, '3205401502830001', 'PAK USMAN', 'LAKI - LAKI', 'Kp.Lembur Kulon RT02/RW02', 'Cipareaun', 'Cibiuk', 'Garut', '1963-02-15', '2020-01-01', 'SMA', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '1', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(7, NULL, 'HERI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(8, '3205122210910001', 'USEP SOPANDI', 'LAKI - LAKI', 'Kp.Kopeng RT03/RW01 ', 'Sindang Suka', 'Cibatu', 'Garut', '1991-10-22', '2020-01-01', 'SMP', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(9, '3205380506860001', 'YADI SURYADI', 'LAKI - LAKI', 'Kp.Cangkudu RT02/RW01', 'Galihpakuwon', 'BL. Limbangan', 'Garut', '1979-04-08', '2020-01-01', 'SD', '082317205594', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(10, '3205120205750002', 'ENANG PARDINA', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10 ', 'Mekarsari', 'Cibatu', 'Garut', '1975-02-05', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 55000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(11, '1971040510690001', 'SYARIP', 'LAKI - LAKI', 'Kp.Kopeng RT02/RW01', 'Sindang Suka', 'Cibatu', 'Garut', '1969-05-10', '2020-01-01', 'SD', '085383297672', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(12, '3205120808720001', 'AGUS SUDRAJAT', 'LAKI - LAKI', 'Kp.Cipacing Hilir RT01/RW02 ', 'Mekarsari', 'Cibatu', 'Garut', '1972-07-15', '2020-01-01', 'SMP', '082315038766', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(13, '3204050101650082', 'NANA SUMEGA', 'LAKI - LAKI', 'Kp.Tagog Wetan RT03/RW04 ', 'Cangkudu', 'BL. Limbangan', 'Garut', '1965-01-01', '2020-01-01', 'SD', '082149467379', NULL, NULL, 1, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(14, '3207341008800004', 'ENDE HAMDAN', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1980-10-08', '2020-01-01', 'SMP', '083825534209', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(15, NULL, 'MANG JAJA', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(16, '3205380111930001', 'CECEP KURNIAWAN', 'LAKI - LAKI', 'Kp.Sasak Beusi RT02/RW11', 'Sindang Suka', 'Cibatu', 'Garut', '1992-12-08', '2020-01-01', 'SMA', '085721638437', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '1', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(17, '3205120202830003', 'MASNEN', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt01.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1983-02-02', '2020-01-01', 'SD', '089603740487', NULL, NULL, 0, 55000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(18, '1971043006810004', 'ASEP SUBARJAH', 'LAKI - LAKI', 'Kp.Cigalumpit RT01/RW10', 'Sindang Suka', 'Cibatu', 'Garut', '1981-06-30', '2020-01-01', 'SD', '089603740487', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(19, '3205122205910001', 'RUHIAT ARDIANSYAH', 'LAKI - LAKI', 'Kp.Cipeujeuh RT01/RW06', 'Sukemarang', 'Kersamanah', 'Garut', '1991-05-22', '2020-01-01', 'SMP', '088247093509', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(20, '1971041401990002', 'FAISAL RAMDAN', 'LAKI - LAKI', 'Kp.Kopeng RT02/RW01', 'Sindang Suka', 'Cibatu', 'Garut', '1999-01-14', '2020-01-01', 'SMA', '082119230932', NULL, NULL, 1, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(21, '3205121401980004', 'ARIYANTO', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt01.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1998-01-14', '2020-01-01', 'SMP', '083861568665', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(22, '3205120505010003', 'ADI SAPUTRA', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt01.RW10', 'Mekarsari', 'Cibatu', 'Garut', '2001-05-05', '2020-01-01', 'SD', '083120459934', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(23, NULL, 'ARIF RUSMANA', 'LAKI - LAKI', 'Kp.Cikelepu RT01/RW07', 'Dunguswiru', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, '082216187889', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(24, '3205120501930002', 'AGUS RUHIAT', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10 ', 'Mekarsari', 'Cibatu', 'Garut', '1993-05-01', '2020-01-01', 'SD', '089632543495', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(25, NULL, 'HAMDANI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, '085798201353', NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(26, NULL, 'MANG ACENG', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(27, '3205122803980001', 'DENI RUSTANDI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1998-03-28', '2020-01-01', 'SMP', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(28, NULL, 'MANG IIN', 'LAKI - LAKI', 'Kp.Gadog Hilir RT/RW', 'Sindang Suka', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, '081321262451', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(29, '3205140407800010', 'IMAM SARIPUDIN', 'LAKI - LAKI', 'Kp.Cibitung Kulon RT03/RW02', 'Cibunar', 'Malangbong', 'Garut', '1980-04-07', '2020-01-01', 'SMP', '082321433259', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:01:14', NULL, NULL),
+(30, NULL, 'MANG MAMAT', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(31, NULL, 'ASEP IRAWAN', 'LAKI - LAKI', 'Kp.Salam', 'Cibunar', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, '08990675737', NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(32, '3205120801840001', 'ANDI ROHENDI', 'LAKI - LAKI', 'Kp.Cicadas Bodas Rt02.RW10', 'Mekarsari', 'Cibatu', 'Garut', '1984-08-01', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(33, NULL, 'HERMAN', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(34, NULL, 'RIZKI', 'LAKI - LAKI', 'Kp.Salam', 'Cibunar', 'Cibatu', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(35, NULL, 'A REPI', 'LAKI - LAKI', 'Besi Baja Makmur', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1945-08-17', '2020-01-01', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '14', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(36, '3205385903930002', 'ERSAN SUKMAYA', 'LAKI - LAKI', 'Kp.Pulosari RT01/RW0', 'Cijolang', 'BL. Limbangan', 'Garut', '1993-03-19', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(37, NULL, 'ABAH.HOLID', 'LAKI - LAKI', 'Kp.Cikurantung RT09/RW02', 'Cirapuhan', 'Selaawi', 'Garut', '1963-08-08', '2020-01-01', 'SD', NULL, NULL, NULL, 0, 50000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(38, '3205385302950004', 'LINDA AMELIA RAMDANI', 'PEREMPUAN', 'Kp.Banen RT01/RW 11', 'Limbangan Timur', 'BL. Limbangan', 'Garut', '1995-02-13', '2020-01-01', 'SMK', NULL, NULL, NULL, 0, 30000, 10000, 'default.jpg', 1, '6', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
+(39, '3205384506970009', 'NENG YULIANTIN', 'LAKI - LAKI', 'KP. WEDA SARI', 'MEKARSARI', 'CIBATU', 'GARUT', '1997-06-05', '2020-06-01', NULL, NULL, NULL, '943769190443000', 0, 0, 0, 'default.jpg', 1, '9', 0, 1, '2021-05-27 00:02:48', NULL, NULL),
+(40, '3205121506690003', 'SARWONO', 'LAKI - LAKI', 'KP.BABAKAN LOA RT02/RW03 ', 'CIBATU', 'CIBATU', 'GARUT', '1969-03-06', '2018-01-07', 'SMA', '082315521016', NULL, NULL, 1, 2000000, 40000, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:01:10', NULL, NULL),
+(41, '3273200110860003', 'PURWIDI SAKTI.S.SOS', 'LAKI - LAKI', 'JL KAWALI 3 NO 20 RT05/RW17', 'ANTAPANI', 'ANTAPANI', 'BANDUNG', '1986-01-10', '2020-05-28', 'SARJANA', NULL, NULL, NULL, 1, 1500000, 20000, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(42, '00', 'NENG', 'PEREMPUAN', 'KP BATUKARUT LIMBANGAN TIMUR', 'LIMBANGAN', 'BL LIMBANGAN', 'GARUT', '1997-05-06', '2020-06-06', 'SMP', NULL, NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
+(43, '3205131703730003', 'TETEN', 'LAKI - LAKI', 'KP.BINUANG RT01/RW11', 'KERSAMANAH', 'KERSAMANAH', 'GARUT', '1973-05-03', '2017-01-14', NULL, '081224582086', NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:02:48', NULL, NULL),
+(44, '3205126607990001', 'KAMILA JULIANTI', 'PEREMPUAN', 'KP.WEDASARI RT05/RW04', 'MEKARSARI', 'CIBATU', 'GARUT', '1999-02-07', '2020-06-30', NULL, '083825953726', NULL, NULL, 1, 40000, 10000, 'default.jpg', 1, '6', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
+(45, '320512250578003', 'ATEN ARIPIN', 'LAKI - LAKI', 'KP.WEDASARI RT005/RW 004', 'MEKARSARI', 'CIBATU', 'GARUT', '1978-05-25', '2020-06-30', 'SD', '085324884799', 'BCA - 1480980570', '55.485.291.3-443.000', 0, 0, 0, 'default.jpg', 1, '8', 0, 1, '2021-05-26 23:58:52', NULL, NULL),
+(46, '3205122012990003', 'RIDWAN RAMDANI SONJAYA', 'LAKI - LAKI', 'KP.PULO RT 004/ RW 001 ', 'SINDANG SUKA', 'CIBATU', 'GARUT', '0199-12-20', '2020-07-03', 'SMP', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(47, '3205120708020002', 'ALDI JAELANI', 'LAKI - LAKI', 'KP CADAS BODAS RT 002/RW 010', 'MEKARSARI', 'CIBATU', 'GARUT', '2002-08-07', '2020-07-03', NULL, NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:48', NULL, NULL),
+(48, NULL, 'NCENG SUKMANA', 'LAKI - LAKI', 'KP.CADAS BODAS  RT 001/RW 010\r\n', 'MEKARSARI', 'CIBATU', 'GARUT', '1973-08-05', '2020-07-03', 'SD', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:03:32', NULL, NULL),
+(49, '3204100401810003', 'RURI JANUAR WIJAYA', 'LAKI - LAKI', 'KOMP. MARGAHAYU PERMAI JLN PERMAI 26 NO 7 RT010/ RW 009', 'MEKAR RAHAYU', 'MARGAASIH', 'BANDUNG', '1981-01-04', '2018-02-08', 'SMA', '085694955601', NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:01:10', NULL, NULL),
+(50, '3273052908700002', 'H.WAGIA AGUSDIYANA SE ', 'LAKI - LAKI', 'JL.JATI HANAP RT 004/ RW 010', 'JATIHANDAP', 'MANDALA JATI', 'BANDUNG', '1970-08-29', '2019-12-01', 'SARJANA', '081809252630', NULL, NULL, 1, 0, 0, 'default.jpg', 1, '5', 0, 1, '2021-05-27 00:01:10', NULL, NULL),
+(51, '3205121903750001', 'BASIRIN', 'LAKI - LAKI', 'KP.CADAS BODAS RT001/RW010', 'MEKARSARI', 'CIBATU', 'GARUT', '1975-03-19', '2020-07-04', 'SD', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '4', 0, 1, '2021-05-27 00:02:10', NULL, NULL),
+(52, '3205144508010005', 'AJENG WIDI', 'PEREMPUAN', 'KP SUKARESMI, RT02/RW01', 'CIBUNAR', 'MALAMBONG', 'GARUT', '2001-05-08', '2020-08-03', NULL, '085722847834', NULL, NULL, 1, 50000, 10000, 'default.jpg', 1, '6', 0, 1, '2021-05-27 00:05:25', NULL, NULL),
+(53, '32051228012123123123', 'LUCKY ANGGARA', 'LAKI - LAKI', 'KP.CADAS BODAS, RT02/RW10 DS.MEKARSARI KEC CIBATU', 'MEKARSARI', 'CIBATU', 'GARUT', '1984-04-04', '2021-01-11', 'SMA', NULL, NULL, NULL, 0, 40000, 10000, 'default.jpg', 1, '16', 0, 1, '2021-05-27 00:02:10', '2021-06-08 22:54:11', NULL),
+(56, '123123', 'asd', 'LAKI - LAKI', 'asdasdasd', 'asd', 'asd', 'asd', '2021-06-10', '2021-06-10', NULL, '1231231231', '1233', '12312', 0, 0, 0, '', 1, '1', 0, 1, '2021-06-09 22:27:35', '2021-06-09 22:27:35', NULL);
 
 -- --------------------------------------------------------
 
@@ -991,13 +956,6 @@ CREATE TABLE `master_pembelian` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `master_pembelian`
---
-
-INSERT INTO `master_pembelian` (`id`, `nomor_transaksi`, `kontak_id`, `total`, `diskon`, `ongkir`, `pajak_masukan`, `grand_total`, `metode_pembayaran`, `kredit`, `down_payment`, `sisa_pembayaran`, `cara_pembayaran`, `bank_id`, `tanggal_jatuh_tempo`, `retur`, `user_id`, `cabang_id`, `nomor_jurnal`, `catatan`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '1', '2', 2000000, 0, 150000, 200000, 2350000, 'Lunas', 0, 0, 0, 'Tunai', NULL, NULL, 'Tidak', '1', 1, '2105202', 'asdasdasd', '2021-05-19 03:00:00', '2021-05-19 03:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -1037,10 +995,7 @@ CREATE TABLE `master_penjualan` (
 --
 
 INSERT INTO `master_penjualan` (`id`, `nomor_transaksi`, `kontak_id`, `total`, `diskon`, `ongkir`, `pajak_keluaran`, `grand_total`, `metode_pembayaran`, `kredit`, `down_payment`, `sisa_pembayaran`, `cara_pembayaran`, `bank_id`, `tanggal_jatuh_tempo`, `retur`, `sales_id`, `catatan`, `user_id`, `cabang_id`, `nomor_jurnal`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'BBM-200521-1', '1', 230000, 20000, 50000, 0, 260000, 'Lunas', 0, 0, 0, 'Tunai', NULL, NULL, 'Tidak', '3', NULL, 1, 1, '2105203', '2021-05-19 17:31:54', '2021-05-22 15:37:50', NULL),
-(2, 'BBM-200521-2', '1', 360000, 0, 1000, 0, 361000, 'Cash On Delivery (COD)', 0, 0, 361000, 'Tunai', NULL, NULL, 'Tidak', '2', NULL, 1, 1, '2105237', '2021-05-19 18:14:28', '2021-05-22 18:15:19', NULL),
-(3, 'BBM-230521-1', '1', 30000, 0, 0, 0, 30000, 'Lunas', 0, 0, 0, 'Tunai', NULL, NULL, 'Tidak', '1', NULL, 1, 1, '2105234', '2021-05-22 17:34:10', '2021-05-22 17:34:10', NULL),
-(4, 'BBM-230521-2', '9', 200000, 0, 0, 0, 200000, 'Lunas', 0, 0, 0, 'Tunai', NULL, NULL, 'Tidak', '1', NULL, 1, 1, '2105235', '2021-05-22 17:39:49', '2021-05-22 17:39:49', NULL);
+(1, 'BBM-150621-1', '1', 100000, 0, 0, 0, 100000, 'Lunas', 0, 0, 0, 'Tunai', NULL, NULL, 'Tidak', '1', NULL, 1, 1, '2106151', '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
 
 -- --------------------------------------------------------
 
@@ -1076,15 +1031,6 @@ CREATE TABLE `master_presensi` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `master_presensi`
---
-
-INSERT INTO `master_presensi` (`id`, `pegawai_id`, `tanggal`, `jam_masuk`, `jam_keluar`, `catatan`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 55, '2021-06-06', '2021-06-08 08:02:41', '2021-06-08 17:02:41', 'Tidak ada Potongan', NULL, NULL, NULL),
-(2, 55, '2021-06-07', '2021-06-08 08:02:41', NULL, 'Tidak ada Potongan', NULL, NULL, NULL),
-(19, 55, '2021-06-08', '2021-06-08 15:51:51', NULL, '21-06-08 03:51:51', NULL, '2021-06-08 02:15:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -1243,6 +1189,12 @@ ALTER TABLE `detail_opname`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `detail_pembayaran`
+--
+ALTER TABLE `detail_pembayaran`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `detail_pembelian`
 --
 ALTER TABLE `detail_pembelian`
@@ -1252,6 +1204,12 @@ ALTER TABLE `detail_pembelian`
 -- Indexes for table `detail_penjualan`
 --
 ALTER TABLE `detail_penjualan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `detail_piutang`
+--
+ALTER TABLE `detail_piutang`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1327,8 +1285,7 @@ ALTER TABLE `master_opname`
 -- Indexes for table `master_pegawai`
 --
 ALTER TABLE `master_pegawai`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `nip` (`nip`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `master_pembelian`
@@ -1411,16 +1368,28 @@ ALTER TABLE `detail_opname`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `detail_pembayaran`
+--
+ALTER TABLE `detail_pembayaran`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `detail_pembelian`
 --
 ALTER TABLE `detail_pembelian`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `detail_penjualan`
 --
 ALTER TABLE `detail_penjualan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `detail_piutang`
+--
+ALTER TABLE `detail_piutang`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1450,7 +1419,7 @@ ALTER TABLE `jenis_barang`
 -- AUTO_INCREMENT for table `kartu_persediaan`
 --
 ALTER TABLE `kartu_persediaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `master_bank`
@@ -1474,7 +1443,7 @@ ALTER TABLE `master_divisi`
 -- AUTO_INCREMENT for table `master_jabatan`
 --
 ALTER TABLE `master_jabatan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `master_kontak`
@@ -1492,19 +1461,19 @@ ALTER TABLE `master_opname`
 -- AUTO_INCREMENT for table `master_pegawai`
 --
 ALTER TABLE `master_pegawai`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `master_pembelian`
 --
 ALTER TABLE `master_pembelian`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `master_penjualan`
 --
 ALTER TABLE `master_penjualan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `master_persediaan`
@@ -1516,7 +1485,7 @@ ALTER TABLE `master_persediaan`
 -- AUTO_INCREMENT for table `master_presensi`
 --
 ALTER TABLE `master_presensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `merek_barang`

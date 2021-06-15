@@ -58,7 +58,7 @@
 
       <!-- Column: Nomor Transaksi -->
       <template #cell(nomorTransaksi)="data">
-        <b-link :to="{ name: 'transaksi-penjualan-invoice', params: { id: data.item.id } }" class="font-weight-bold"> #{{ data.item.nomorTransaksi }} </b-link>
+        <b-link :to="{ name: 'transaksi-penjualan-invoice', params: { id: data.item.id } }" class="font-weight-bold"> {{ data.item.nomorTransaksi }} </b-link>
       </template>
 
       <!-- Column: Issued Date -->

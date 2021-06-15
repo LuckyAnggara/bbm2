@@ -138,5 +138,13 @@ export default {
           .catch(error => reject(error))
       })
     },
+    storePiutang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}pembayaran/store/piutang`, data)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
   },
 }

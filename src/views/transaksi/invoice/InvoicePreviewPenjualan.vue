@@ -125,27 +125,25 @@
                           Status Pembayaran:
                         </td>
                         <td>
-                          <b>{{ dataInvoice.pembayaran.statusPembayaran.title }}</b>
+                          <b>{{ dataInvoice.pembayaran.sisaPembayaran === 0 ? 'Lunas' : 'Belum Lunas' }}</b>
                         </td>
                       </tr>
-                      <section v-show="dataInvoice.pembayaran.statusPembayaran.value === '1' ? true : false">
-                        <tr>
-                          <td class="pr-1">
-                            Down Payment:
-                          </td>
-                          <td>
-                            {{ formatRupiah(dataInvoice.pembayaran.downPayment) }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="pr-1">
-                            Sisa Tagihan:
-                          </td>
-                          <td>
-                            <b>{{ sisaTagihan }}</b>
-                          </td>
-                        </tr>
-                      </section>
+                      <!-- <tr v-show="dataInvoice.pembayaran.sisaPembayaran === 0 ? false : true">
+                        <td class="pr-1">
+                          Down Payment:
+                        </td>
+                        <td>
+                          {{ formatRupiah(dataInvoice.pembayaran.downPayment) }}
+                        </td>
+                      </tr> -->
+                      <tr v-show="dataInvoice.pembayaran.sisaPembayaran === 0 ? false : true">
+                        <td class="pr-1">
+                          Sisa Tagihan:
+                        </td>
+                        <td>
+                          <b>{{ sisaTagihan }}</b>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -241,37 +239,6 @@
         </b-card>
       </b-col>
 
-      <!-- <b-dropdown variant="link" toggle-class="p-0" no-caret>
-            <template #button-content>
-              <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
-            </template>
-            <b-dropdown-item>
-              <feather-icon icon="CastIcon" />
-              <span class="align-middle ml-50">Print Invoice</span>
-            </b-dropdown-item>
-            <b-dropdown-item>
-              <feather-icon icon="ActivityIcon" />
-              <span class="align-middle ml-50">Timeline</span>
-            </b-dropdown-item>
-            <b-dropdown-item :to="{ name: 'akuntansi-jurnal-detail', params: { id: data.item.nomorJurnal } }">
-              <feather-icon icon="BookIcon" />
-              <span class="align-middle ml-50">Jurnal</span>
-            </b-dropdown-item>
-            <hr />
-            <b-dropdown-item :to="{ name: 'transaksi-penjualan-edit', params: { id: data.item.id } }" v-if="!typeRetur">
-              <feather-icon icon="EditIcon" />
-              <span class="align-middle ml-50">Edit</span>
-            </b-dropdown-item>
-            <b-dropdown-item @click="retur(data)" v-if="!typeRetur">
-              <feather-icon icon="CornerUpLeftIcon" />
-              <span class="align-middle ml-50">Retur</span>
-            </b-dropdown-item>
-            <b-dropdown-item @click="destroy(data)">
-              <feather-icon icon="TrashIcon" />
-              <span class="align-middle ml-50">Delete</span>
-            </b-dropdown-item>
-          </b-dropdown> -->
-
       <!-- Right Col: Card -->
       <b-col cols="12" md="3" xl="3" class="invoice-actions">
         <b-card>
@@ -285,11 +252,6 @@
             Download
           </b-button>
 
-          <!-- Button: Download -->
-          <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-secondary" class="mb-75" block>
-            Timeline
-          </b-button>
-
           <!-- Button: Jurnal -->
           <b-button
             :to="{ name: 'akuntansi-jurnal-detail', params: { id: dataInvoice.nomorJurnal } }"
@@ -299,6 +261,10 @@
             block
           >
             Jurnal
+          </b-button>
+          <!-- Button:  Rincian Pembayaran -->
+          <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-secondary" class="mb-75" block>
+            Rincian Pembayaran
           </b-button>
           <div v-if="!typeRetur">
             <hr />
@@ -326,12 +292,20 @@
           </div>
 
           <!-- Button: Add Payment -->
-          <b-button v-b-toggle.sidebar-invoice-add-payment v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="success" class="mb-75" block>
+          <b-button
+            v-show="dataInvoice.pembayaran.sisaPembayaran === 0 ? false : true"
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="success"
+            class="mb-75"
+            block
+            @click="showModal()"
+          >
             Tambah Pembayaran
           </b-button>
         </b-card>
       </b-col>
     </b-row>
+    <modal-Pembayaran :data-piutang="dataInvoice" />
   </section>
 </template>
 
@@ -344,6 +318,8 @@ import { BRow, BCol, BCard, BCardBody, BTableLite, BCardText, BButton, BAlert, B
 import Logo from '@core/layouts/components/Logo.vue'
 import Ripple from 'vue-ripple-directive'
 import store from '@/store'
+
+import ModalPembayaran from './component/ModalPembayaranPiutang.vue'
 
 export default {
   directives: {
@@ -362,26 +338,37 @@ export default {
     BLink,
 
     Logo,
+    ModalPembayaran,
   },
   data() {
     return {
       return: {
         transfer: false,
       },
+      caraPembayaran: [
+        { title: 'Tunai', value: '0' },
+        { title: 'Transfer', value: '1' },
+      ],
+      piutang: {
+        penjualan_id: '',
+        tanggal: '',
+        nominal: 0,
+        caraPembayaran: '',
+        catatan: '',
+      },
     }
   },
   computed: {
     sisaTagihan() {
-      return this.formatRupiah(parseFloat(this.dataInvoice.invoice.grandTotal) - parseFloat(this.dataInvoice.pembayaran.downPayment))
+      return this.formatRupiah(this.dataInvoice.pembayaran.sisaPembayaran)
     },
     bank() {
       if (this.dataInvoice.pembayaran.bank === '' || this.dataInvoice.pembayaran.bank === null) {
         return ''
       }
-      return this.dataInvoice.pembayaran.bank.title
+      return `${this.dataInvoice.pembayaran.bank.nama_bank} - ${this.dataInvoice.pembayaran.bank.nomor_rekening}`
     },
     typeRetur() {
-      console.info(this.dataInvoice)
       if (this.dataInvoice.retur === 'Tidak') {
         return false
       }
@@ -507,6 +494,9 @@ export default {
         }
       })
     },
+    showModal() {
+      this.$bvModal.show('modal-pembayaran-piutang')
+    },
   },
   setup() {
     if (router.currentRoute.params.id !== undefined) {
@@ -521,6 +511,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@core/scss/vue/libs/vue-select.scss';
 @import '~@core/scss/base/pages/app-invoice.scss';
 </style>
 

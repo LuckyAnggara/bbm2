@@ -69,7 +69,7 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import router from '@/router'
 import store from '@/store'
 
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+// import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import DetailKonsumen from './component/DetailKonsumen.vue'
 import ReviewOrder from './component/ReviewOrder.vue'
 import Keranjang from './component/Keranjang.vue'
@@ -87,11 +87,8 @@ export default {
     ReviewOrder,
     TabContent,
     Keranjang,
-    // BFormTextarea,
-
-    // vSelect,
     // eslint-disable-next-line vue/no-unused-components
-    ToastificationContent,
+    // ToastificationContent,
   },
   data() {
     return {
@@ -104,7 +101,11 @@ export default {
       if (this.jumlahPembayaran === 0) {
         return this.formatRupiah(0)
       }
-      return this.formatRupiah(this.jumlahPembayaran - this.dataOrder.invoice.grandTotal)
+
+      if (this.dataOrder.pembayaran.jenisPembayaran.value === '0' && this.dataOrder.pembayaran.statusPembayaran.value !== '2') {
+        return this.formatRupiah(this.jumlahPembayaran - this.dataOrder.invoice.grandTotal)
+      }
+      return this.formatRupiah(this.jumlahPembayaran - this.dataOrder.pembayaran.downPayment)
     },
   },
   mounted() {

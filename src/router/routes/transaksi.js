@@ -73,7 +73,7 @@ export default [
   {
     path: '/transaksi/invoice',
     name: 'transaksi-penjualan-invoice',
-    component: () => import('@/views/transaksi/invoice/InvoicePreview.vue'),
+    component: () => import('@/views/transaksi/invoice/InvoicePreviewPenjualan.vue'),
     meta: {
       pageTitle: 'Penjualan',
       breadcrumb: [

@@ -91,11 +91,15 @@ export default {
   },
   watch: {
     dateFilter(x) {
-      const d = x.split(' to ')
-      if (d.length > 1) {
-        this.loadTransaksi(this.$moment(d[0]), this.$moment(d[1]))
+      if (x === '') {
+        this.loadTransaksi()
       } else {
-        this.loadTransaksi(this.$moment(d[0]), this.$moment(d[0]))
+        const d = x.split(' to ')
+        if (d.length > 1) {
+          this.loadTransaksi(this.$moment(d[0]), this.$moment(d[1]))
+        } else {
+          this.loadTransaksi(this.$moment(d[0]), this.$moment(d[0]))
+        }
       }
     },
   },
@@ -175,8 +179,7 @@ export default {
       }
     },
     clear() {
-      this.date.value = null
-      this.loadAwal()
+      this.date.value = ''
     },
     moment(value) {
       return this.$moment(value).format('DD MMMM YYYY')
@@ -199,10 +202,11 @@ export default {
         })
     },
     loadAwal() {
-      const d = new Date()
-      const m = d.getMonth()
-      const y = d.getFullYear()
-      this.loadTransaksi(this.$moment(new Date(y, m, 1)), this.moment(Date.now()))
+      // const d = new Date()
+      // const m = d.getMonth()
+      // const y = d.getFullYear()
+      // this.loadTransaksi(this.$moment(new Date(y, m, 1)), this.$moment(Date.now()))
+      this.loadTransaksi()
     },
   },
   mounted() {

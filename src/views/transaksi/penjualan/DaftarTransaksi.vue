@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import store from '@/store'
+// import store from '@/store'
 
 import { BTab, BTabs } from 'bootstrap-vue'
 
@@ -26,29 +26,30 @@ export default {
     BTab,
     BTabs,
   },
-  methods: {
-    loadData(dateawal = null, dateakhir = null) {
-      const user = JSON.parse(localStorage.getItem('userData'))
-      const cabang = user.cabang_id
-      store
-        .dispatch('app-transaksi-penjualan/fetchListTransaksiPenjualan', {
-          cabang,
-          dateawal,
-          dateakhir,
-        })
-        .then(res => {
-          store.commit('app-transaksi-penjualan/SET_LIST_TRANSAKSI_PENJUALAN', res.data)
-        })
-    },
-    loadAwal() {
-      const d = new Date()
-      const m = d.getMonth()
-      const y = d.getFullYear()
-      this.loadData(this.$moment(new Date(y, m, 1)), this.$moment(Date.now()))
-    },
-  },
-  mounted() {
-    this.loadAwal()
-  },
+  // methods: {
+  //   loadData(dateawal = null, dateakhir = null) {
+  //     const user = JSON.parse(localStorage.getItem('userData'))
+  //     const cabang = user.cabang_id
+  //     store
+  //       .dispatch('app-transaksi-penjualan/fetchListTransaksiPenjualan', {
+  //         cabang,
+  //         dateawal,
+  //         dateakhir,
+  //       })
+  //       .then(res => {
+  //         store.commit('app-transaksi-penjualan/SET_LIST_TRANSAKSI_PENJUALAN', res.data)
+  //       })
+  //   },
+  //   loadAwal() {
+  //     // const d = new Date()
+  //     // const m = d.getMonth()
+  //     // const y = d.getFullYear()
+  //     // this.loadData(this.$moment(new Date(y, m, 1)), this.$moment(Date.now()))
+  //     this.loadData()
+  //   },
+  // },
+  // mounted() {
+  //   this.loadAwal()
+  // },
 }
 </script>

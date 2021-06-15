@@ -275,12 +275,13 @@ export default {
         this.caraPembayaran = true
       } else if (id.value === '2') {
         // COD
-        this.dataOrder.pembayaran.kredit = false
+        this.dataOrder.pembayaran.kredit = true
         this.statusKembalian = false
         this.caraPembayaran = false
       } else if (id.value === '0') {
         // Lunas
         this.dataOrder.pembayaran.kredit = false
+        this.dataOrder.pembayaran.bank = ''
         this.statusKembalian = true
       }
       this.resetInput()
@@ -290,6 +291,7 @@ export default {
         this.transfer = true
       } else {
         this.transfer = false
+        this.dataOrder.pembayaran.bank = ''
       }
     },
     resetInput() {
