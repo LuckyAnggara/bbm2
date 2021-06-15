@@ -105,7 +105,7 @@ export default {
       const { id } = this.$router.currentRoute.params
       store.commit('app-pegawai/SET_DETAIL_DATA', parseInt(id, 10))
       this.dataPegawai = store.getters['app-pegawai/getDetailData']
-      store.dispatch('app-pegawai/fetchListPresensi', id).then(res => {
+      store.dispatch('app-pegawai/fetchDetailPresensi', id).then(res => {
         if (res.status === 200) {
           store.commit('app-pegawai/SET_DETAIL_PRESENSI', res.data)
         }

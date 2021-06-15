@@ -10,6 +10,7 @@ export default {
     listCabang: [],
     listPegawai: [],
     listSales: [],
+    listPresensi: [],
   },
   getters: {
     getListDivisi: state => state.listDivisi,
@@ -19,6 +20,7 @@ export default {
     getDetailPresensi: state => state.detailPresensi,
     getListPegawai: state => state.listPegawai,
     getListSales: state => state.listSales,
+    getListPresensi: state => state.listPresensi,
   },
   mutations: {
     SET_LIST_JABATAN_DIVISI_CABANG(state, data) {
@@ -30,6 +32,9 @@ export default {
       state.listPegawai = data
       state.listSales = state.listPegawai.filter(x => x.jabatan_id === 5)
     },
+    SET_LIST_PRESENSI(state, data) {
+      state.listPresensi = data
+    },
     SET_DETAIL_DATA(state, data) {
       const index = state.listPegawai.findIndex(x => x.id === data)
       state.detailData = state.listPegawai[index]
@@ -39,6 +44,10 @@ export default {
     },
     UPDATE_DATA_LIST_PEGAWAI(state, data) {
       state.listPegawai.push(data)
+    },
+    UPDATE_PRESENSI(state, data) {
+      const b = state.listPresensi.findIndex(x => x.id === data.id)
+      state.listPresensi[b].push(data)
     },
   },
   actions: {
@@ -94,10 +103,40 @@ export default {
           .catch(error => reject(error))
       })
     },
-    fetchListPresensi(ctx, data) {
+    fetchDetailPresensi(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
           .get(`${axios.defaults.baseURL}pegawai/presensi/${data.pegawai_id}/bulan/${data.bulan}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchListPresensi(ctx, date) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}presensi/${date}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    absenMasuk(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .put(`${axios.defaults.baseURL}presensi/store/masuk/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    absenKeluar(ctx, id) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}presensi/store/keluar/${id}`)
           .then(response => {
             resolve(response)
           })

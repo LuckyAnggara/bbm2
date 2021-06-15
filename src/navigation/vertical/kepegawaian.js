@@ -13,7 +13,7 @@ export default [
   },
   {
     title: 'Presensi / Absensi',
-    route: 'master-kontak',
+    route: 'master-presensi',
     icon: 'ShieldIcon',
     // acl: {
     action: 'read',

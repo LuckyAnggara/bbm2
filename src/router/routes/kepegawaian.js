@@ -48,4 +48,19 @@ export default [
       ],
     },
   },
+  {
+    path: '/kepegawaian/presensi/',
+    name: 'master-presensi',
+    component: () => import('@/views/kepegawaian/presensi/Daftar.vue'),
+    meta: {
+      resource: 'ACL',
+      pageTitle: 'Presensi Pegawai',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/kepegawaian/daftar/',
+        },
+      ],
+    },
+  },
 ]
