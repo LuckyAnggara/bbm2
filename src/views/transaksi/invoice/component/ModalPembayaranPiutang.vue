@@ -79,9 +79,6 @@ export default {
     },
   },
   methods: {
-    show(data) {
-      this.$emit('destroy', data)
-    },
     loadBank() {
       this.$store.dispatch('app-transaksi-penjualan/fetchDataBank', this.dataOrder).then(res => {
         this.bank = res.data
@@ -92,13 +89,24 @@ export default {
     },
     store() {
       this.$store.dispatch('app-transaksi-penjualan/storePiutang', this.piutang).then(res => {
-        console.info(res)
+        if (res.status === 200) {
+          this.$swal({
+            icon: 'success',
+            title: 'Berhasil!',
+            Text: 'Pembayaran telah ditambahkan',
+            customClass: {
+              confirmButton: 'btn btn-success',
+            },
+          })
+          this.$store.commit('app-transaksi-penjualan/UPDATE_PEMBAYARAN', res.data.nominal)
+        }
       })
     },
   },
   mounted() {
     this.loadBank()
   },
+
   setup(props) {
     const caraPembayaran = ref([
       { title: 'Tunai', value: '0' },

@@ -1,7 +1,7 @@
 <template>
   <section class="invoice-preview-wrapper">
     <!-- Alert: No item found -->
-    <b-alert variant="danger" :show="dataInvoice === undefined">
+    <b-alert variant="danger" v-if="dataInvoice === undefined ? true : false">
       <h4 class="alert-heading">
         Error fetching invoice data
       </h4>
@@ -14,7 +14,7 @@
       </div>
     </b-alert>
 
-    <b-row v-if="dataInvoice" class="invoice-preview">
+    <b-row v-if="dataInvoice === undefined ? false : true" class="invoice-preview">
       <!-- Col: Left (Invoice Container) -->
       <b-col cols="12" xl="9" md="9">
         <b-card no-body class="invoice-preview-card">
@@ -91,7 +91,6 @@
                   {{ dataInvoice.pelanggan.nomorTelepon }}
                 </p>
               </b-col>
-
               <!-- Col: Payment Details -->
               <b-col xl="6" cols="12" class="p-0 mt-xl-0 mt-2 d-flex justify-content-xl-end">
                 <div>
@@ -263,7 +262,7 @@
             Jurnal
           </b-button>
           <!-- Button:  Rincian Pembayaran -->
-          <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-secondary" class="mb-75" block>
+          <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-secondary" class="mb-75" block @click="showModalPembayaran()">
             Rincian Pembayaran
           </b-button>
           <div v-if="!typeRetur">
@@ -304,8 +303,10 @@
           </b-button>
         </b-card>
       </b-col>
+
+      <modal-pembayaran :data-piutang="dataInvoice" />
+      <modal-daftar-pembayaran :data-id="dataInvoice.id" />
     </b-row>
-    <modal-Pembayaran :data-piutang="dataInvoice" />
   </section>
 </template>
 
@@ -320,6 +321,7 @@ import Ripple from 'vue-ripple-directive'
 import store from '@/store'
 
 import ModalPembayaran from './component/ModalPembayaranPiutang.vue'
+import ModalDaftarPembayaran from './component/ModalDaftarPembayaran.vue'
 
 export default {
   directives: {
@@ -339,6 +341,7 @@ export default {
 
     Logo,
     ModalPembayaran,
+    ModalDaftarPembayaran,
   },
   data() {
     return {
@@ -497,12 +500,24 @@ export default {
     showModal() {
       this.$bvModal.show('modal-pembayaran-piutang')
     },
+    showModalPembayaran() {
+      this.$bvModal.show('modal-daftar-pembayaran')
+    },
+  },
+  mounted() {
+    const { id } = router.currentRoute.params
+    if (id !== undefined) {
+      store.dispatch('app-transaksi-penjualan/fetchTransaksi', id).then(res => {
+        if (res.status === 200) {
+          store.commit('app-transaksi-penjualan/SET_DATA_INVOICE', res.data)
+          this.dataInvoice = store.getters['app-transaksi-penjualan/getDataInvoice']
+        }
+      })
+    }
   },
   setup() {
-    if (router.currentRoute.params.id !== undefined) {
-      store.commit('app-transaksi-penjualan/SET_DATA_INVOICE_FROM_DAFTAR', router.currentRoute.params.id)
-    }
-    const dataInvoice = ref(store.getters['app-transaksi-penjualan/getDataInvoice'])
+    const dataInvoice = ref()
+
     return {
       dataInvoice,
     }

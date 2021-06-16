@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 15, 2021 at 10:43 AM
+-- Generation Time: Jun 16, 2021 at 11:01 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.15
 
@@ -179,10 +179,13 @@ CREATE TABLE `master_jurnal` (
 --
 
 INSERT INTO `master_jurnal` (`id`, `reff`, `nomor_jurnal`, `master_akun_id`, `nominal`, `jenis`, `keterangan`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '2106151', '2106151', '46', 100000, 'DEBIT', 'KAS MASUK PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:27', NULL),
-(2, '2106151', '2106151', '32', 100000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:27', NULL),
-(3, '2106151', '2106151', '44', 2000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:28', NULL),
-(4, '2106151', '2106151', '6', 2000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-14 20:36:27', '2021-06-15 08:36:28', NULL);
+(1, '2106161', '2106161', '51', 5000, 'DEBIT', 'TRANSFER DOWN PAYMENT PENJUALAN NOMOR TRANSAKSI #BBM-160621-1', 1, 1, '2021-06-15 20:42:02', '2021-06-16 08:42:02', NULL),
+(2, '2106161', '2106161', '5', 45000, 'DEBIT', 'PIUTANG PENJUALAN NOMOR TRANSAKSI #BBM-160621-1', 1, 1, '2021-06-15 20:42:02', '2021-06-16 08:42:02', NULL),
+(3, '2106161', '2106161', '32', 50000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-160621-1', 1, 1, '2021-06-15 20:42:02', '2021-06-16 08:42:02', NULL),
+(4, '2106161', '2106161', '44', 25000, 'DEBIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-160621-1', 1, 1, '2021-06-15 20:42:02', '2021-06-16 08:42:02', NULL),
+(5, '2106161', '2106161', '6', 25000, 'KREDIT', 'PENJUALAN NOMOR TRANSAKSI #BBM-160621-1', 1, 1, '2021-06-15 20:42:02', '2021-06-16 08:42:02', NULL),
+(6, '2106162', '2106162', '46', 10000, 'DEBIT', 'KAS MASUK PEMBAYARAN PIUTANG NOMOR TRANSAKSI BBM-160621-1', 1, 1, '2021-06-15 20:45:17', '2021-06-16 08:45:17', NULL),
+(7, '2106162', '2106162', '5', 10000, 'KREDIT', 'PEMBAYARAN PIUTANG NOMOR TRANSAKSI BBM-160621-1', 1, 1, '2021-06-15 20:45:17', '2021-06-16 08:45:17', NULL);
 
 -- --------------------------------------------------------
 
@@ -325,7 +328,7 @@ ALTER TABLE `master_beban`
 -- AUTO_INCREMENT for table `master_jurnal`
 --
 ALTER TABLE `master_jurnal`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -450,7 +453,8 @@ CREATE TABLE `detail_pembayaran` (
 --
 
 INSERT INTO `detail_pembayaran` (`id`, `penjualan_id`, `pembelian_id`, `nominal`, `cara_pembayaran`, `catatan`, `nomor_jurnal`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '1', NULL, 100000, 'TUNAI', 'LUNAS', '2106151', '1', '1', '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
+(1, '1', NULL, 5000, 'TRANSFER', 'PEMBAYARAN DOWN PAYMENT', '2106161', '1', '1', '2021-06-16 08:42:02', '2021-06-16 08:42:02', NULL),
+(2, '1', NULL, 10000, 'TUNAI', 'asdasdasd', '2106162', '1', '1', '2021-06-15 17:00:00', '2021-06-16 08:45:17', NULL);
 
 -- --------------------------------------------------------
 
@@ -495,7 +499,7 @@ CREATE TABLE `detail_penjualan` (
 --
 
 INSERT INTO `detail_penjualan` (`id`, `master_penjualan_id`, `kode_barang_id`, `jumlah`, `harga`, `diskon`, `total`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'S00001', 1, 100000, 0, 100000, '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
+(1, 1, 'X00008', 5, 10000, 0, 50000, '2021-06-16 08:42:02', '2021-06-16 08:42:02', NULL);
 
 -- --------------------------------------------------------
 
@@ -652,7 +656,8 @@ CREATE TABLE `kartu_persediaan` (
 --
 
 INSERT INTO `kartu_persediaan` (`id`, `nomor_transaksi`, `master_barang_id`, `jenis`, `jumlah`, `harga`, `catatan`, `user_id`, `cabang_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'BBM-150621-1', '1', 'KREDIT', 1, 2000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-150621-1', 1, 1, '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
+(1, 'BBM-160621-1', '8', 'KREDIT', 5, 5000, 'PENJUALAN BARANG NOMOR TRANSAKSI #BBM-160621-1', 1, 1, '2021-06-16 08:42:02', '2021-06-16 08:42:02', NULL),
+(3, 'BBM-160621-1', '8', 'DEBIT', 5, 5000, 'RETUR PENJUALAN BARANG NOMOR TRANSAKSI #BBM-160621-1', 1, 1, '2021-06-15 20:59:39', '2021-06-16 08:42:02', NULL);
 
 -- --------------------------------------------------------
 
@@ -995,7 +1000,7 @@ CREATE TABLE `master_penjualan` (
 --
 
 INSERT INTO `master_penjualan` (`id`, `nomor_transaksi`, `kontak_id`, `total`, `diskon`, `ongkir`, `pajak_keluaran`, `grand_total`, `metode_pembayaran`, `kredit`, `down_payment`, `sisa_pembayaran`, `cara_pembayaran`, `bank_id`, `tanggal_jatuh_tempo`, `retur`, `sales_id`, `catatan`, `user_id`, `cabang_id`, `nomor_jurnal`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'BBM-150621-1', '1', 100000, 0, 0, 0, 100000, 'Lunas', 0, 0, 0, 'Tunai', NULL, NULL, 'Tidak', '1', NULL, 1, 1, '2106151', '2021-06-15 08:36:27', '2021-06-15 08:36:27', NULL);
+(1, 'BBM-160621-1', '1', 50000, 0, 0, 0, 50000, 'Kredit', 1, 5000, 35000, 'Transfer', '1', '2021-06-16 00:00:00', 'Tidak', '1', NULL, 1, 1, '2106161', '2021-06-16 08:42:02', '2021-06-16 08:59:39', NULL);
 
 -- --------------------------------------------------------
 
@@ -1371,7 +1376,7 @@ ALTER TABLE `detail_opname`
 -- AUTO_INCREMENT for table `detail_pembayaran`
 --
 ALTER TABLE `detail_pembayaran`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `detail_pembelian`
@@ -1419,7 +1424,7 @@ ALTER TABLE `jenis_barang`
 -- AUTO_INCREMENT for table `kartu_persediaan`
 --
 ALTER TABLE `kartu_persediaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `master_bank`

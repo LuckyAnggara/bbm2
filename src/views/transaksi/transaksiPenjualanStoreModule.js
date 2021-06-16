@@ -72,8 +72,21 @@ export default {
       state.listPenjualan.splice(index, 1)
       state.listPenjualanRetur.push(dd, 1)
     },
+    // PEMBAYARAN
+    UPDATE_PEMBAYARAN(state, data) {
+      const a = state.activeDataInvoice.pembayaran.sisaPembayaran
+      state.activeDataInvoice.pembayaran.sisaPembayaran = parseFloat(a) - parseFloat(data)
+    },
   },
   actions: {
+    fetchTransaksi(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}penjualan/transaksi/${data}`)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
     addTransaksi(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
@@ -142,6 +155,14 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .post(`${axios.defaults.baseURL}pembayaran/store/piutang`, data)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
+    fetchListPembayaran(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}pembayaran/daftar/piutang/${data}`)
           .then(response => resolve(response))
           .catch(error => reject(error))
       })

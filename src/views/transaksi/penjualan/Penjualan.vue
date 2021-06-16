@@ -112,7 +112,7 @@ export default {
     this.load()
   },
   methods: {
-    success() {
+    success(data) {
       this.$swal({
         title: 'Success!',
         text: 'Transaksi Sukses!!',
@@ -124,6 +124,7 @@ export default {
       })
       this.$router.push({
         name: 'transaksi-penjualan-invoice',
+        params: { id: data.id },
       })
     },
     error(error) {
@@ -199,7 +200,7 @@ export default {
             if (router.currentRoute.params.nomor !== undefined) {
               store.commit('app-transaksi-penjualan/REMOVE_DRAFT_PENJUALAN', router.currentRoute.params.nomor)
             }
-            this.success()
+            this.success(res.data)
           } else {
             this.error()
           }

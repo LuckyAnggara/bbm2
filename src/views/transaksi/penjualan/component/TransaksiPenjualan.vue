@@ -127,25 +127,32 @@ export default {
             .then(x => {
               if (x.status === 200) {
                 store.commit('app-transaksi-penjualan/RETUR_DATA_PENJUALAN', id)
-                store.dispatch('app-keuangan/returJurnal', x.data).then(d => {
-                  if (d.status === 200) {
-                    this.$swal({
-                      icon: 'success',
-                      title: 'Transaksi sudah di Retur!',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  } else {
-                    this.$swal({
-                      icon: 'error',
-                      title: 'Oopps!! Kesalahan',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  }
+                this.$swal({
+                  icon: 'success',
+                  title: 'Transaksi sudah di Retur!',
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                  },
                 })
+                // store.dispatch('app-keuangan/returJurnal', x.data).then(d => {
+                //   if (d.status === 200) {
+                //     this.$swal({
+                //       icon: 'success',
+                //       title: 'Transaksi sudah di Retur!',
+                //       customClass: {
+                //         confirmButton: 'btn btn-success',
+                //       },
+                //     })
+                //   } else {
+                //     this.$swal({
+                //       icon: 'error',
+                //       title: 'Oopps!! Kesalahan',
+                //       customClass: {
+                //         confirmButton: 'btn btn-success',
+                //       },
+                //     })
+                //   }
+                // })
               } else {
                 this.$swal({
                   icon: 'error',

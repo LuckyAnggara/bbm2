@@ -71,7 +71,7 @@ export default [
     },
   },
   {
-    path: '/transaksi/invoice',
+    path: '/transaksi/invoice/:id',
     name: 'transaksi-penjualan-invoice',
     component: () => import('@/views/transaksi/invoice/InvoicePreviewPenjualan.vue'),
     meta: {
