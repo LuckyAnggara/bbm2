@@ -82,14 +82,16 @@
             </b-badge>
           </template>
           <template v-else>
-            <span :id="`transaksi-row-${data.item.id}-tooltip-saldo`">-{{ formatRupiah(data.item.pembayaran.sisaPembayaran) }}</span>
+            <b-badge pill variant="light-danger">
+              <span :id="`transaksi-row-${data.item.id}-tooltip-saldo`">-{{ formatRupiah(data.item.pembayaran.sisaPembayaran) }}</span>
+            </b-badge>
             <b-tooltip :target="`transaksi-row-${data.item.id}-tooltip-saldo`">
               <span v-if="data.item.pembayaran.statusPembayaran.value === 1">
                 Kredit
                 <br />
                 Jt. Tempo : {{ moment(data.item.pembayaran.tanggalJatuhTempo) }}
                 <br />
-                Total Tagihan : {{ data.item.pembayaran.sisaPembayaran }}
+                Total Tagihan : {{ formatRupiah(data.item.pembayaran.sisaPembayaran) }}
               </span>
             </b-tooltip>
           </template>

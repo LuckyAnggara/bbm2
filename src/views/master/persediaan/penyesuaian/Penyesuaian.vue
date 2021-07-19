@@ -5,6 +5,10 @@
         <b-card>
           <h5>Form Penyesuaian Persediaan</h5>
           <hr />
+          <b-form-group label="Gudang" label-for="ke" label-cols-md="4">
+            <v-select v-model="form.gudang" :options="listGudang" label="nama" :clearable="true" />
+          </b-form-group>
+
           <b-form-group label="Tipe Penyesuaian" label-for="tipe" label-cols-md="4">
             <v-select :clearable="false" v-model="form.tipe" placeholder="Tipe Penyesuaian" label="title" :options="tipePenyesuaian" />
           </b-form-group>
@@ -18,7 +22,7 @@
           </b-form-group>
 
           <b-form-group label="Tanggal Transaksi" label-for="tanggalTransaksi" label-cols-md="4">
-            <flat-pickr v-model="form.tanggalTransaksi.value" class="form-control" :config="form.tanggalTransaksi.config" placeholder="Tanggal Transaksi" />
+            <b-form-datepicker id="tanggalTransfer" v-model="form.tanggalTransaksi" />
           </b-form-group>
 
           <b-form-group label="Catatan" label-for="catatan" label-cols-md="4">
@@ -45,17 +49,16 @@ import router from '@/router'
 // import store from '@/store'
 import { ref } from '@vue/composition-api'
 
-import { BCard, BFormInput, BButton, BFormGroup, BRow, BCol, BFormTextarea } from 'bootstrap-vue'
+import { BCard, BFormInput, BButton, BFormGroup, BRow, BCol, BFormTextarea, BFormDatepicker } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 import Ripple from 'vue-ripple-directive'
-import flatPickr from 'vue-flatpickr-component'
 import DaftarPenyesuaian from '../component/DaftarPenyesuaian.vue'
 
 export default {
   components: {
     DaftarPenyesuaian,
+    BFormDatepicker,
     BFormTextarea,
-    flatPickr,
     BButton,
     vSelect,
     BFormInput,
@@ -78,17 +81,44 @@ export default {
       }
     },
     submit() {
-      if (this.form.tipe.value === 0) {
-        router.push({ name: 'master-persediaan-penyesuaian-perhitungan-stock', params: this.form })
+      const x = this.form
+      if (x.gudang === '' || x.gudang === null || x.tanggalTransaksi === '' || x.tanggalTransaksi === null || x.catatan === '' || x.catatan === null) {
+        this.$swal({
+          title: 'Error!',
+          text: 'Form belum di isi lengkap',
+          icon: 'error',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+          },
+          buttonsStyling: false,
+        })
       } else {
-        router.push({ name: 'master-persediaan-penyesuaian-masuk-keluar', params: this.form })
+        // eslint-disable-next-line
+        if (this.form.tipe.value === 0) {
+          router.push({ name: 'master-persediaan-penyesuaian-perhitungan-stock', params: this.form })
+        } else {
+          router.push({ name: 'master-persediaan-penyesuaian-masuk-keluar', params: this.form })
+        }
       }
+    },
+    // eslint-enable-next-line
+    loadGudang() {
+      const user = JSON.parse(localStorage.getItem('userData'))
+      const cabang = user.cabang_id
+      this.$store
+        .dispatch('app-persediaan/fetchListGudang', {
+          cabang,
+        })
+        .then(res => {
+          this.$store.commit('app-persediaan/SET_LIST_GUDANG', res.data)
+          this.listGudang = this.$store.getters['app-persediaan/getListGudang']
+        })
     },
     loadDataPenyesuaian() {
       const user = JSON.parse(localStorage.getItem('userData'))
       this.$store
         .dispatch('app-persediaan/fetcListDataPenyesuaian', {
-          cabang: user.cabang.id,
+          cabang: user.cabang_id,
         })
         .then(res => {
           this.$store.commit('app-persediaan/SET_LIST_DATA_PENYESUAIAN', res.data)
@@ -98,16 +128,19 @@ export default {
     },
   },
   mounted() {
+    this.loadGudang()
     this.loadDataPenyesuaian()
   },
   setup() {
     const dataPenyesuaian = ref([])
     const dataTemp = ref([])
+    const listGudang = ref([])
     const form = ref({
       tipe: {
         title: 'Perhitungan Stok',
         value: 0,
       },
+      gudang: {},
       catatan: '',
       kategori: {
         title: 'Umum',
@@ -117,15 +150,7 @@ export default {
           text: '1.1.5 - PERSEDIAAN DAGANG',
         },
       },
-      tanggalTransaksi: {
-        value: Date.now(),
-        config: {
-          wrap: true, // set wrap to true only when using 'input-group'
-          altFormat: 'd F Y',
-          altInput: true,
-          dateFormat: 'Y-m-d',
-        },
-      },
+      tanggalTransaksi: '',
     })
 
     const kategori = [
@@ -173,6 +198,7 @@ export default {
       },
     ]
     return {
+      listGudang,
       dataTemp,
       dataPenyesuaian,
       form,

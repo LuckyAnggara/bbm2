@@ -50,8 +50,8 @@ export default {
     },
     // LABA RUGI
     SET_LABA(state, data) {
-      state.dataPendapatan = data.pendapatan.filter(x => x.saldo !== 0)
-      state.dataBeban = data.beban.filter(x => x.saldo !== 0)
+      state.dataPendapatan = data.pendapatan.filter(x => x.saldo !== 1)
+      state.dataBeban = data.beban.filter(x => x.saldo !== 1)
     },
     // BEBAN
     SET_DATA_BEBAN_OPERASIONAL(state, data) {

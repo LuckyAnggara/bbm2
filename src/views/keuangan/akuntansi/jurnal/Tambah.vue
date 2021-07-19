@@ -272,35 +272,49 @@ export default {
     proses() {
       const user = JSON.parse(localStorage.getItem('userData'))
       if (this.cekValidasi()) {
-        const loader = this.$loading.show({
-          container: this.$refs.formContainer,
+        this.$swal({
+          title: 'Proses ?',
+          text: 'Data akan di proses',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Proses !!',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-outline-danger ml-1',
+          },
+          buttonsStyling: false,
+        }).then(result => {
+          if (result.value) {
+            const loader = this.$loading.show({
+              container: this.$refs.formContainer,
 
-          // Optional parameters
-        })
-        const output = {
-          catatan: this.catatan,
-          tanggalTransaksi: this.$moment(this.tanggalTransaksi.value),
-          jurnal: this.dataJurnal,
-          user_id: user.id,
-          cabang_id: user.cabang.id,
-        }
-        store.dispatch('app-keuangan/storeJurnal', output).then(res => {
-          loader.hide()
-          if (res.status === 200) {
-            store.commit('app-keuangan/UPDATE_LIST_JURNAL', res.data)
-            this.success()
-            this.$router.push({
-              name: 'akuntansi-jurnal-daftar',
+              // Optional parameters
             })
-          } else {
-            this.error()
+            const output = {
+              catatan: this.catatan,
+              tanggalTransaksi: this.$moment(this.tanggalTransaksi.value),
+              jurnal: this.dataJurnal,
+              user_id: user.id,
+              cabang_id: user.cabang_id,
+            }
+            store.dispatch('app-keuangan/storeJurnal', output).then(res => {
+              loader.hide()
+              if (res.status === 200) {
+                store.commit('app-keuangan/UPDATE_LIST_JURNAL', res.data)
+                this.success()
+                this.$router.push({
+                  name: 'akuntansi-jurnal-daftar',
+                })
+              } else {
+                this.error()
+              }
+            })
           }
         })
       }
       return false
     },
     remove(x) {
-      console.info(x)
       this.dataJurnal.splice(x, 1)
       this.total()
     },
@@ -314,6 +328,11 @@ export default {
       data.forEach(x => {
         x.subheader.forEach(y => {
           this.dataAkun.push(y)
+          if (y.komponen.length !== 0) {
+            y.komponen.forEach(a => {
+              this.dataAkun.push(a)
+            })
+          }
         })
       })
       return this.dataAkun

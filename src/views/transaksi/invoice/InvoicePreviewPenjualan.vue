@@ -25,9 +25,7 @@
               <div>
                 <div class="logo-wrapper">
                   <logo />
-                  <h3 class="text-primary invoice-logo">
-                    PT. Berkah Baja Makmur
-                  </h3>
+                  <h3 class="text-primary invoice-logo">PT. Berkah Baja Makmur</h3>
                 </div>
                 <p class="card-text mb-25">
                   Jl. Raya Limbangan Nomor xx Garut, Jawa Barat
@@ -35,6 +33,7 @@
                 <p class="card-text mb-25">
                   Nomor Telepon : 08211xxxx Fax : xxxxx Email : asdasd@gmail.com
                 </p>
+                <h3 v-if="typeRetur" class="text-danger">STATUS RETUR</h3>
               </div>
 
               <!-- Header: Right Content -->
@@ -105,6 +104,14 @@
                         </td>
                         <td>
                           <span class="font-weight-bold"> {{ formatRupiah(dataInvoice.invoice.grandTotal) }}</span>
+                        </td>
+                      </tr>
+                      <tr v-show="dataInvoice.pembayaran.downPayment > 0 ? true : false">
+                        <td class="pr-1">
+                          Down Payment:
+                        </td>
+                        <td>
+                          <span class="font-weight-bold"> {{ formatRupiah(dataInvoice.pembayaran.downPayment) }}</span>
                         </td>
                       </tr>
                       <tr v-show="dataInvoice.pembayaran.statusPembayaran.value === '1' ? false : true">
@@ -232,7 +239,12 @@
 
           <!-- Note -->
           <b-card-body class="invoice-padding pt-0">
-            <span class="font-weight-bold">Note: </span>
+            <span class="font-weight-bold"
+              ><u>
+                <b>Note:</b>
+              </u>
+              <br />{{ dataInvoice.catatan }}
+            </span>
             <span>..</span>
           </b-card-body>
         </b-card>
@@ -242,7 +254,7 @@
       <b-col cols="12" md="3" xl="3" class="invoice-actions">
         <b-card>
           <!-- Button: Send Invoice -->
-          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" v-b-toggle.sidebar-send-invoice variant="primary" class="mb-75" block>
+          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block>
             Print Invoice
           </b-button>
 
@@ -268,12 +280,12 @@
           <div v-if="!typeRetur">
             <hr />
             <!-- Button: Retur -->
-            <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-danger" class="mb-75" block @click="retur(dataInvoice.id)">
+            <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-danger" class="mb-75" block @click="retur(dataInvoice)">
               Retur
             </b-button>
 
             <!-- Button: Retur -->
-            <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-danger" class="mb-75" block @click="destroy(dataInvoice.id)">
+            <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-danger" class="mb-75" block @click="destroy(dataInvoice)">
               Delete
             </b-button>
 
@@ -293,6 +305,7 @@
           <!-- Button: Add Payment -->
           <b-button
             v-show="dataInvoice.pembayaran.sisaPembayaran === 0 ? false : true"
+            v-if="!typeRetur"
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="success"
             class="mb-75"
@@ -390,7 +403,7 @@ export default {
     },
     printInvoice() {},
     retur(data) {
-      const { id } = data.item
+      const { id } = data
       this.$swal({
         title: 'Retur data ?',
         text: 'Data transaksi penjualan akan di retur',
@@ -411,24 +424,12 @@ export default {
             .then(x => {
               if (x.status === 200) {
                 store.commit('app-transaksi-penjualan/RETUR_DATA_PENJUALAN', id)
-                store.dispatch('app-keuangan/returJurnal', x.data).then(d => {
-                  if (d.status === 200) {
-                    this.$swal({
-                      icon: 'success',
-                      title: 'Transaksi sudah di Retur!',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  } else {
-                    this.$swal({
-                      icon: 'error',
-                      title: 'Oopps!! Kesalahan',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  }
+                this.$swal({
+                  icon: 'success',
+                  title: 'Transaksi sudah di Retur!',
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                  },
                 })
               } else {
                 this.$swal({
@@ -444,7 +445,7 @@ export default {
       })
     },
     destroy(data) {
-      const { id } = data.item
+      const { id } = data
       this.$swal({
         title: 'Delete data ?',
         text: 'Data penjualan akan di hapus',
@@ -465,24 +466,15 @@ export default {
             .then(x => {
               if (x.status === 200) {
                 store.commit('app-transaksi-penjualan/REMOVE_DATA_PENJUALAN', id)
-                store.dispatch('app-keuangan/removeJurnal', x).then(d => {
-                  if (d.status === 200) {
-                    this.$swal({
-                      icon: 'success',
-                      title: 'Deleted!',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  } else {
-                    this.$swal({
-                      icon: 'error',
-                      title: 'Oopps!! Kesalahan',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  }
+                this.$swal({
+                  icon: 'success',
+                  title: 'Transaksi berhasil di Delete!',
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                  },
+                })
+                router.push({
+                  name: 'transaksi-penjualan-daftar',
                 })
               } else {
                 this.$swal({

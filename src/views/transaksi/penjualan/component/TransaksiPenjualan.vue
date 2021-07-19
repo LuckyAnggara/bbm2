@@ -134,25 +134,6 @@ export default {
                     confirmButton: 'btn btn-success',
                   },
                 })
-                // store.dispatch('app-keuangan/returJurnal', x.data).then(d => {
-                //   if (d.status === 200) {
-                //     this.$swal({
-                //       icon: 'success',
-                //       title: 'Transaksi sudah di Retur!',
-                //       customClass: {
-                //         confirmButton: 'btn btn-success',
-                //       },
-                //     })
-                //   } else {
-                //     this.$swal({
-                //       icon: 'error',
-                //       title: 'Oopps!! Kesalahan',
-                //       customClass: {
-                //         confirmButton: 'btn btn-success',
-                //       },
-                //     })
-                //   }
-                // })
               } else {
                 this.$swal({
                   icon: 'error',
@@ -188,24 +169,12 @@ export default {
             .then(x => {
               if (x.status === 200) {
                 store.commit('app-transaksi-penjualan/REMOVE_DATA_PENJUALAN', id)
-                store.dispatch('app-keuangan/removeJurnal', x).then(d => {
-                  if (d.status === 200) {
-                    this.$swal({
-                      icon: 'success',
-                      title: 'Deleted!',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  } else {
-                    this.$swal({
-                      icon: 'error',
-                      title: 'Oopps!! Kesalahan',
-                      customClass: {
-                        confirmButton: 'btn btn-success',
-                      },
-                    })
-                  }
+                this.$swal({
+                  icon: 'success',
+                  title: 'Transaksi berhasil di Delete!',
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                  },
                 })
               } else {
                 this.$swal({

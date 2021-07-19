@@ -1,7 +1,7 @@
 <template>
   <b-row>
     <b-col cols="12" md="9" xl="9">
-      <b-card>
+      <b-card :title="gudang ? `Persediaan Gudang  ${gudang.nama}` : `Gudang belum di pilih`">
         <div class="mb-2">
           <!-- Table Top -->
           <b-row>
@@ -56,6 +56,11 @@
               {{ data.item.persediaan.saldo ? data.item.persediaan.saldo : '-' }}
             </span>
           </template>
+          <template #cell(saldo_rp)="data">
+            <span>
+              {{ data.item.persediaan.saldo_rp ? formatRupiah(data.item.persediaan.saldo_rp) : '-' }}
+            </span>
+          </template>
           <!-- Column: Actions -->
           <template #cell(actions)="data">
             <div class="text-nowrap">
@@ -66,7 +71,7 @@
                 @click="
                   $router.push({
                     name: 'master-persediaan-detail',
-                    params: { id: data.item.id },
+                    params: { item: data.item, gudang_id: data.item.persediaan.gudang_id },
                   })
                 "
               />
@@ -105,14 +110,24 @@
     <b-col cols="12" md="3" xl="3">
       <b-card>
         <!-- Button: Download -->
+        <b-form-group label="Gudang" label-for="gudang">
+          <v-select v-model="gudang" :options="listGudang" label="nama" :clearable="false" />
+        </b-form-group>
+        <b-form-group label="alamat" label-for="gudang">
+          <b-form-textarea v-model="gudang.alamat" type="text" readonly />
+        </b-form-group>
+
+        <b-form-group label="Kode Akun" label-for="gudang">
+          <b-form-input v-model="gudang.kode_akun" readonly />
+        </b-form-group>
+      </b-card>
+
+      <b-card v-if="gudang">
+        <!-- Button: Download -->
         <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block>
           Download Data
         </b-button>
 
-        <!-- Button: Print -->
-        <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-secondary" class="mb-75" block>
-          Print Data
-        </b-button>
         <hr />
 
         <!-- Button: Penyesuaian Stok -->
@@ -121,7 +136,7 @@
         </b-button>
 
         <!-- Button: Transafer Gudang -->
-        <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="outline-secondary" class="mb-75" block>
+        <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="outline-secondary" class="mb-75" block :to="{ name: 'master-persediaan-transfer' }">
           Transfer Gudang
         </b-button>
       </b-card>
@@ -132,12 +147,14 @@
 <script>
 import { ref } from '@vue/composition-api'
 import {
+  BFormGroup,
   BButton,
   BRow,
   BCol,
   BTable,
   BPagination,
   BFormInput,
+  BFormTextarea,
   // BButton,
   BCard,
 } from 'bootstrap-vue'
@@ -149,12 +166,14 @@ import vSelect from 'vue-select'
 
 export default {
   components: {
+    BFormGroup,
     BButton,
     BRow,
     BCol,
     BTable,
     BPagination,
     BFormInput,
+    BFormTextarea,
     // BButton,
     BCard,
     vSelect,
@@ -174,14 +193,23 @@ export default {
           mode: 'range',
         },
       },
+      gudang: '',
       filterQuery: '',
       searchQuery: '',
       refTable: null,
       dataPersediaan: [],
-      totalData: 0,
+      listGudang: [],
     }
   },
+  watch: {
+    gudang(x) {
+      this.loadData(x)
+    },
+  },
   computed: {
+    totalData() {
+      return this.dataPersediaan.length
+    },
     dataMeta() {
       const localItemsCount = this.$refs.refTable ? this.$refs.refTable.computedItems.length : 0
       return {
@@ -192,19 +220,41 @@ export default {
     },
   },
   mounted() {
-    this.loadData()
+    this.loadGudang()
+    // this.loadData()
   },
-
   methods: {
-    loadData() {
-      store.dispatch('app-persediaan/fetchListPersediaan').then(res => {
-        store.commit('app-persediaan/SET_LIST_PERSEDIAAN', res.data)
-
-        this.dataPersediaan = store.getters['app-persediaan/getListPersediaan'].filter(
-          x => x.persediaan.saldo !== 0 || x.persediaan.saldo_masuk !== 0 || x.persediaan.saldo_keluar !== 0,
-        )
-        this.totalData = this.dataPersediaan.length
-      })
+    loadGudang() {
+      const user = JSON.parse(localStorage.getItem('userData'))
+      const cabang = user.cabang_id
+      store
+        .dispatch('app-persediaan/fetchListGudang', {
+          cabang,
+        })
+        .then(res => {
+          store.commit('app-persediaan/SET_LIST_GUDANG', res.data)
+          this.listGudang = store.getters['app-persediaan/getListGudang']
+          this.gudang = this.listGudang.find(x => x.utama === 1)
+        })
+    },
+    loadData(data) {
+      const user = JSON.parse(localStorage.getItem('userData'))
+      const cabang = user.cabang_id
+      const gudang = data.id
+      store
+        .dispatch('app-persediaan/fetchListPersediaan', {
+          cabang,
+          gudang,
+        })
+        .then(res => {
+          store.commit('app-persediaan/SET_LIST_PERSEDIAAN', res.data)
+          this.dataPersediaan = store.getters['app-persediaan/getListPersediaan'].filter(
+            x => x.persediaan.saldo !== 0 || x.persediaan.saldo_masuk !== 0 || x.persediaan.saldo_keluar !== 0,
+          )
+        })
+    },
+    formatRupiah(value) {
+      return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
   },
   setup() {
@@ -214,7 +264,8 @@ export default {
       { label: 'Nama Barang', key: 'nama', sortable: true },
       { label: 'debit', key: 'debit', sortable: true },
       { label: 'kredit', key: 'kredit', sortable: true },
-      { label: 'saldo', key: 'saldo', sortable: true },
+      { label: 'saldo (qty)', key: 'saldo', sortable: true },
+      { label: 'saldo (Rp.)', key: 'saldo_rp', sortable: true },
       { label: 'actions', key: 'actions', sortable: true },
     ]
     const perPage = ref(10)

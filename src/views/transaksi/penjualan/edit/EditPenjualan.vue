@@ -128,8 +128,8 @@ export default {
     },
     formSubmitted() {
       this.$swal({
-        title: 'Retur data ?',
-        text: 'Data transaksi penjualan akan di retur',
+        title: 'Ubah data Transaksi ?',
+        text: 'Data transaksi penjualan akan di ubah',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Ya!',

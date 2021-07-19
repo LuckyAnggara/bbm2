@@ -152,8 +152,19 @@
       <b-row v-show="dataOrder.pembayaran.kredit">
         <b-col cols="12" md="8">
           <b-form-group label="Down Payment" label-for="down-payment" label-cols-md="4">
-            <b-form-input id="down-payment" v-model="dataOrder.pembayaran.downPayment" type="number" @change="dpOnChange($event)" />
+            <b-form-input
+              id="down-payment"
+              v-model="dataOrder.pembayaran.downPayment"
+              :max="dataOrder.invoice.grandTotal"
+              type="number"
+              @change="dpOnChange($event)"
+            />
           </b-form-group>
+        </b-col>
+        <b-col md="4">
+          <label class="mt-1"
+            >Maksimal DP Rp. <b>{{ formatRupiah(dataOrder.invoice.grandTotal) }}</b></label
+          >
         </b-col>
       </b-row>
 

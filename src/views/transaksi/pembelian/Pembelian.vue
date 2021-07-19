@@ -100,7 +100,7 @@ export default {
       })
 
       this.$router.push({
-        name: 'transaksi-pembelian-invoice',
+        name: 'transaksi-pembelian-daftar',
       })
     },
     error(error) {
@@ -117,7 +117,18 @@ export default {
     errorNomor() {
       this.$swal({
         title: 'Error!',
-        text: 'Nomor Transaksi masih kosong!!!',
+        text: 'Nomor transaksi masih kosong!!!',
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+        },
+        buttonsStyling: false,
+      })
+    },
+    errorTanggal() {
+      this.$swal({
+        title: 'Error!',
+        text: 'Tanggal transaksi masih kosong!!!',
         icon: 'error',
         customClass: {
           confirmButton: 'btn btn-primary',
@@ -169,6 +180,8 @@ export default {
     store() {
       if (this.dataOrder.nomorTransaksi === '' || this.dataOrder.nomorTransaksi === null) {
         this.errorNomor()
+      } else if (this.dataOrder.tanggalTransaksi === '' || this.dataOrder.tanggalTransaksi === null) {
+        this.errorTanggal()
       } else {
         const loader = this.$loading.show({
           // Optional parameters

@@ -25,7 +25,7 @@
         <!-- Column: DEBIT KREDIT SALDO-->
         <template #cell(saldo)="data">
           <p v-if="data.item.align !== 1">
-            {{ formatRupiah(data.item.saldo) }}
+            <span :class="warna(data.item.saldo_normal)">{{ formatRupiah(data.item.saldo) }}</span>
           </p>
           <p v-if="data.item.align === 1" class="font-weight-bold text-right">
             {{ formatRupiah(data.item.saldo) }}
@@ -62,6 +62,12 @@ export default {
     },
   },
   methods: {
+    warna(value) {
+      if (value === 'KREDIT') {
+        return ''
+      }
+      return 'text-danger'
+    },
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },

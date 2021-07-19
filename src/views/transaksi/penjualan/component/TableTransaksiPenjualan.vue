@@ -91,7 +91,9 @@
             </b-badge>
           </template>
           <template v-else>
-            <span class="text-danger" :id="`transaksi-row-${data.item.id}-tooltip-saldo`">-{{ formatRupiah(data.item.pembayaran.sisaPembayaran) }}</span>
+            <b-badge pill variant="light-danger">
+              <span class="text-danger" :id="`transaksi-row-${data.item.id}-tooltip-saldo`">-{{ formatRupiah(data.item.pembayaran.sisaPembayaran) }}</span>
+            </b-badge>
             <b-tooltip :target="`transaksi-row-${data.item.id}-tooltip-saldo`">
               <span v-if="data.item.pembayaran.statusPembayaran.value === 1">
                 Kredit
@@ -113,14 +115,14 @@
       <!-- Column: Maker -->
       <template #cell(sales)="data">
         <span>
-          {{ data.item.sales == null ? '' : data.item.sales.nama_lengkap }}
+          {{ data.item.sales == null ? '' : data.item.sales.nama }}
         </span>
       </template>
 
       <!-- Column: Maker -->
       <template #cell(maker)="data">
         <span>
-          {{ data.item.user.nama_lengkap }}
+          {{ data.item.user.nama }}
         </span>
       </template>
 
@@ -149,10 +151,10 @@
               <feather-icon icon="CastIcon" />
               <span class="align-middle ml-50">Print Invoice</span>
             </b-dropdown-item>
-            <b-dropdown-item>
+            <!-- <b-dropdown-item>
               <feather-icon icon="ActivityIcon" />
-              <span class="align-middle ml-50">Timeline</span>
-            </b-dropdown-item>
+              <span class="align-middle ml-50">Rincian Pembayaran</span>
+            </b-dropdown-item> -->
             <b-dropdown-item :to="{ name: 'akuntansi-jurnal-detail', params: { id: data.item.nomorJurnal } }">
               <feather-icon icon="BookIcon" />
               <span class="align-middle ml-50">Jurnal</span>
@@ -166,7 +168,7 @@
               <feather-icon icon="CornerUpLeftIcon" />
               <span class="align-middle ml-50">Retur</span>
             </b-dropdown-item>
-            <b-dropdown-item @click="destroy(data)">
+            <b-dropdown-item @click="destroy(data)" v-if="!typeRetur">
               <feather-icon icon="TrashIcon" />
               <span class="align-middle ml-50">Delete</span>
             </b-dropdown-item>

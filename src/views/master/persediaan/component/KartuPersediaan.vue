@@ -119,7 +119,7 @@ export default {
   },
   props: {
     dataPersediaan: Array,
-    id: String,
+    id: Number,
   },
   data() {
     return {

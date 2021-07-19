@@ -20,7 +20,7 @@
         <b-col lg="6" cols="12">
           <b-card title="Total Laba Berjalan" :footer="footerTitle" class="text-center" footer-class="text-muted">
             <b-card-text>
-              <h3 :class="labaRugiClass">{{ formatRupiah(labaRugi) }}</h3>
+              <h1 :class="labaRugiClass">{{ formatRupiah(labaRugi) }}</h1>
             </b-card-text>
           </b-card>
         </b-col>

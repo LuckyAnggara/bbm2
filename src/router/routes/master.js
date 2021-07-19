@@ -111,6 +111,68 @@ export default [
     },
   },
   {
+    path: '/master/persediaan/transfer',
+    name: 'master-persediaan-transfer',
+    component: () => import('@/views/master/persediaan/transfer/TransferPersediaan.vue'),
+    meta: {
+      pageTitle: 'Transfer Persediaan',
+      breadcrumb: [
+        {
+          text: 'Persediaan',
+          to: '/master/persediaan/',
+        },
+        {
+          text: 'Transfer',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/master/persediaan/transfer/lanjut',
+    name: 'master-persediaan-transfer-lanjut',
+    component: () => import('@/views/master/persediaan/transfer/TransferPersediaanLanjut.vue'),
+    meta: {
+      pageTitle: 'Transfer Persediaan Lanjut',
+      breadcrumb: [
+        {
+          text: 'Persediaan',
+          to: '/master/persediaan/',
+        },
+        {
+          text: 'Transfer',
+          to: '/master/persediaan/transfer',
+        },
+        {
+          text: 'Lanjut',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/master/persediaan/transfer/detail/:id',
+    name: 'master-persediaan-transfer-detail',
+    component: () => import('@/views/master/persediaan/transfer/DetailTransferPersediaan.vue'),
+    meta: {
+      pageTitle: 'Detail Transfer Persediaan',
+      breadcrumb: [
+        {
+          text: 'Persediaan',
+          to: '/master/persediaan/',
+        },
+        {
+          text: 'Transfer',
+          to: '/master/persediaan/transfer',
+        },
+        {
+          text: 'Detail',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/master/persediaan/penyesuaian',
     name: 'master-persediaan-tambah',
     component: () => import('@/views/master/persediaan/penyesuaian/Penyesuaian.vue'),
@@ -190,7 +252,6 @@ export default [
       ],
     },
   },
-
   {
     path: '/master/persediaan/penyesuaian/detail/:id',
     name: 'master-persediaan-penyesuaian-detail',

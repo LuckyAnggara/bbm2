@@ -7,13 +7,8 @@
         <b-col cols="12" md="6" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
           <label>Data</label>
           <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class="per-page-selector d-inline-block ml-50 mr-1" />
-          <label>Tipe</label>
-          <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class="per-page-selector d-inline-block ml-50 mr-1" />
-          <label>Kategori</label>
-          <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class="per-page-selector d-inline-block ml-50 mr-1" />
         </b-col>
 
-        <!-- Search -->
         <b-col cols="12" md="6">
           <div class="d-flex align-items-center justify-content-end">
             <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Kode Barang, Nama Barang)" />
@@ -29,7 +24,7 @@
       show-empty
       empty-text="Tidak ada data"
       class="position-relative"
-      :items="dataPenyesuaian"
+      :items="dataTransfer"
       :fields="tableColumns"
       :current-page="currentPage"
       :per-page="perPage"
@@ -42,24 +37,27 @@
         </span>
       </template>
 
+      <template #cell(dari)="data">
+        <span>
+          {{ data.item.dari.nama }}
+        </span>
+      </template>
+
+      <template #cell(ke)="data">
+        <span>
+          {{ data.item.ke.nama }}
+        </span>
+      </template>
+
+      <template #cell(nominal)="data">
+        <span>
+          {{ formatRupiah(data.item.nominal) }}
+        </span>
+      </template>
       <!-- Column: tanggal -->
       <template #cell(tanggal)="data">
         <span>
           {{ moment(data.item.created_at) }}
-        </span>
-      </template>
-
-      <!-- Column: Tipe -->
-      <template #cell(tipe)="data">
-        <span>
-          {{ data.tipe === 0 ? 'Perhitungan Stok' : 'Stok Masuk / Keluar' }}
-        </span>
-      </template>
-
-      <!-- Column: Kategori -->
-      <template #cell(kategori)="data">
-        <span>
-          {{ kategori(data.item.ketegori) }}
         </span>
       </template>
 
@@ -72,7 +70,7 @@
             class="mx-1"
             @click="
               $router.push({
-                name: 'master-persediaan-penyesuaian-detail',
+                name: 'master-persediaan-transfer-detail',
                 params: { id: data.item.id },
               })
             "
@@ -148,7 +146,7 @@ export default {
     Ripple,
   },
   props: {
-    dataPenyesuaian: Array,
+    dataTransfer: Array,
   },
   data() {
     return {
@@ -161,20 +159,69 @@ export default {
     },
   },
   methods: {
+    formatRupiah(value) {
+      return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
+    },
     moment(value) {
       return this.$moment(value).format('DD MMMM YYYY')
     },
-    kategori(val) {
-      if (val === 0) {
-        return 'UMUM'
-      }
-      if (val === 1) {
-        return 'BARANG RUSAK'
-      }
-      if (val === 2) {
-        return 'PRODUKSI'
-      }
-      return 'KUANTITAS AWAL'
+    success() {
+      this.$swal({
+        title: 'Success!',
+        text: 'Transaksi Sukses!!',
+        icon: 'success',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+        },
+        buttonsStyling: false,
+      })
+      // this.$router.push({
+      //   name: 'master-persediaan-transfer',
+      // })
+    },
+    error() {
+      this.$swal({
+        title: 'Error!',
+        text: 'Delete data transfer tidak dapat di proses',
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+        },
+        buttonsStyling: false,
+      })
+    },
+    destroy(id) {
+      this.$swal({
+        title: 'Delete ?',
+        text: 'Data akan di di delete',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Delete !!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+      }).then(result => {
+        if (result.value) {
+          const loader = this.$loading.show({
+            container: this.$refs.formContainer,
+          })
+          this.$store
+            .dispatch('app-persediaan/destroyTransferPersediaan', {
+              id,
+            })
+            .then(res => {
+              if (res.status === 200) {
+                this.$store.commit('app-persediaan/DELETE_LIST_DATA_TRANSFER', id)
+                this.success()
+              } else {
+                this.error()
+              }
+              loader.hide()
+            })
+        }
+      })
     },
   },
   computed: {
@@ -187,16 +234,17 @@ export default {
       }
     },
     totalData() {
-      return this.dataPenyesuaian.length
+      return this.dataTransfer.length
     },
   },
   setup() {
     const tableColumns = [
       { key: 'no', sortable: false },
-      { key: 'nomor_opname', sortable: false },
+      { key: 'nomor_transfer', sortable: false },
       { key: 'tanggal', sortable: false },
-      { key: 'tipe', sortable: false },
-      { key: 'kategori', sortable: false },
+      { key: 'dari', sortable: false },
+      { key: 'ke', sortable: false },
+      { key: 'nominal', sortable: false },
       { key: 'catatan', sortable: false },
       { key: 'action', sortable: false },
     ]
