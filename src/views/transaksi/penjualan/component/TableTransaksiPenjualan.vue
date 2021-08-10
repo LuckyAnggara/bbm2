@@ -115,7 +115,7 @@
       <!-- Column: Maker -->
       <template #cell(sales)="data">
         <span>
-          {{ data.item.sales == null ? '' : data.item.sales.nama }}
+          {{ data.item.sales === null ? '-' : data.item.sales.nama }}
         </span>
       </template>
 

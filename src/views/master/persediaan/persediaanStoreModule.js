@@ -59,7 +59,6 @@ export default {
       })
     },
     fetchKartuPersediaan(ctx, params) {
-      console.info(params)
       return new Promise((resolve, reject) => {
         axios
           .get(`${axios.defaults.baseURL}persediaan/${params.item.id}/gudang/${params.gudang_id}`)

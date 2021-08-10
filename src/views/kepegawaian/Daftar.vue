@@ -238,6 +238,7 @@ export default {
   },
   mounted() {
     this.loadpegawai()
+    console.info(this.$router.currentRoute)
   },
   setup() {
     const tableColumns = [

@@ -10,14 +10,24 @@
             <!-- Table Top -->
             <b-row>
               <!-- Per Page -->
-              <b-col cols="12" md="6" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
-                <b-form-group label="Tanggal" label-cols-md="4">
-                  <flat-pickr v-model="filter.date" class="form-control" :config="filter.config" />
-                </b-form-group>
+
+              <b-col cols="12" md="9" class=" justify-content-start mb-1 mb-md-0">
+                <b-row>
+                  <b-col cols="12" md="6">
+                    <b-form-group label="Tanggal" label-cols-md="3">
+                      <b-form-datepicker v-model="tanggal" locale="id" />
+                    </b-form-group>
+                  </b-col>
+                  <b-col cols="12" md="6">
+                    <b-button variant="primary" @click="pilihModal">
+                      Tambah Data
+                    </b-button>
+                  </b-col>
+                </b-row>
               </b-col>
 
               <!-- Search -->
-              <b-col cols="12" md="6">
+              <b-col cols="12" md="3">
                 <div class="d-flex align-items-center justify-content-end">
                   <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Nama Pegawai)" />
                 </div>
@@ -48,14 +58,14 @@
             <!-- Column: Jam Masuk -->
             <template #cell(jam_masuk)="data">
               <span>
-                {{ data.item.jam_masuk !== null ? $moment(data.item.jam_masuk).format('LT') : '-' }}
+                {{ data.item.jam_masuk !== null ? data.item.jam_masuk : '-' }}
               </span>
             </template>
 
             <!-- Column: Jam Keluar -->
             <template #cell(jam_keluar)="data">
               <span>
-                {{ data.item.jam_keluar !== null ? $moment(data.item.jam_keluar).format('LT') : '-' }}
+                {{ data.item.jam_keluar !== null ? data.item.jam_keluar : '-' }}
               </span>
             </template>
 
@@ -67,7 +77,7 @@
                     <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
                   </template>
 
-                  <b-dropdown-item @click="showModal(data.item.pegawai_id, 'MASUK')">
+                  <b-dropdown-item @click="showModal(data.item.id, 'MASUK')">
                     <feather-icon icon="TrashIcon" />
                     <span class="align-middle ml-50">Absen Masuk</span>
                   </b-dropdown-item>
@@ -123,7 +133,29 @@
         Absen di lakukan manual. <br />
         silahkan Pilih Jam Absen
       </b-card-text>
-      <flat-pickr v-model="timePicker" class="form-control" :config="config" />
+      <hr />
+      <b-form-group label="Tanggal" label-cols-md="4">
+        <b-form-datepicker v-model="tanggal" locale="id" disabled />
+      </b-form-group>
+      <b-form-group label="Jam Keluar" label-for="tanggal" label-cols-md="4">
+        <b-form-timepicker v-model="timePicker" locale="id" />
+        <small class="text-danger">Jam Keluar adalah jam 16:00 </small>
+      </b-form-group>
+      <!-- <flat-pickr v-model="timePicker" class="form-control" :config="config" /> -->
+    </b-modal>
+    <b-modal ref="pilih-modal" id="modal-center" ok-only ok-title="Close" centered>
+      <b-row>
+        <b-col lg="6">
+          <b-button variant="primary" :to="{ name: 'master-presensi-tambah-manual' }">
+            Manual
+          </b-button>
+        </b-col>
+        <b-col lg="6">
+          <b-button variant="primary" :to="{ name: 'master-presensi-tambah-bulk' }">
+            Upload
+          </b-button>
+        </b-col>
+      </b-row>
     </b-modal>
   </section>
 </template>
@@ -131,9 +163,11 @@
 <script>
 import store from '@/store'
 import { ref } from '@vue/composition-api'
-import flatPickr from 'vue-flatpickr-component'
+// import flatPickr from 'vue-flatpickr-component'
 
 import {
+  BFormDatepicker,
+  BFormTimepicker,
   BFormGroup,
   BCard,
   BModal,
@@ -141,7 +175,7 @@ import {
   BRow,
   BCol,
   BFormInput,
-  // BButton,
+  BButton,
   BTable,
   BDropdown,
   BDropdownItem,
@@ -151,6 +185,9 @@ import {
 
 export default {
   components: {
+    BFormDatepicker,
+    BFormTimepicker,
+    BButton,
     BFormGroup,
     BModal,
     BCardText,
@@ -158,29 +195,19 @@ export default {
     BRow,
     BCol,
     BFormInput,
-    // BButton,
     BTable,
     BDropdown,
     BDropdownItem,
     BPagination,
-
-    flatPickr,
-
+    //
+    // flatPickr,
+    //
     // vSelect,
   },
   data() {
     return {
-      filter: {
-        date: Date.now(),
-        config: {
-          wrap: true, // set wrap to true only when using 'input-group'
-          altFormat: 'd F y',
-          altInput: true,
-          dateFormat: 'Y-m-d',
-        },
-      },
-      config: { enableTime: true, noCalendar: true, dateFormat: 'y-m-d H:i:s', time_24hr: true, minuteIncrement: 1, altFormat: 'H:i:s' },
-      timePicker: Date.now(),
+      tanggal: new Date(),
+      timePicker: '',
       titleModalAbsen: 'Absen Masuk Pegawai',
       jenisAbsen: '',
       filterQuery: '',
@@ -198,11 +225,8 @@ export default {
         this.dataPresensi = this.dataTemp.filter(item => item.nama.toLowerCase().indexOf(query.toLowerCase()) > -1)
       }
     },
-    filter: {
-      deep: true,
-      handler(x) {
-        this.loadPresensi(x.date)
-      },
+    tanggal(x) {
+      this.loadPresensi(x)
     },
   },
   computed: {
@@ -243,6 +267,9 @@ export default {
         console.info(this.dataTemp)
       })
     },
+    pilihModal() {
+      this.$refs['pilih-modal'].show()
+    },
     showModal(id, fun) {
       this.jenisAbsen = fun
       this.idAbsen = id
@@ -257,7 +284,7 @@ export default {
         text: 'Absen Masuk akan di Proses ?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Ya!',
         customClass: {
           confirmButton: 'btn btn-primary',
           cancelButton: 'btn btn-outline-danger ml-1',
@@ -266,15 +293,49 @@ export default {
       }).then(result => {
         if (result.value) {
           store
-            .dispatch('app-pegawai/absenMasuk', {
+            .dispatch('app-pegawai/updateAbsenMasuk', {
               id: this.idAbsen,
               jam: this.timePicker,
+              tanggal: this.tanggal,
             })
             .then(res => {
               if (res.status === 200) {
-                store.commit('app-pegawai/UPDATE_PRESENSI', res.data)
-                this.dataTemp = store.getters['app-pegawai/getListPresensi']
-                this.dataPresensi = this.dataTemp
+                this.loadPresensi(this.tanggal)
+                this.$swal({
+                  icon: 'success',
+                  title: 'Absen Berhasi!',
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                  },
+                })
+              }
+            })
+        }
+      })
+    },
+    absenKeluar() {
+      this.$swal({
+        title: 'Absen Keluar',
+        text: 'Absen Keluar akan di Proses ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+      }).then(result => {
+        if (result.value) {
+          store
+            .dispatch('app-pegawai/updateAbsenKeluar', {
+              id: this.idAbsen,
+              jam: this.timePicker,
+              tanggal: this.tanggal,
+            })
+            .then(res => {
+              if (res.status === 200) {
+                this.loadPresensi(this.tanggal)
                 this.$swal({
                   icon: 'success',
                   title: 'Absen Berhasi!',

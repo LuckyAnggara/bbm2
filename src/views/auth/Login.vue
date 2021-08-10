@@ -29,71 +29,40 @@
           </b-card-text>
 
           <!-- form -->
-          <validation-observer ref="loginValidation">
-            <b-form class="auth-login-form mt-2" @submit.prevent>
-              <!-- email -->
-              <b-form-group label="Username" label-for="login-email">
-                <validation-provider #default="{ errors }" name="Username" rules="required">
-                  <b-form-input
-                    id="login-email"
-                    v-model="form.username"
-                    :state="errors.length > 0 ? false : null"
-                    name="login-email"
-                    placeholder="john@example.com"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
+          <b-form class="auth-login-form mt-2" @submit.prevent>
+            <!-- email -->
+            <b-form-group label="Username" label-for="login-email">
+              <b-form-input id="login-email" v-model="form.username" name="login-email" placeholder="john@example.com" />
+            </b-form-group>
 
-              <!-- forgot password -->
-              <b-form-group>
-                <div class="d-flex justify-content-between">
-                  <label for="login-password">Password</label>
-                  <b-link :to="{ name: 'auth-forgot-password-v2' }">
-                    <small>Lupa Password?</small>
-                  </b-link>
-                </div>
-                <validation-provider #default="{ errors }" name="Password" rules="required">
-                  <b-input-group class="input-group-merge" :class="errors.length > 0 ? 'is-invalid' : null">
-                    <b-form-input
-                      id="login-password"
-                      v-model="form.password"
-                      :state="errors.length > 0 ? false : null"
-                      class="form-control-merge"
-                      :type="passwordFieldType"
-                      name="login-password"
-                      placeholder="············"
-                    />
-                    <b-input-group-append is-text>
-                      <feather-icon class="cursor-pointer" :icon="passwordToggleIcon" @click="togglePasswordVisibility" />
-                    </b-input-group-append>
-                  </b-input-group>
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
+            <!-- forgot password -->
+            <b-form-group>
+              <div class="d-flex justify-content-between">
+                <label for="login-password">Password</label>
+                <b-link :to="{ name: 'dashboard-analytics' }">
+                  <small>Lupa Password?</small>
+                </b-link>
+              </div>
+              <b-input-group class="input-group-merge">
+                <b-form-input id="login-password" v-model="form.password" class="form-control-merge" name="login-password" placeholder="············" />
+                <b-input-group-append is-text>
+                  <feather-icon class="cursor-pointer" :icon="passwordToggleIcon" @click="togglePasswordVisibility" />
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
 
-              <!-- CABANG -->
-              <b-form-group>
-                <validation-provider #default="{ errors }" name="Cabang" rules="required">
-                  <label for="login-password">Cabang</label>
-                  <v-select v-model="form.cabang" :state="errors.length > 0 ? false : null" :options="cabangOptions" label="nama" :clearable="false" />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
+            <!-- checkbox -->
+            <b-form-group>
+              <b-form-checkbox id="remember-me" v-model="form.status" name="checkbox-1">
+                Ingat saya
+              </b-form-checkbox>
+            </b-form-group>
 
-              <!-- checkbox -->
-              <b-form-group>
-                <b-form-checkbox id="remember-me" v-model="form.status" name="checkbox-1">
-                  Ingat saya
-                </b-form-checkbox>
-              </b-form-group>
-
-              <!-- submit buttons -->
-              <b-button type="submit" variant="primary" block @click="validationForm">
-                Sign in
-              </b-button>
-            </b-form>
-          </validation-observer>
+            <!-- submit buttons -->
+            <b-button type="submit" variant="primary" block @click="login">
+              Sign in
+            </b-button>
+          </b-form>
 
           <b-card-text class="text-center mt-2">
             <span>User baru? </span>
@@ -109,8 +78,8 @@
 <script>
 /* eslint-disable global-require */
 import axios from '@axios'
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
+import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 
 import VuexyLogo from '@core/layouts/components/Logo.vue'
 import {
@@ -129,10 +98,8 @@ import {
   BButton,
 } from 'bootstrap-vue'
 import { required } from '@validations'
-import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-import vSelect from 'vue-select'
 
 export default {
   components: {
@@ -150,19 +117,13 @@ export default {
     BForm,
     BButton,
     VuexyLogo,
-    ValidationProvider,
-    ValidationObserver,
-    vSelect,
   },
   mixins: [togglePasswordVisibility],
   data() {
     return {
-      cabangOptions: [],
       form: {
-        status: '',
-        password: '',
-        username: '',
-        cabang: {},
+        password: '123456',
+        username: 'lucky',
       },
       sideImg: require('@/assets/images/pages/login-v2.svg'),
       // validation rulesimport store from '@/store/index'
@@ -182,24 +143,7 @@ export default {
       return this.sideImg
     },
   },
-  created() {
-    this.loadCabang()
-    console.info(this.$router.currentRoute)
-  },
   methods: {
-    loadCabang() {
-      axios.get(`${axios.defaults.baseURL}cabang/`).then(res => {
-        this.cabangOptions = res.data
-        console.info(this.cabangOptions)
-      })
-    },
-    validationForm() {
-      this.$refs.loginValidation.validate().then(success => {
-        if (success) {
-          this.login()
-        }
-      })
-    },
     login() {
       const loader = this.$loading.show({
         // Optional parameters
@@ -219,6 +163,7 @@ export default {
         } else {
           const userData = res.data
           localStorage.setItem('userData', JSON.stringify(res.data))
+          console.info(userData)
           this.$ability.update(userData.ability)
           this.$router
             .replace(getHomeRouteForLoggedInUser(userData.role))
@@ -227,10 +172,10 @@ export default {
                 component: ToastificationContent,
                 position: 'top-right',
                 props: {
-                  title: `Welcome ${userData.fullName || userData.username}`,
+                  title: `Selamat Datang ${userData.pegawai.nama}`,
                   icon: 'CoffeeIcon',
                   variant: 'success',
-                  text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
+                  text: `Kamu berhasil login sebagai ${userData.role}. selamat bekerja!`,
                 },
               })
             })
@@ -245,26 +190,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.per-page-selector {
-  width: 90px;
-}
-
-.invoice-filter-select {
-  min-width: 190px;
-
-  ::v-deep .vs__selected-options {
-    flex-wrap: nowrap;
-  }
-
-  ::v-deep .vs__selected {
-    width: 100px;
-  }
-}
-</style>
-
 <style lang="scss">
-@import '@core/scss/vue/libs/vue-select.scss';
 @import '@core/scss/vue/pages/page-auth.scss';
 @import '@core/scss/vue/libs/vue-flatpicker.scss';
 </style>

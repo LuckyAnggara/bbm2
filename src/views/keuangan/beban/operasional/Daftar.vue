@@ -366,7 +366,7 @@ export default {
           store.dispatch('app-keuangan/removeBeban', id).then(x => {
             if (x.status === 200) {
               store.commit('app-keuangan/REMOVE_DETAIL_BEBAN_OPERASIONAL', id)
-              store.dispatch('app-keuangan/removeJurnal', x).then(d => {
+              store.dispatch('app-keuangan/removeJurnal', x.data.jurnal).then(d => {
                 if (d.status === 200) {
                   this.$swal({
                     icon: 'success',

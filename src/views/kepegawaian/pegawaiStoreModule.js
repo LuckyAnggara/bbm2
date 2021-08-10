@@ -123,20 +123,52 @@ export default {
           .catch(error => reject(error))
       })
     },
-    absenMasuk(ctx, data) {
+    updateAbsenMasuk(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .put(`${axios.defaults.baseURL}presensi/store/masuk/`, data)
+          .post(`${axios.defaults.baseURL}presensi/store/update-masuk/`, data)
           .then(response => {
             resolve(response)
           })
           .catch(error => reject(error))
       })
     },
-    absenKeluar(ctx, id) {
+    updateAbsenKeluar(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}presensi/store/keluar/${id}`)
+          .post(`${axios.defaults.baseURL}presensi/store/update-keluar/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    tarikDataPegawaiGaji(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${axios.defaults.baseURL}gaji/pegawai?cabang_id=${params.cabang_id}&absensi=${params.absensi}&tipe=${params.kategori}&bonus=${params.bonus}&tanggal=${params.tanggal}`,
+          )
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    storePresensiManual(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}presensi/store/manual`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    uploadPresensi(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}presensi/upload-file`, data)
           .then(response => {
             resolve(response)
           })

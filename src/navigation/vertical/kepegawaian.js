@@ -7,8 +7,7 @@ export default [
     route: 'kepegawaian-daftar',
     icon: 'ShieldIcon',
     // acl: {
-    action: 'read',
-    resource: 'ACL',
+
     // },
   },
   {
@@ -16,8 +15,7 @@ export default [
     route: 'master-presensi',
     icon: 'ShieldIcon',
     // acl: {
-    action: 'read',
-    resource: 'ACL',
+
     // },
   },
   {
@@ -25,8 +23,7 @@ export default [
     route: 'master-persediaan',
     icon: 'ShieldIcon',
     // acl: {
-    action: 'read',
-    resource: 'ACL',
+
     // },
   },
 ]

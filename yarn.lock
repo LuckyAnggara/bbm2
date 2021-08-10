@@ -9401,6 +9401,11 @@ vue-tree-halower@1.8.3:
   dependencies:
     vue "^2.4.4"
 
+vue-xlsx@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vue-xlsx/-/vue-xlsx-0.2.1.tgz#336858c573e4c487aece3474cedc6f791114596d"
+  integrity sha512-j7uVNl1E1ZUpOaEYhQFw2NiXIP1ktlq25XPEdAOdUUnXhz8HjNsLnmgcqWs48aehnoDRGj6cmcOsJZ9L4NS3Dw==
+
 vue2-dropzone@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/vue2-dropzone/-/vue2-dropzone-3.6.0.tgz#b4bb4b64de1cbbb3b88f04b24878e06780a51546"

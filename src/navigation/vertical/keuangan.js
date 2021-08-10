@@ -11,6 +11,10 @@ export default [
         title: 'Operasional',
         route: 'beban-operasional-daftar',
       },
+      {
+        title: 'Gaji',
+        route: 'beban-gaji-daftar',
+      },
     ],
   },
   {
@@ -33,6 +37,17 @@ export default [
       {
         title: 'Laba / Rugi',
         route: 'akuntansi-laba-rugi',
+      },
+    ],
+  },
+  {
+    title: 'Kas',
+    icon: 'HomeIcon',
+    tagVariant: 'light-warning',
+    children: [
+      {
+        title: 'Kasir',
+        route: 'kas-kasir',
       },
     ],
   },

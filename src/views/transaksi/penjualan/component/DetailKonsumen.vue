@@ -104,13 +104,14 @@ export default {
       this.dataOrder.pelanggan.nomorTelepon = e.telepon
     },
     loadDataPelanggan() {
+      const user = JSON.parse(localStorage.getItem('userData'))
       if (store.getters['app-kontak/getListPelanggan'].length === 0) {
         store.dispatch('app-kontak/fetchListKontak').then(res => {
           store.commit('app-kontak/SET_LIST_KONTAK', res.data)
-          this.option = store.getters['app-kontak/getListPelanggan']
+          this.option = store.getters['app-kontak/getListPelanggan'].filter(x => x.cabang_id === user.cabang_id)
         })
       } else {
-        this.option = store.getters['app-kontak/getListPelanggan']
+        this.option = store.getters['app-kontak/getListPelanggan'].filter(x => x.cabang_id === user.cabang_id)
       }
     },
     choosePelanggan(id) {

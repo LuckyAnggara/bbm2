@@ -11,9 +11,12 @@ export default {
     dataEquity: [],
     dataPendapatan: [],
     dataBeban: [],
-
     // BEBAN
-    dataBebanOperasional: '',
+    dataBebanOperasional: {},
+    // GAJI
+    dataBebanGaji: {},
+    listMasterPenggajian: [],
+    listDataDetailPenggajian: [],
   },
   getters: {
     getListAkun: state => state.listAkun,
@@ -25,9 +28,12 @@ export default {
     getTotalAssets: state => state.totalAssets,
     getPendapatan: state => state.dataPendapatan,
     getBeban: state => state.dataBeban,
-
     // BEBAN
     getDataBebanOperasional: state => state.dataBebanOperasional,
+    // GAJI
+    getDataBebanGaji: state => state.dataBebanGaji,
+    getMasterPenggajian: state => state.listMasterPenggajian,
+    getDataDetailPenggajian: state => state.listDataDetailPenggajian,
   },
   mutations: {
     SET_LIST_AKUN(state, data) {
@@ -67,6 +73,20 @@ export default {
       const index = state.dataBebanOperasional.detail.findIndex(x => x.id === data)
       state.dataBebanOperasional.detail.splice(index, 1)
     },
+    // GAJI
+    SET_DATA_BEBAN_GAJI(state, data) {
+      state.dataBebanGaji = data
+    },
+    SET_DATA_MASTER_PENGGAJIAN(state, data) {
+      state.listMasterPenggajian = data
+    },
+    SET_DATA_DETAIL_PENGGAJIAN(state, data) {
+      state.listDataDetailPenggajian = data
+    },
+    REMOVE_DETAIL_PENGGAJIAN(state, data) {
+      const index = state.listMasterPenggajian.findIndex(x => x.id === data)
+      state.listMasterPenggajian.splice(index, 1)
+    },
   },
   actions: {
     // AKUN
@@ -101,10 +121,10 @@ export default {
           .catch(error => reject(error))
       })
     },
-    fetchListAkun(ctx, tahun) {
+    fetchListAkun(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/akun/tahun/${tahun}`)
+          .get(`http://127.0.0.1:8080/api/akun/tahun/${params.tahun}/cabang/${params.cabang}`)
           .then(response => {
             resolve(response)
           })
@@ -153,10 +173,10 @@ export default {
       })
     },
     // KENAPA PAKE NOMOR JURNAL, KARENA JURNAL PAKETAN TIDAK SATUAN KAYA ID..
-    removeJurnal(ctx, data) {
+    removeJurnal(ctx, jurnal) {
       return new Promise((resolve, reject) => {
         axios
-          .delete(`http://127.0.0.1:8080/api/jurnal/delete/${data.data.jurnal}`)
+          .delete(`http://127.0.0.1:8080/api/jurnal/delete/${jurnal}`)
           .then(response => {
             resolve(response)
           })
@@ -199,6 +219,59 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .delete(`http://127.0.0.1:8080/api/beban/delete/${id}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+
+    // GAJI
+    fetchGaji(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`http://127.0.0.1:8080/api/beban/gaji/cabang/${params.cabang}/tahun/${params.tahun}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchMasterGaji(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}gaji/daftar/${params.cabang}/${params.tahun}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    storeGaji(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}gaji/store/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    removeGaji(ctx, id) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`${axios.defaults.baseURL}gaji/delete/${id}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    // KAS
+    storeKas(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post('http://127.0.0.1:8080/api/kas/store', data)
           .then(response => {
             resolve(response)
           })

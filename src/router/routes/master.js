@@ -1,15 +1,5 @@
 export default [
   {
-    path: '/login',
-    name: 'auth-login',
-    component: () => import('@/views/pages/authentication/Login.vue'),
-    meta: {
-      layout: 'full',
-      resource: 'Auth',
-      redirectIfLoggedIn: true,
-    },
-  },
-  {
     path: '/master/barang/tambah',
     name: 'master-barang-tambah',
     component: () => import('@/views/master/barang/Tambah/Tambah.vue'),
@@ -288,6 +278,21 @@ export default [
         {
           text: 'Detail',
           active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/master/gudang/',
+    name: 'master-gudang',
+    component: () => import('@/views/master/gudang/Daftar.vue'),
+    meta: {
+      pageTitle: 'Daftar',
+      breadcrumb: [
+        {
+          active: true,
+          text: 'Gudang',
+          to: '/master/gudang/',
         },
       ],
     },

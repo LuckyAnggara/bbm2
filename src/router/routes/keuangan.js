@@ -117,4 +117,49 @@ export default [
       ],
     },
   },
+  {
+    path: '/beban/gaji/',
+    name: 'beban-gaji-daftar',
+    component: () => import('@/views/keuangan/beban/gaji/Daftar.vue'),
+    meta: {
+      pageTitle: 'Gaji',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/beban/gaji/tambah/detail',
+    name: 'beban-gaji-tambah-detail',
+    component: () => import('@/views/keuangan/beban/gaji/tambah/Detail.vue'),
+    meta: {
+      pageTitle: 'Gaji',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+        },
+        {
+          text: 'Detail Penggajian',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/kas/kasir/',
+    name: 'kas-kasir',
+    component: () => import('@/views/keuangan/kas/Kasir.vue'),
+    meta: {
+      pageTitle: 'Kas Kasir',
+      breadcrumb: [
+        {
+          text: 'Detail',
+          active: true,
+        },
+      ],
+    },
+  },
 ]

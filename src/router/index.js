@@ -9,6 +9,7 @@ import keuangan from './routes/keuangan'
 import transaksi from './routes/transaksi'
 import auth from './routes/auth'
 import master from './routes/master'
+import laporan from './routes/laporan'
 import kepegawaian from './routes/kepegawaian'
 
 Vue.use(VueRouter)
@@ -26,6 +27,7 @@ const router = new VueRouter({
     ...transaksi,
     ...keuangan,
     ...dashboard,
+    ...laporan,
     ...kepegawaian,
     {
       path: '*',
@@ -36,12 +38,14 @@ const router = new VueRouter({
 
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
+  // console.info(isLoggedIn)
 
   if (!canNavigate(to)) {
     // Redirect to login if not logged in
-    if (!isLoggedIn) return next({ name: 'auth-login' })
+    // if (!isLoggedIn) return next({ name: 'auth-login' })
+    // if (!isLoggedIn) return next({ name: 'auth-login' })
     // If logged in => not authorized
-    return next({ name: 'master-barang' })
+    return next({ name: 'laporan-transaksi' })
   }
 
   // Redirect if logged in

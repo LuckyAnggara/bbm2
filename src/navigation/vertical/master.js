@@ -1,14 +1,13 @@
 export default [
   {
-    header: 'Master Barang',
+    header: 'Manajemen',
   },
   {
-    title: 'Data Barang',
+    title: 'Barang',
     route: 'master-barang',
     icon: 'ShieldIcon',
     // acl: {
-    action: 'read',
-    resource: 'ACL',
+    resource: 'admin',
     // },
   },
   {
@@ -16,8 +15,8 @@ export default [
     route: 'master-kontak',
     icon: 'ShieldIcon',
     // acl: {
-    action: 'read',
-    resource: 'ACL',
+    // action: 'read',
+    // resource: 'ACL',
     // },
   },
   {
@@ -25,8 +24,26 @@ export default [
     route: 'master-persediaan',
     icon: 'ShieldIcon',
     // acl: {
-    action: 'read',
-    resource: 'ACL',
+    // action: 'read',
+    // resource: 'ACL',
+    // },
+  },
+  {
+    title: 'Gudang',
+    route: 'master-gudang',
+    icon: 'ShieldIcon',
+    // acl: {
+    // action: 'read',
+    // resource: 'ACL',
+    // },
+  },
+  {
+    title: 'Cabang',
+    route: 'master-persediaan',
+    icon: 'ShieldIcon',
+    // acl: {
+    // action: 'read',
+    // resource: 'ACL',
     // },
   },
 ]

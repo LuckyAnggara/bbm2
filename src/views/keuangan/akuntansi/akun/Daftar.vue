@@ -50,10 +50,16 @@ export default {
       this.loadAkun()
     },
     loadAkun() {
-      store.dispatch('app-keuangan/fetchListAkun', this.tahun).then(res => {
-        store.commit('app-keuangan/SET_LIST_AKUN', res.data)
-        this.dataAkun = store.getters['app-keuangan/getListAkun'].filter(x => x.subheader.filter(y => y.saldo !== 0))
-      })
+      const user = JSON.parse(localStorage.getItem('userData'))
+      store
+        .dispatch('app-keuangan/fetchListAkun', {
+          tahun: this.tahun,
+          cabang: user.cabang_id,
+        })
+        .then(res => {
+          store.commit('app-keuangan/SET_LIST_AKUN', res.data)
+          this.dataAkun = store.getters['app-keuangan/getListAkun'].filter(x => x.subheader.filter(y => y.saldo !== 0))
+        })
     },
   },
   setup() {

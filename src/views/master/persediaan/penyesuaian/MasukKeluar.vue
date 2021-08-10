@@ -54,7 +54,7 @@
 
             <template #cell(harga)="data">
               <span>
-                <b-form-input type="number" v-model="data.item.harga" />
+                <b-form-input type="number" v-model="data.item.harga" :disabled="data.item.perbedaan > 0 ? false : true" />
               </span>
             </template>
 
@@ -170,6 +170,7 @@ export default {
           this.$store
             .dispatch('app-persediaan/storePenyesuaianPersediaan', {
               user,
+              gudang: this.data.gudang,
               data: this.persediaan,
               jumlah_data: this.persediaan.length,
               tipe: this.data.tipe,
@@ -199,7 +200,9 @@ export default {
     },
     /* eslint-enable no-param-reassign */
     loadData() {
-      console.info(this.postJurnal)
+      const user = JSON.parse(localStorage.getItem('userData'))
+      const cabang = user.cabang_id
+      const gudang = this.data.gudang.id
       if (this.$store.getters['app-barang/getListBarang'].length === 0) {
         this.$store.dispatch('app-barang/fetchListBarang').then(res => {
           this.$store.commit('app-barang/SET_LIST_BARANG', res.data)
@@ -208,29 +211,47 @@ export default {
           return data
         })
       }
+
       if (this.$store.getters['app-persediaan/getListPersediaan'].length === 0) {
-        this.$store.dispatch('app-persediaan/fetchListPersediaan').then(res => {
-          this.$store.commit('app-persediaan/SET_LIST_PERSEDIAAN', res.data)
-        })
+        this.$store
+          .dispatch('app-persediaan/fetchListPersediaan', {
+            cabang,
+            gudang,
+          })
+          .then(res => {
+            this.$store.commit('app-persediaan/SET_LIST_PERSEDIAAN', res.data)
+          })
       }
       this.barang = this.$store.getters['app-barang/getListBarang']
       return this.$store.getters['app-barang/getListBarang']
     },
     tambah() {
-      const data = this.$store.getters['app-persediaan/getListPersediaan'].find(x => x.id === this.idBarang)
-      const output = {
-        id: data.id,
-        kode_barang: data.kode_barang,
-        nama: data.nama,
-        jumlah_tercatat: data.persediaan.saldo,
-        jumlah_fisik: 0,
-        harga: data.harga_beli,
-        tanggalTransaksi: this.tanggalFormated,
+      const a = this.persediaan.find(x => x.id === this.idBarang)
+      if (a === undefined) {
+        const data = this.$store.getters['app-persediaan/getListPersediaan'].find(x => x.id === this.idBarang)
+        const output = {
+          id: data.id,
+          kode_barang: data.kode_barang,
+          nama: data.nama,
+          jumlah_tercatat: data.persediaan.saldo,
+          jumlah_fisik: 0,
+          harga: 0,
+          tanggalTransaksi: this.tanggalFormated,
+        }
+        output.perbedaan = parseFloat(output.jumlah_tercatat) - parseFloat(output.jumlah_tercatat)
+        output.jenis = output.perbedaan < 0 ? 'KREDIT' : 'DEBIT'
+        this.persediaan.push(output)
+      } else {
+        this.$swal({
+          title: 'Error!',
+          text: 'Barang sudah ada!',
+          icon: 'error',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+          },
+          buttonsStyling: false,
+        })
       }
-      output.perbedaan = parseFloat(output.jumlah_tercatat) - parseFloat(output.jumlah_tercatat)
-      output.jenis = output.perbedaan < 0 ? 'KREDIT' : 'DEBIT'
-      this.persediaan.push(output)
-      console.info(this.persediaan)
     },
   },
   mounted() {

@@ -35,21 +35,6 @@ import master from './master'
 import transaksi from './transaksi'
 import keuangan from './keuangan'
 import kepegawaian from './kepegawaian'
-// import others from './others'
-// import chartsAndMaps from './charts-and-maps'
-// import uiElements from './ui-elements'
-// import formAndTable from './forms-and-table'
 
 // Array of sections
-export default [
-  ...dashboard,
-  ...master,
-  ...transaksi,
-  ...keuangan,
-  ...kepegawaian,
-  // ...appsAndPages,
-  // ...uiElements,
-  // ...formAndTable,
-  // ...chartsAndMaps,
-  // ...others,
-]
+export default [...dashboard, ...master, ...transaksi, ...keuangan, ...kepegawaian]
