@@ -49,6 +49,16 @@ export default [
         title: 'Kasir',
         route: 'kas-kasir',
       },
+      {
+        title: 'Cabang',
+        route: 'kas-cabang',
+      },
     ],
+  },
+  {
+    title: 'Utang / Piutang',
+    icon: 'HomeIcon',
+    tagVariant: 'light-warning',
+    route: 'keuangan-utang-piutang',
   },
 ]

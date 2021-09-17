@@ -13,6 +13,8 @@ import gudangStoreModule from '@/views/master/gudang/gudangStoreModule'
 import persediaanStoreModule from '@/views/master/persediaan/persediaanStoreModule'
 import transaksiPenjualanStoreModule from '@/views/transaksi/transaksiPenjualanStoreModule'
 import transaksiPembelianStoreModule from '@/views/transaksi/transaksiPembelianStoreModule'
+import dashboardCabangStoreModule from '@/views/dashboard/dashboardCabangStoreModule'
+import poStoreModule from '@/views/transaksi/poStoreModule'
 import app from './app'
 import appConfig from './app-config'
 import verticalMenu from './vertical-menu'
@@ -35,6 +37,8 @@ export default new Vuex.Store({
     'app-persediaan': persediaanStoreModule,
     'app-transaksi-penjualan': transaksiPenjualanStoreModule,
     'app-transaksi-pembelian': transaksiPembelianStoreModule,
+    'app-po': poStoreModule,
+    'app-dashboard-cabang': dashboardCabangStoreModule,
   },
   strict: process.env.DEV,
 })

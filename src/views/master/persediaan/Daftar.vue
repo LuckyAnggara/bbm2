@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section ref="container">
     <b-row>
       <b-col cols="12" md="9" xl="9">
         <b-card :title="gudang ? `Persediaan Gudang  ${gudang.nama}` : `Gudang belum di pilih`">
@@ -72,7 +72,7 @@
                   @click="
                     $router.push({
                       name: 'master-persediaan-detail',
-                      params: { item: data.item, gudang_id: data.item.persediaan.gudang_id },
+                      params: { id: data.item.id, item: data.item, gudang_id: data.item.persediaan.gudang_id },
                     })
                   "
                 />
@@ -213,6 +213,7 @@ export default {
       searchQuery: '',
       refTable: null,
       dataPersediaan: [],
+      dataTemp: [],
       dataHargaPersediaan: [],
       listGudang: [],
     }
@@ -220,6 +221,11 @@ export default {
   watch: {
     gudang(x) {
       this.loadData(x)
+    },
+    searchQuery(query) {
+      this.dataPersediaan = this.dataTemp.filter(
+        item => item.kode_barang.toLowerCase().indexOf(query.toLowerCase()) > -1 || item.nama.toLowerCase().indexOf(query.toLowerCase()) > -1,
+      )
     },
   },
   computed: {
@@ -245,6 +251,9 @@ export default {
       this.$refs['my-modal'].show()
     },
     loadGudang() {
+      const loader = this.$loading.show({
+        container: this.$refs.formContainer,
+      })
       const user = JSON.parse(localStorage.getItem('userData'))
       const cabang = user.cabang_id
       store
@@ -255,6 +264,7 @@ export default {
           store.commit('app-persediaan/SET_LIST_GUDANG', res.data)
           this.listGudang = store.getters['app-persediaan/getListGudang']
           this.gudang = this.listGudang.find(x => x.utama === 1)
+          loader.hide()
         })
     },
     loadData(data) {
@@ -268,9 +278,10 @@ export default {
         })
         .then(res => {
           store.commit('app-persediaan/SET_LIST_PERSEDIAAN', res.data)
-          this.dataPersediaan = store.getters['app-persediaan/getListPersediaan'].filter(
+          this.dataTemp = store.getters['app-persediaan/getListPersediaan'].filter(
             x => x.persediaan.saldo !== 0 || x.persediaan.saldo_masuk !== 0 || x.persediaan.saldo_keluar !== 0,
           )
+          this.dataPersediaan = this.dataTemp
         })
     },
     formatRupiah(value) {

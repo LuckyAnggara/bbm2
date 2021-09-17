@@ -93,12 +93,16 @@ export default {
           this.$swal({
             icon: 'success',
             title: 'Berhasil!',
-            Text: 'Pembayaran telah ditambahkan',
+            text: 'Pembayaran telah ditambahkan',
             customClass: {
               confirmButton: 'btn btn-success',
             },
           })
-          this.$store.commit('app-transaksi-penjualan/UPDATE_PEMBAYARAN', res.data.nominal)
+          this.$store.commit('app-transaksi-penjualan/UPDATE_PEMBAYARAN', {
+            jenis: 'TAMBAH',
+            nominal: res.data.nominal,
+          })
+          this.$store.commit('app-transaksi-penjualan/UPDATE_LIST_PEMBAYARAN', res.data)
         }
       })
     },
@@ -106,7 +110,6 @@ export default {
   mounted() {
     this.loadBank()
   },
-
   setup(props) {
     const caraPembayaran = ref([
       { title: 'Tunai', value: '0' },
@@ -117,6 +120,7 @@ export default {
     const piutang = ref({
       penjualan_id: props.dataPiutang.id,
       nomor_jurnal: props.dataPiutang.nomorJurnal,
+      akun_piutang_id: props.dataPiutang.pelanggan.akun_piutang_id,
       tanggal: '',
       nominal: 0,
       caraPembayaran: '',

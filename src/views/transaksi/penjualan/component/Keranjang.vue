@@ -199,18 +199,23 @@
             <b-form-input v-model="diskon" trim type="number" />
           </b-form-group>
         </b-col>
+        <small>
+          Persediaan {{ detailBarang.nama }} di {{ detailBarang.persediaan.gudang }} adalah <span class="text-danger">{{ detailBarang.persediaan.saldo }}</span
+          >, pastikan persediaan digudang sesuai dan lakukan <b-link :to="{ name: 'master-persediaan-penyesuaian' }"><i>Stok Opname</i></b-link> secara berkala
+        </small>
       </b-card-body>
     </b-modal>
   </div>
 </template>
 
 <script>
-import { BRow, BFormSpinbutton, BCol, BModal, BFormGroup, BForm, BCard, BCardBody, BInputGroup, BFormInput, BTable } from 'bootstrap-vue'
+import { BLink, BRow, BFormSpinbutton, BCol, BModal, BFormGroup, BForm, BCard, BCardBody, BInputGroup, BFormInput, BTable } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 import Ripple from 'vue-ripple-directive'
 
 export default {
   components: {
+    BLink,
     BInputGroup,
     BFormSpinbutton,
     BCard,
@@ -249,6 +254,10 @@ export default {
       detailBarang: {
         nama: null,
         qty: null,
+        persediaan: {
+          gudang: '',
+          saldo: 0,
+        },
       },
     }
   },
@@ -381,7 +390,7 @@ export default {
     },
     loadDataBarang() {
       if (this.$store.getters['app-barang/getListBarang'].length === 0) {
-        this.$store.dispatch('app-barang/fetchListBarang').then(res => {
+        this.$store.dispatch('app-barang/fetchListBarang', { cabang_id: this.user.cabang_id }).then(res => {
           this.$store.commit('app-barang/SET_LIST_BARANG', res.data)
           const data = this.$store.getters['app-barang/getListBarang']
           this.select.barang = data
@@ -403,7 +412,10 @@ export default {
       { key: 'total', sortable: true },
       { key: 'action' },
     ]
+    const user = JSON.parse(localStorage.getItem('userData'))
+
     return {
+      user,
       field,
     }
   },

@@ -375,7 +375,7 @@ export default {
     },
     loadDataBarang() {
       if (this.$store.getters['app-barang/getListBarang'].length === 0) {
-        this.$store.dispatch('app-barang/fetchListBarang').then(res => {
+        this.$store.dispatch('app-barang/fetchListBarang', { cabang_id: this.user.cabang_id }).then(res => {
           this.$store.commit('app-barang/SET_LIST_BARANG', res.data)
           const data = this.$store.getters['app-barang/getListBarang']
           this.select.barang = data
@@ -398,7 +398,9 @@ export default {
       { key: 'total', sortable: true },
       { key: 'action' },
     ]
+    const user = JSON.parse(localStorage.getItem('userData'))
     return {
+      user,
       field,
     }
   },

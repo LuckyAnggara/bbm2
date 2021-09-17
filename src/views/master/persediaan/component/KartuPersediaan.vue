@@ -8,12 +8,6 @@
           <label>Data</label>
           <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class="per-page-selector d-inline-block ml-50 mr-1" />
         </b-col>
-        <!-- Search -->
-        <b-col cols="12" md="6">
-          <div class="d-flex align-items-center justify-content-end">
-            <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Kode Barang, Nama Barang)" />
-          </div>
-        </b-col>
       </b-row>
     </div>
 
@@ -24,7 +18,7 @@
       show-empty
       empty-text="Tidak ada data"
       class="position-relative"
-      :items="dataPersediaan"
+      :items="listData"
       :fields="tableColumns"
       :current-page="currentPage"
       :per-page="perPage"
@@ -99,7 +93,7 @@
 </template>
 
 <script>
-import { BRow, BCol, BPagination, BTable, BFormInput } from 'bootstrap-vue'
+import { BRow, BCol, BPagination, BTable } from 'bootstrap-vue'
 import { ref } from '@vue/composition-api'
 
 import Ripple from 'vue-ripple-directive'
@@ -111,15 +105,13 @@ export default {
     BRow,
     BCol,
     BPagination,
-    BFormInput,
     vSelect,
   },
   directives: {
     Ripple,
   },
   props: {
-    dataPersediaan: Array,
-    id: Number,
+    listData: Array,
   },
   data() {
     return {
@@ -148,7 +140,7 @@ export default {
       }
     },
     totalData() {
-      return this.dataPersediaan.length
+      return this.listData.length
     },
   },
   methods: {
@@ -166,7 +158,6 @@ export default {
       { key: 'catatan', sortable: false },
     ]
     const perPage = ref(10)
-
     const currentPage = ref(1)
     const perPageOptions = [10, 25, 50, 100]
     const sortBy = ref('id')

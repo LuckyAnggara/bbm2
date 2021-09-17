@@ -32,6 +32,7 @@
             :dataTemp="dataTemp"
             :typeRetur="false"
             :tanggalData="tanggal"
+            :components="true"
           />
         </b-card>
       </b-col>

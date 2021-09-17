@@ -46,7 +46,7 @@
 
       <!-- Column: DEBIT -->
       <template #cell(saldo)="data">
-        <span>
+        <span variant="danger">
           {{ data.item.saldo }}
         </span>
       </template>

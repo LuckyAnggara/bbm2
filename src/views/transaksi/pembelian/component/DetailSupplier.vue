@@ -26,21 +26,13 @@
       <b-row>
         <b-col md="6">
           <b-form-group label="Nama Supplier*" label-for="nama-supplier" class="mb-2">
-            <b-form-input id="nama-supplier" v-model="dataOrder.supplier.nama" placeholder="Nama Supplier" trim />
+            <b-form-input id="nama-supplier" v-model="dataOrder.supplier.nama" placeholder="Nama Supplier" trim readonly />
           </b-form-group>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col md="6">
           <b-form-group label="Alamat Supplier*" label-for="alamat-supplier" class="mb-2">
-            <b-form-textarea id="alamat-supplier" v-model="dataOrder.supplier.alamat" placeholder="Alamat Supplier" rows="4" trim />
+            <b-form-textarea id="alamat-supplier" v-model="dataOrder.supplier.alamat" placeholder="Alamat Supplier" rows="4" trim readonly />
           </b-form-group>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col md="6">
           <b-form-group label="Nomor Telepon" label-for="nomor-telepon" class="mb-2">
-            <b-form-input id="nomor-telepon" v-model="dataOrder.supplier.nomorTelepon" placeholder="Nomor Telepon (Optional)" type="number" trim />
+            <b-form-input id="nomor-telepon" v-model="dataOrder.supplier.nomorTelepon" placeholder="Nomor Telepon (Optional)" type="number" trim readonly />
           </b-form-group>
         </b-col>
       </b-row>
@@ -97,13 +89,14 @@ export default {
       this.dataOrder.supplier.nomorTelepon = e.telepon
     },
     loadDataSupplier() {
+      const user = JSON.parse(localStorage.getItem('userData'))
       if (store.getters['app-kontak/getListSupplier'].length === 0) {
         store.dispatch('app-kontak/fetchListKontak').then(res => {
           store.commit('app-kontak/SET_LIST_KONTAK', res.data)
-          this.option = store.getters['app-kontak/getListSupplier']
+          this.option = store.getters['app-kontak/getListSupplier'].filter(x => x.cabang_id === user.cabang_id || x.cabang_id === 0)
         })
       } else {
-        this.option = store.getters['app-kontak/getListSupplier']
+        this.option = store.getters['app-kontak/getListSupplier'].filter(x => x.cabang_id === user.cabang_id || x.cabang_id === 0)
       }
     },
     chooseSupplier(id) {
@@ -113,11 +106,13 @@ export default {
         this.dataOrder.supplier.nama = supplier.nama
         this.dataOrder.supplier.alamat = supplier.alamat
         this.dataOrder.supplier.nomorTelepon = supplier.telepon
+        this.dataOrder.supplier.akun_utang_id = supplier.akun_utang_id
       } else {
         this.dataOrder.supplier.id = ''
         this.dataOrder.supplier.nama = ''
         this.dataOrder.supplier.alamat = ''
         this.dataOrder.supplier.nomorTelepon = ''
+        this.dataOrder.supplier.akun_utang_id = ''
       }
     },
   },

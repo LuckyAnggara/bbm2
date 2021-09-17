@@ -1,6 +1,7 @@
 import { isToday } from './utils'
 
 export const kFormatter = num => (num > 999 ? `${(num / 1000).toFixed(1)}k` : num)
+export const formatRupiah = value => `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
 
 export const title = (value, replacer = ' ') => {
   if (!value) return ''

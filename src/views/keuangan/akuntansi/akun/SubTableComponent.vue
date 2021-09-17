@@ -76,9 +76,7 @@ export default {
       data: {},
     }
   },
-  created() {
-    console.info(this.komponen)
-  },
+
   methods: {
     formatRupiah(value) {
       return `Rp. ${value.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`

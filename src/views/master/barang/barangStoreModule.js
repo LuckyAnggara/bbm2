@@ -65,10 +65,20 @@ export default {
     },
   },
   actions: {
-    fetchListBarang(ctx, queryParams) {
+    fetchBarangById(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}barang`, { params: queryParams })
+          .get(`${axios.defaults.baseURL}barang/detail?id=${params.id}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchListBarang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}barang?cabang_id=${data.cabang_id}`)
           .then(response => {
             resolve(response)
           })

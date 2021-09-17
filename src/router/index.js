@@ -35,22 +35,21 @@ const router = new VueRouter({
     },
   ],
 })
-
+/* eslint-disable */
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
-  // console.info(isLoggedIn)
 
   if (!canNavigate(to)) {
     // Redirect to login if not logged in
-    // if (!isLoggedIn) return next({ name: 'auth-login' })
-    // if (!isLoggedIn) return next({ name: 'auth-login' })
+    if (!isLoggedIn) return next({ name: 'auth-login' })
     // If logged in => not authorized
     return next({ name: 'laporan-transaksi' })
   }
 
-  // Redirect if logged in
+  // // Redirect if logged in
   if (to.meta.redirectIfLoggedIn && isLoggedIn) {
     const userData = getUserData()
+
     next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
   }
 

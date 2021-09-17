@@ -16,7 +16,7 @@
         </b-col>
 
         <!-- Search -->
-        <b-col cols="12" md="6">
+        <b-col cols="12" md="6" v-show="components">
           <div class="d-flex align-items-center justify-content-end">
             <b-col cols="12" md="9">
               <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Nomor Transaksi , Nama Pelanggan)" />
@@ -46,8 +46,8 @@
       :sort-by.sync="sortBy"
       :sort-desc.sync="isSortDirDesc"
       show-empty
+      responsive
       empty-text="Tidak ada data"
-      class="position-relative"
     >
       <!-- Column: Id -->
       <template #cell(id)="data">
@@ -151,19 +151,15 @@
               <feather-icon icon="CastIcon" />
               <span class="align-middle ml-50">Print Invoice</span>
             </b-dropdown-item>
-            <!-- <b-dropdown-item>
+            <b-dropdown-item v-show="data.item.pembayaran.statusPembayaran.value === 1" @click="showModalPembayaran(data.item.pembayaran)">
               <feather-icon icon="ActivityIcon" />
-              <span class="align-middle ml-50">Rincian Pembayaran</span>
-            </b-dropdown-item> -->
+              <span class="align-middle ml-50">Pembayaran</span>
+            </b-dropdown-item>
             <b-dropdown-item :to="{ name: 'akuntansi-jurnal-detail', params: { id: data.item.nomorJurnal } }">
               <feather-icon icon="BookIcon" />
               <span class="align-middle ml-50">Jurnal</span>
             </b-dropdown-item>
             <hr />
-            <b-dropdown-item :to="{ name: 'transaksi-penjualan-edit', params: { id: data.item.id } }" v-if="!typeRetur">
-              <feather-icon icon="EditIcon" />
-              <span class="align-middle ml-50">Edit</span>
-            </b-dropdown-item>
             <b-dropdown-item @click="retur(data)" v-if="!typeRetur">
               <feather-icon icon="CornerUpLeftIcon" />
               <span class="align-middle ml-50">Retur</span>
@@ -205,6 +201,7 @@
         </b-col>
       </b-row>
     </div>
+    <modal-daftar-pembayaran />
   </section>
 </template>
 
@@ -216,6 +213,7 @@ import { ref } from '@vue/composition-api'
 
 import { BRow, BCol, BFormInput, BButton, BTable, BLink, BBadge, BDropdown, BDropdownItem, BPagination, BTooltip } from 'bootstrap-vue'
 import vSelect from 'vue-select'
+import ModalDaftarPembayaran from '@/views/transaksi/invoice/component/ModalDaftarPembayaranPenjualan.vue'
 
 export default {
   components: {
@@ -231,6 +229,7 @@ export default {
     BPagination,
     BTooltip,
     vSelect,
+    ModalDaftarPembayaran,
   },
   data() {
     return {
@@ -264,6 +263,10 @@ export default {
     },
     tanggalData: {
       type: Object,
+      required: true,
+    },
+    components: {
+      type: Boolean,
       required: true,
     },
   },
@@ -301,6 +304,10 @@ export default {
     },
     formatRupiah(value) {
       return `Rp. ${value.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
+    },
+    showModalPembayaran(data) {
+      this.$store.commit('app-transaksi-penjualan/SET_LIST_PEMBAYARAN', data.listPembayaran)
+      this.$bvModal.show('modal-daftar-pembayaran')
     },
   },
   setup() {

@@ -10,6 +10,8 @@ export default {
     activeOrder: '',
     listPembelian: [],
     listPembelianRetur: [],
+    // PEMBAYARAN
+    listPembayaran: [],
   },
   getters: {
     // PEMBELIAN
@@ -25,6 +27,8 @@ export default {
     getListTransaksiPembelian: state => state.listPembelian,
     getListTransaksiPembelianRetur: state => state.listPembelianRetur,
     getTransaksiByBarang: state => kodeBarang => state.listPembelian.filter(x => x.orders.kode_barang_id === kodeBarang),
+    // PEMBAYARAN
+    getListPembayaran: state => state.listPembayaran,
   },
   mutations: {
     // PEMBELIAN TRANSAKSI
@@ -72,8 +76,34 @@ export default {
       state.listPembelian.splice(index, 1)
       state.listPembelianRetur.push(dd, 1)
     },
+    // PEMBAYARAN
+    UPDATE_PEMBAYARAN(state, data) {
+      const a = state.activeDataInvoice.pembayaran.sisaPembayaran
+      if (data.jenis === 'HAPUS') {
+        state.activeDataInvoice.pembayaran.sisaPembayaran = parseFloat(a) + parseFloat(data.nominal)
+      } else {
+        state.activeDataInvoice.pembayaran.sisaPembayaran = parseFloat(a) - parseFloat(data.nominal)
+      }
+    },
+    SET_LIST_PEMBAYARAN(state, data) {
+      state.listPembayaran = data
+    },
+    UPDATE_LIST_PEMBAYARAN(state, data) {
+      state.listPembayaran.push(data)
+    },
+    UPDATE_REMOVE_PEMBAYARAN(state, data) {
+      state.listPembayaran.splice(data, 1)
+    },
   },
   actions: {
+    fetchTransaksi(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}pembelian/transaksi/${data}`)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
     addTransaksi(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
@@ -111,7 +141,7 @@ export default {
     fetchListTransaksiByBarang(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}pembelian/detail/barang/${params.kodeBarang}/cabang/${params.cabang}`)
+          .get(`${axios.defaults.baseURL}pembelian/detail/barang?id_barang=${params.idBarang}&cabang=${params.cabang}`)
           .then(response => {
             resolve(response)
           })
@@ -127,6 +157,40 @@ export default {
           .then(response => {
             resolve(response)
           })
+          .catch(error => reject(error))
+      })
+    },
+    cekNomorTransaksi(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}pembelian/cek-nomor-transaksi?cabang_id=${params.cabang}&nomor_transaksi=${params.nomorTransaksi}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    storeUtang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}pembayaran/store/utang`, data)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
+    deletePembayaranUtang(ctx, { id }) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`${axios.defaults.baseURL}pembayaran/delete/utang/${id}`)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
+    fetchListPembayaran(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}pembayaran/daftar/utang/${data}`)
+          .then(response => resolve(response))
           .catch(error => reject(error))
       })
     },

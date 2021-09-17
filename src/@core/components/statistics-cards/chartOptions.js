@@ -1,5 +1,51 @@
 import { $themeColors } from '@themeConfig'
 
+export const areaChartLabel = {
+  grid: {
+    show: false,
+    padding: {
+      left: 0,
+      right: 0,
+    },
+  },
+  chart: {
+    toolbar: {
+      show: false,
+    },
+    sparkline: {
+      enabled: true,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: 'smooth',
+    width: 2.5,
+  },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shadeIntensity: 0.9,
+      opacityFrom: 0.5,
+      opacityTo: 0.2,
+      stops: [0, 80, 100],
+    },
+  },
+
+  theme: {
+    monochrome: {
+      enabled: true,
+      shadeTo: 'light',
+      shadeIntensity: 0.65,
+    },
+  },
+  xaxis: {
+    type: 'String',
+    categories: [],
+  },
+}
+
 export const areaChartOptions = {
   grid: {
     show: false,
@@ -119,4 +165,82 @@ export const lineChartOptions = {
   tooltip: {
     x: { show: false },
   },
+}
+
+export const donutChartOptions = {
+  chart: {
+    type: 'donut',
+    toolbar: {
+      show: false,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  legend: { show: false },
+  comparedResult: [2, -3, 8],
+  labels: [],
+  stroke: { width: 0 },
+  colors: ['#28c76f33', '#28c76f66', $themeColors.success],
+  grid: {
+    padding: {
+      right: -20,
+      bottom: -8,
+      left: -20,
+    },
+  },
+  plotOptions: {
+    pie: {
+      startAngle: -10,
+      donut: {
+        labels: {
+          show: true,
+          name: {
+            offsetY: 15,
+          },
+          value: {
+            offsetY: -15,
+            formatter(val) {
+              // eslint-disable-next-line radix
+              return `${parseInt(val)}%`
+            },
+          },
+        },
+      },
+    },
+  },
+  responsive: [
+    {
+      breakpoint: 1325,
+      options: {
+        chart: {
+          height: 100,
+        },
+      },
+    },
+    {
+      breakpoint: 1200,
+      options: {
+        chart: {
+          height: 120,
+        },
+      },
+    },
+    {
+      breakpoint: 1045,
+      options: {
+        chart: {
+          height: 100,
+        },
+      },
+    },
+    {
+      breakpoint: 992,
+      options: {
+        chart: {
+          height: 120,
+        },
+      },
+    },
+  ],
 }

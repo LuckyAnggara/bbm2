@@ -32,6 +32,11 @@
                       {{ dataOrder.pelanggan.nomorTelepon }}
                     </div>
                   </li>
+                  <li class="price-detail">
+                    <div class="detail-title">
+                      Status : <strong>{{ dataOrder.pelanggan.wic === true ? 'WALK IN CUSTOMER' : 'PELANGGAN' }}</strong>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </b-card>
@@ -114,7 +119,8 @@
       <b-row>
         <b-col cols="12" md="8">
           <b-form-group label="Sales" label-cols-md="4">
-            <v-select placeholder="Sales" label="nama" :options="salesOption" :clearable="true" />
+            <v-select placeholder="Pilih Sales" label="nama" :options="salesOption" :clearable="true" v-model="dataOrder.sales" />
+            <small class="text-muted">Kosongkan jika penjualan bukan dari Sales</small>
           </b-form-group>
         </b-col>
       </b-row>
@@ -128,11 +134,18 @@
               :value="dataOrder.pembayaran.statusPembayaran.value"
               placeholder="Cara Pembayaran"
               label="title"
-              :options="pembayaranOption"
+              :options="
+                dataOrder.pelanggan.wic === 0 ? (dataOrder.pelanggan.akun_piutang_id != null ? pembayaranOption : pembayaranOption2) : pembayaranOption2
+              "
               :clearable="false"
               @input="cekStatusPembayaran"
             />
           </b-form-group>
+          <p v-if="dataOrder.pelanggan.akun_piutang_id === null">
+            Akun Piutang {{ dataOrder.pelanggan.nama }} belum di <b>TETAPKAN</b>. Pelanggan tidak bisa mendapatkan Fasilitas
+            <span class="text-danger">Kredit</span>
+          </p>
+
           <hr />
         </b-col>
       </b-row>
@@ -224,6 +237,7 @@ export default {
   },
   data() {
     return {
+      transfer: false,
       caraPembayaran: true,
       statusKembalian: true,
       pembayaranOption: [
@@ -231,35 +245,23 @@ export default {
         { title: 'Kredit', value: '1' },
         { title: 'Cash On Delivery (COD)', value: '2' },
       ],
-      salesOption: [
-        { nama: 'Lulu', value: '0' },
-        { nama: 'Wawan', value: '1' },
-        { nama: 'Dadan', value: '2' },
-      ],
+      pembayaranOption2: [{ title: 'Lunas', value: '0' }],
+      salesOption: [],
       jenisPembayaranOption: [
         { title: 'Tunai', value: '0' },
         { title: 'Transfer', value: '1' },
       ],
-      bankOption: [
-        { title: 'BNI - 0542424', value: '0' },
-        { title: 'BRI - 0203203020302', value: '1' },
-        { title: 'BCA - asdasdasdasd', value: '1' },
-      ],
+      bankOption: [],
     }
   },
   computed: {
     subTotal() {
       return parseFloat(this.dataOrder.invoice.total) - parseFloat(this.dataOrder.invoice.diskon)
     },
-    transfer() {
-      if (this.dataOrder.pembayaran.jenisPembayaran.value === '1') {
-        return true
-      }
-      return false
-    },
   },
   mounted() {
     this.loadBank()
+    this.loadSales()
   },
   methods: {
     dpOnChange(e) {
@@ -304,7 +306,7 @@ export default {
     },
     storeDraft() {
       this.$swal({
-        title: 'Simpan ?',
+        title: 'Simpan di Draft ?',
         text: 'Draft Penjualan akan di Simpan',
         icon: 'warning',
         showCancelButton: true,
@@ -326,6 +328,13 @@ export default {
     loadBank() {
       store.dispatch('app-transaksi-penjualan/fetchDataBank', this.dataOrder).then(res => {
         this.bankOption = res.data
+      })
+    },
+    loadSales() {
+      const user = JSON.parse(localStorage.getItem('userData'))
+      store.dispatch('app-pegawai/fetchListPegawai').then(res => {
+        store.commit('app-pegawai/SET_LIST_PEGAWAI', res.data)
+        this.salesOption = store.getters['app-pegawai/getListSales'].filter(x => x.cabang_id === user.cabang_id)
       })
     },
   },

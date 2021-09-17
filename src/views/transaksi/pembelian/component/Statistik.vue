@@ -94,41 +94,6 @@ export default {
       type: String,
     },
   },
-  data() {
-    return {
-      statisticsItems: [
-        {
-          icon: 'TrendingUpIcon',
-          color: 'light-primary',
-          title: '230k',
-          subtitle: 'Sales',
-          customClass: 'mb-2 mb-xl-0',
-        },
-        {
-          icon: 'UserIcon',
-          color: 'light-info',
-          title: '8.549k',
-          subtitle: 'Customers',
-          customClass: 'mb-2 mb-xl-0',
-        },
-        {
-          icon: 'BoxIcon',
-          color: 'light-danger',
-          title: '1.423k',
-          subtitle: 'Products',
-          customClass: 'mb-2 mb-sm-0',
-        },
-        {
-          icon: 'DollarSignIcon',
-          color: 'light-success',
-          title: '$9745',
-          subtitle: 'Revenue',
-          customClass: '',
-        },
-      ],
-    }
-  },
-
   computed: {
     total() {
       let total = 0

@@ -75,6 +75,8 @@
             :current-page="currentPage"
             :per-page="perPage"
             show-empty
+            :sort-by.sync="sortBy"
+            :sort-desc.sync="isSortDirDesc"
             class="position-relative"
           >
             <!-- Column: Tanggal -->
@@ -122,8 +124,6 @@
                   :sort-compare="true"
                   :total-rows="totalDataKas"
                   :per-page="perPage"
-                  :sort-by.sync="sortBy"
-                  :sort-desc.sync="isSortDirDesc"
                   first-number
                   last-number
                   class="mb-0 mt-1 mt-sm-0"
@@ -210,7 +210,7 @@
 
           <b-row>
             <b-col cosl="12" md="12">
-              <b-form-group :label="`${form.jenis} ke`" label-for="catatan" label-cols-md="4">
+              <b-form-group :label="`${form.jenis}`" label-for="catatan" label-cols-md="4">
                 <v-select v-model="form.lawan_akun_id" label="nama" :clearable="true" :options="nomorAkun">
                   <template v-slot:option="option">
                     {{ option.kode_akun }} - <b>{{ option.nama }}</b>
@@ -320,12 +320,17 @@ export default {
     },
     /* eslint-disable */
     tanggalKas(q) {
-      this.loadKas(q)
+      const d = new Date()
+      const y = d.getFullYear()
+      this.loadUser()
+      this.loadKas(this.$moment(new Date(y, 1, 1)), this.$moment(q))
     },
   },
   mounted() {
+    const d = new Date()
+    const y = d.getFullYear()
     this.loadUser()
-    this.loadKas(this.$moment(Date.now()).format('YYYY-MM-DD'))
+    this.loadKas(this.$moment(new Date(y, 1, 1)), this.$moment(Date.now()))
     this.loadNomorAkun()
   },
   methods: {
@@ -363,7 +368,7 @@ export default {
               confirmButton: 'btn btn-success',
             },
           })
-          this.loadKas(this.tanggalKas)
+          this.loadKas(this.loadKas(this.$moment(new Date(y, 1, 1)), this.$moment(this.tanggalKas)))
         }
       })
     },
@@ -401,7 +406,7 @@ export default {
       this.loadLedger(this.$moment(x[0]), this.$moment(x[1]))
     },
     moment(value) {
-      return this.$moment(value).format('DD MMMM YYYY || h:mm:ss')
+      return this.$moment(value).format('DD MMMM YYYY')
     },
     loadKas(dateawal = null, dateakhir = null) {
       const dataUser = JSON.parse(localStorage.getItem('userData'))
@@ -421,19 +426,22 @@ export default {
         })
     },
     loadNomorAkun() {
-      store.dispatch('app-keuangan/fetchListAkun').then(res => {
+      const dataUser = JSON.parse(localStorage.getItem('userData'))
+      store.dispatch('app-keuangan/fetchListAkun', { tahun: null, cabang: dataUser.cabang_id }).then(res => {
         store.commit('app-keuangan/SET_LIST_AKUN', res.data)
         this.load(store.getters['app-keuangan/getListAkun'])
       })
     },
     load(data) {
+      const dataUser = JSON.parse(localStorage.getItem('userData'))
+
       data.forEach(x => {
         x.subheader.forEach(y => {
           if (y.komponen.length !== 0) {
             y.komponen.forEach(a => {
               if (a.komponen == '1.1.2') {
                 if (a.kode_akun !== this.dataAkun.kode_akun) {
-                  this.nomorAkun.push(a)
+                  if (a.cabang_id === dataUser.cabang_id) this.nomorAkun.push(a)
                 }
               }
             })
@@ -451,7 +459,6 @@ export default {
     const tableColumns = [
       {
         key: 'tanggal',
-        sortable: false,
       },
       { key: 'nomor_jurnal', sortable: false },
       { label: 'debit', key: 'debit', sortable: false },
@@ -480,9 +487,8 @@ export default {
     const dataTemp = ref([])
     const currentPage = ref(1)
     const perPageOptions = [10, 25, 50, 100]
-    const sortBy = ref('tanggal')
-    const isSortDirDesc = ref(false)
-    const statusFilter = ref(null)
+    const sortBy = ref('nomor_jurnal')
+    const isSortDirDesc = ref(true)
 
     return {
       form,
@@ -497,7 +503,6 @@ export default {
       currentPage,
       perPageOptions,
       sortBy,
-      statusFilter,
     }
   },
 }

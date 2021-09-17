@@ -30,16 +30,22 @@
 
         <!-- Column: Kode Akun -->
         <template #cell(kode_akun)="data">
-          <b-link :to="{ name: 'akuntansi-ledger-detail', params: { id: data.item.id } }" class="font-weight-bold">
+          <b-link :to="{ name: 'akuntansi-ledger-detail', params: { id: data.item.id } }" class="font-weight-bold" v-show="data.item.sub_header != 1">
             {{ data.item.kode_akun }}
           </b-link>
+          <span v-show="data.item.sub_header == 1">
+            {{ data.item.kode_akun }}
+          </span>
         </template>
 
         <!-- Column: Nama Akun -->
         <template #cell(nama)="data">
-          <b-link :to="{ name: 'akuntansi-ledger-detail', params: { id: data.item.id } }" class="font-weight-bold">
+          <b-link :to="{ name: 'akuntansi-ledger-detail', params: { id: data.item.id } }" class="font-weight-bold" v-show="data.item.sub_header != 1">
             {{ data.item.nama }}
           </b-link>
+          <span v-show="data.item.sub_header == 1">
+            {{ data.item.nama }}
+          </span>
         </template>
 
         <!-- Column: DEBIT KREDIT SALDO-->

@@ -89,7 +89,6 @@ export default {
           })
       }
       this.detailTransfer = this.$store.getters['app-persediaan/getListDataTransfer'].find(x => x.id === id)
-      console.info(this.detailTransfer)
     },
   },
   setup() {

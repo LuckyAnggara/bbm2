@@ -42,6 +42,7 @@ export default [
       breadcrumb: [
         {
           text: 'Transaksi',
+          to: '/transaksi/penjualan/daftar/',
         },
         {
           text: 'Penjualan',
@@ -62,6 +63,7 @@ export default [
         },
         {
           text: 'Penjualan',
+          to: '/transaksi/penjualan/daftar/',
         },
         {
           text: 'Edit',
@@ -71,7 +73,7 @@ export default [
     },
   },
   {
-    path: '/transaksi/invoice/:id',
+    path: '/transaksi/invoice/penjualan/:id',
     name: 'transaksi-penjualan-invoice',
     component: () => import('@/views/transaksi/invoice/InvoicePreviewPenjualan.vue'),
     meta: {
@@ -79,6 +81,7 @@ export default [
       breadcrumb: [
         {
           text: 'Transaksi',
+          to: '/transaksi/penjualan/daftar/',
         },
         {
           text: 'Invoice',
@@ -130,9 +133,118 @@ export default [
       breadcrumb: [
         {
           text: 'Transaksi',
+          to: '/transaksi/pembelian/daftar/',
         },
         {
           text: 'Pembelian',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/transaksi/invoice/pembelian/:id',
+    name: 'transaksi-pembelian-invoice',
+    component: () => import('@/views/transaksi/invoice/InvoicePreviewPembelian.vue'),
+    meta: {
+      pageTitle: 'Pembelian',
+      breadcrumb: [
+        {
+          text: 'Transaksi',
+          to: '/transaksi/pembelian/daftar/',
+        },
+        {
+          text: 'Invoice',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/transaksi/po/daftar/',
+    name: 'transaksi-po-daftar',
+    component: () => import('@/views/transaksi/po/Daftar.vue'),
+    meta: {
+      pageTitle: 'Purchase Order',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/transaksi/po/tambah',
+    name: 'transaksi-po-tambah',
+    component: () => import('@/views/transaksi/po/Tambah.vue'),
+    meta: {
+      pageTitle: 'Purchase Order',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/transaksi/po/daftar/',
+        },
+        {
+          text: 'Tambah',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/transaksi/po/detail/:id',
+    name: 'transaksi-po-detail',
+    component: () => import('@/views/transaksi/po/Dokumen.vue'),
+    meta: {
+      pageTitle: 'Detail',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/transaksi/po/daftar/',
+        },
+        {
+          text: 'Detail',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/transaksi/po/proses/:id',
+    name: 'transaksi-po-proses',
+    component: () => import('@/views/transaksi/po/Proses.vue'),
+    meta: {
+      pageTitle: 'Proses',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/transaksi/po/daftar/',
+        },
+        {
+          text: 'Proses',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/transaksi/po/invoice/:id',
+    name: 'transaksi-po-invoice',
+    component: () => import('@/views/transaksi/po/component/InvoicePO.vue'),
+    meta: {
+      pageTitle: 'Proses',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/transaksi/po/daftar/',
+        },
+        {
+          text: 'Terima',
+          active: true,
+        },
+        {
+          text: 'Invoice',
           active: true,
         },
       ],

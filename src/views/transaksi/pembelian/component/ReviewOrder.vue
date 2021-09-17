@@ -112,9 +112,10 @@
       </b-row>
       <hr />
       <b-row>
-        <b-col cols="12" md="8">
+        <b-col cols="12" md="8" ref="nomorTransaksi">
           <b-form-group label="Nomor Transaksi" label-cols-md="4">
-            <b-form-input v-model="dataOrder.nomorTransaksi" type="text" required placeholder="Nomor Transaksi / Invoice / Faktur" />
+            <b-form-input v-model="dataOrder.nomorTransaksi" type="text" required placeholder="Nomor Transaksi / Invoice / Faktur" @change="search" />
+            <small class="text-danger" v-if="dataOrder.isTransaksi.value">{{ dataOrder.isTransaksi.title }}</small>
           </b-form-group>
         </b-col>
       </b-row>
@@ -258,6 +259,28 @@ export default {
   },
 
   methods: {
+    search() {
+      const user = JSON.parse(localStorage.getItem('userData'))
+      const loader = this.$loading.show({
+        container: this.$refs.nomorTransaksi,
+      })
+      store
+        .dispatch('app-transaksi-pembelian/cekNomorTransaksi', {
+          cabang: user.cabang_id,
+          nomorTransaksi: this.dataOrder.nomorTransaksi,
+        })
+        .then(res => {
+          if (res.status === 200) {
+            console.info(res)
+            this.dataOrder.isTransaksi = res.data
+            loader.hide()
+          }
+        })
+        .catch(error => {
+          this.error(error)
+        })
+      // loader.hide()
+    },
     dpOnChange(e) {
       if (e >= this.dataOrder.invoice.grandTotal) {
         this.dataOrder.pembayaran.downPayment = this.dataOrder.invoice.grandTotal

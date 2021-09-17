@@ -83,16 +83,18 @@
           <b-table
             ref="refTable"
             responsive
-            primary-key="id"
             :fields="tableColumns"
             :items="dataLedger"
             :current-page="currentPage"
             :per-page="perPage"
+            :sort-desc="true"
+            sort-by="id"
             show-empty
             :empty-text="emptyText"
             class="position-relative"
           >
             <!-- Column: Tanggal -->
+
             <template #cell(tanggal)="data">
               <span>
                 {{ moment(data.item.created_at) }}
@@ -134,11 +136,9 @@
               <b-col cols="12" sm="6" class="d-flex align-items-center justify-content-center justify-content-sm-end">
                 <b-pagination
                   v-model="currentPage"
-                  :sort-compare="true"
                   :total-rows="totalLedger"
                   :per-page="perPage"
-                  :sort-by.sync="sortBy"
-                  :sort-desc.sync="isSortDirDesc"
+                  sort-by.sync="id"
                   first-number
                   last-number
                   class="mb-0 mt-1 mt-sm-0"
@@ -318,8 +318,11 @@ export default {
   setup() {
     const tableColumns = [
       {
+        key: 'id',
+        sortable: true,
+      },
+      {
         key: 'tanggal',
-        sortable: false,
       },
       { key: 'nomor_jurnal', sortable: false },
       { label: 'debit', key: 'debit', sortable: false },
@@ -337,8 +340,6 @@ export default {
     const dataTemp = ref([])
     const currentPage = ref(1)
     const perPageOptions = [10, 25, 50, 100]
-    const sortBy = ref('tanggal')
-    const isSortDirDesc = ref(false)
     const statusFilter = ref(null)
 
     return {
@@ -346,10 +347,8 @@ export default {
       dataTemp,
       tableColumns,
       perPage,
-      isSortDirDesc,
       currentPage,
       perPageOptions,
-      sortBy,
       statusFilter,
     }
   },

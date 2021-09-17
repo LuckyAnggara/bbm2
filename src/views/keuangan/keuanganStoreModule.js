@@ -17,6 +17,9 @@ export default {
     dataBebanGaji: {},
     listMasterPenggajian: [],
     listDataDetailPenggajian: [],
+    // UTANG
+    listUtang: [],
+    listPiutang: [],
   },
   getters: {
     getListAkun: state => state.listAkun,
@@ -34,6 +37,9 @@ export default {
     getDataBebanGaji: state => state.dataBebanGaji,
     getMasterPenggajian: state => state.listMasterPenggajian,
     getDataDetailPenggajian: state => state.listDataDetailPenggajian,
+    // UTANG
+    getListUtang: state => state.listUtang,
+    getListPiutang: state => state.listPiutang,
   },
   mutations: {
     SET_LIST_AKUN(state, data) {
@@ -87,13 +93,20 @@ export default {
       const index = state.listMasterPenggajian.findIndex(x => x.id === data)
       state.listMasterPenggajian.splice(index, 1)
     },
+    // UTANG
+    SET_DATA_UTANG(state, data) {
+      state.listUtang = data
+    },
+    SET_DATA_PIUTANG(state, data) {
+      state.listPiutang = data
+    },
   },
   actions: {
     // AKUN
     storeAkun(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:8080/api/akun/store', data)
+          .post(`${axios.defaults.keuanganURL}akun/store`, data)
           .then(response => {
             resolve(response)
           })
@@ -104,17 +117,17 @@ export default {
     fetchNeraca(ctx, tahun) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/neraca/tahun/${tahun}`)
+          .get(`${axios.defaults.keuanganURL}neraca/tahun/${tahun}`)
           .then(response => {
             resolve(response)
           })
           .catch(error => reject(error))
       })
     },
-    fetchLabaRugi(ctx, tahun) {
+    fetchLabaRugi(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/labarugi/tahun/${tahun}`)
+          .get(`${axios.defaults.keuanganURL}labarugi?cabang_id=${data.cabang_id}&tahun=${data.tahun}`)
           .then(response => {
             resolve(response)
           })
@@ -124,7 +137,7 @@ export default {
     fetchListAkun(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/akun/tahun/${params.tahun}/cabang/${params.cabang}`)
+          .get(`${axios.defaults.keuanganURL}akun/tahun/${params.tahun}/cabang/${params.cabang}`)
           .then(response => {
             resolve(response)
           })
@@ -134,7 +147,7 @@ export default {
     fetchListJurnal(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/jurnal/${params.cabang}/${params.dateawal}/${params.dateakhir}`)
+          .get(`${axios.defaults.keuanganURL}jurnal/${params.cabang}/${params.dateawal}/${params.dateakhir}`)
           .then(response => {
             resolve(response)
           })
@@ -144,7 +157,7 @@ export default {
     fetchListNomorJurnal(ctx, nomorjurnal) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/jurnal/${nomorjurnal}`)
+          .get(`${axios.defaults.keuanganURL}jurnal/${nomorjurnal}`)
           .then(response => {
             resolve(response)
           })
@@ -154,8 +167,8 @@ export default {
     fetchLedgerByAkun(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          // .get(`http://127.0.0.1:8080/api/ledger/${id}`)
-          .get(`http://127.0.0.1:8080/api/ledger/${params.cabang}/${params.id}/${params.dateawal}/${params.dateakhir}`)
+          // .get(`${axios.defaults.keuanganURL}ledger/${id}`)
+          .get(`${axios.defaults.keuanganURL}ledger/${params.cabang}/${params.id}/${params.dateawal}/${params.dateakhir}`)
           .then(response => {
             resolve(response)
           })
@@ -165,7 +178,7 @@ export default {
     storeJurnal(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:8080/api/jurnal/store', data)
+          .post(`${axios.defaults.keuanganURL}jurnal/store`, data)
           .then(response => {
             resolve(response)
           })
@@ -176,7 +189,7 @@ export default {
     removeJurnal(ctx, jurnal) {
       return new Promise((resolve, reject) => {
         axios
-          .delete(`http://127.0.0.1:8080/api/jurnal/delete/${jurnal}`)
+          .delete(`${axios.defaults.keuanganURL}jurnal/delete/${jurnal}`)
           .then(response => {
             resolve(response)
           })
@@ -186,7 +199,7 @@ export default {
     returJurnal(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:8080/api/jurnal/retur', data)
+          .post(`${axios.defaults.keuanganURL}jurnal/retur`, data)
           .then(response => {
             resolve(response)
           })
@@ -198,7 +211,7 @@ export default {
     fetchOperasional(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/beban/operasional/cabang/${params.cabang}/tahun/${params.tahun}`)
+          .get(`${axios.defaults.keuanganURL}beban/operasional/cabang/${params.cabang}/tahun/${params.tahun}`)
           .then(response => {
             resolve(response)
           })
@@ -208,7 +221,7 @@ export default {
     storeBeban(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:8080/api/beban/store', data)
+          .post(`${axios.defaults.keuanganURL}beban/store`, data)
           .then(response => {
             resolve(response)
           })
@@ -218,19 +231,18 @@ export default {
     removeBeban(ctx, id) {
       return new Promise((resolve, reject) => {
         axios
-          .delete(`http://127.0.0.1:8080/api/beban/delete/${id}`)
+          .delete(`${axios.defaults.keuanganURL}beban/delete/${id}`)
           .then(response => {
             resolve(response)
           })
           .catch(error => reject(error))
       })
     },
-
     // GAJI
     fetchGaji(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:8080/api/beban/gaji/cabang/${params.cabang}/tahun/${params.tahun}`)
+          .get(`${axios.defaults.keuanganURL}beban/gaji/cabang/${params.cabang}/tahun/${params.tahun}`)
           .then(response => {
             resolve(response)
           })
@@ -271,7 +283,100 @@ export default {
     storeKas(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:8080/api/kas/store', data)
+          .post(`${axios.defaults.keuanganURL}kas/store`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchListSetorCabang(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${axios.defaults.baseURL}setor?jenis=${params.jenis}&cabang_id=${params.cabang}&tanggal_awal=${params.dateawal}&tanggal_akhir=${params.dateakhir}`,
+          )
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    storeKasCabang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}setor/store/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    kasCabangConfirm(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}setor/confirm/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    // UTANGPIUTANG
+    getPiutang(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}utang-piutang/get-piutang?cabang=${params.cabang}&dd=${params.dd}&ddd=${params.ddd}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    getUtang(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}utang-piutang/get-utang?cabang=${params.cabang}&dd=${params.dd}&ddd=${params.ddd}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    storeBatchPiutang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}utang-piutang/store-piutang/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    storeBatchUtang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}utang-piutang/store-utang/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    getListPelanggan(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}utang-piutang/get-list-pelanggan?cabang=${params.cabang}&dd=${params.dd}&ddd=${params.ddd}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    getListSupplier(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}utang-piutang/get-list-supplier?cabang=${params.cabang}&dd=${params.dd}&ddd=${params.ddd}`)
           .then(response => {
             resolve(response)
           })

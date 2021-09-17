@@ -4,116 +4,88 @@
       <b-card>
         <b-card-header class="pb-50">
           <h4>
-            Data Transaksi Penjualan
+            Data Draft Transaksi Penjualan
           </h4>
         </b-card-header>
         <b-card-body>
-          <div>
-            <!-- Add New Item Button -->
-            <div class="flex justify-content-end">
-              <b-form-group>
-                <div class="d-flex align-items-center">
-                  <b-button variant="primary" @click="toTambahScreen()">
-                    <span class="text-nowrap">Add Transaksi</span>
-                  </b-button>
-                </div>
-              </b-form-group>
-            </div>
-            <!-- search input -->
-            <div class="custom-search d-flex justify-content-end">
-              <b-form-group>
-                <div class="d-flex align-items-center">
-                  <label class="mr-1">Search</label>
-                  <b-form-input v-model="searchTerm" placeholder="Search" type="text" class="d-inline-block" />
-                </div>
-              </b-form-group>
-            </div>
-            <vue-good-table
-              :line-numbers="true"
-              :columns="columns"
-              :rows="rows"
-              :search-options="{
-                enabled: true,
-                externalQuery: searchTerm,
-              }"
-              :pagination-options="{
-                enabled: true,
-                perPage: pageLength,
-              }"
-            >
-              <template slot="table-row" slot-scope="props">
-                <!-- Column: Status -->
-                <span v-if="props.column.field === 'status'">
-                  <b-badge :variant="statusPembayaran(props.row.pembayaran.statusPembayaran.value)">
-                    {{ props.row.pembayaran.statusPembayaran.title === 'Cash On Delivery (COD)' ? 'COD' : props.row.pembayaran.statusPembayaran.title }}
-                  </b-badge>
-                </span>
-
-                <!-- Column: Action -->
-                <span v-if="props.column.field === 'action'">
-                  <span>
-                    <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
-                      <template v-slot:button-content>
-                        <feather-icon icon="MoreVerticalIcon" size="16" class="text-body align-middle mr-25" />
-                      </template>
-                      <b-dropdown-item @click="view(props.row.nomor, props.index)">
-                        <feather-icon icon="EyeIcon" class="mr-50" />
-                        <span>View</span>
-                      </b-dropdown-item>
-                      <b-dropdown-item @click="del(props.index)">
-                        <feather-icon icon="TrashIcon" class="mr-50" />
-                        <span>Delete</span>
-                      </b-dropdown-item>
-                    </b-dropdown>
-                  </span>
-                </span>
-
-                <!-- Column: Common -->
-                <span v-else>
-                  {{ props.formattedRow[props.column.field] }}
-                </span>
-              </template>
-              <!-- pagination -->
-              <template slot="pagination-bottom" slot-scope="props">
-                <div class="d-flex justify-content-between flex-wrap">
-                  <div class="d-flex align-items-center mb-0 mt-1">
-                    <span class="text-nowrap ">
-                      Showing 1 to
-                    </span>
-                    <b-form-select
-                      v-model="pageLength"
-                      :options="['10', '20', '50']"
-                      class="mx-1"
-                      @input="value => props.perPageChanged({ currentPerPage: value })"
-                    />
-
-                    <span class="text-nowrap"> of {{ props.total }} entries </span>
-                  </div>
-                  <div>
-                    <b-pagination
-                      :value="1"
-                      :total-rows="props.total"
-                      :per-page="pageLength"
-                      first-number
-                      last-number
-                      align="right"
-                      prev-class="prev-item"
-                      next-class="next-item"
-                      class="mt-1 mb-0"
-                      @input="value => props.pageChanged({ currentPage: value })"
-                    >
-                      <template #prev-text>
-                        <feather-icon icon="ChevronLeftIcon" size="18" />
-                      </template>
-                      <template #next-text>
-                        <feather-icon icon="ChevronRightIcon" size="18" />
-                      </template>
-                    </b-pagination>
-                  </div>
-                </div>
-              </template>
-            </vue-good-table>
+          <div class="mb-2">
+            <!-- Table Top -->
+            <b-row>
+              <!-- Per Page -->
+              <b-col cols="12" md="6" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
+                <b-button variant="primary" :to="{ name: 'transaksi-penjualan-tambah' }" class="d-inline-block ml-50 mr-1">
+                  Tambah Data
+                </b-button>
+              </b-col>
+            </b-row>
           </div>
+          <b-table
+            id="my-table"
+            ref="refTable"
+            primary-key="id"
+            :fields="tableColumns"
+            :items="listDraft"
+            show-empty
+            empty-text="Tidak ada data"
+            class="position-relative"
+          >
+            <!-- Column: Id -->
+            <template #cell(id)="data">
+              <span>
+                {{ data.index + 1 }}
+              </span>
+            </template>
+
+            <!-- Column: Nama Pelanggan -->
+            <template #cell(nama_pelanggan)="data">
+              <span>
+                {{ data.item.pelanggan.nama }}
+              </span>
+            </template>
+
+            <!-- Column: Jumlah Item -->
+            <template #cell(jumlah_item)="data">
+              <span>
+                {{ data.item.orders.length }}
+              </span>
+            </template>
+
+            <!-- Column: Jumlah Item -->
+            <template #cell(total)="data">
+              <span>
+                {{ formatRupiah(data.item.invoice.grandTotal) }}
+              </span>
+            </template>
+
+            <!-- Column: Actions -->
+            <template #cell(actions)="data">
+              <div class="text-nowrap">
+                <feather-icon
+                  icon="EyeIcon"
+                  size="16"
+                  class="mx-1"
+                  @click="
+                    $router.push({
+                      name: 'transaksi-penjualan-tambah',
+                      params: {
+                        id: data.index,
+                      },
+                    })
+                  "
+                />
+
+                <b-dropdown variant="link" toggle-class="p-0" no-caret>
+                  <template #button-content>
+                    <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
+                  </template>
+                  <b-dropdown-item @click="del(data.index)">
+                    <feather-icon icon="TrashIcon" />
+                    <span class="align-middle ml-50">Delete</span>
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </template>
+          </b-table>
         </b-card-body>
       </b-card>
     </b-col>
@@ -121,42 +93,20 @@
 </template>
 
 <script>
-// import { onUnmounted } from '@vue/composition-api'
+import { ref } from '@vue/composition-api'
 
-import {
-  BBadge,
-  BRow,
-  BCol,
-  BPagination,
-  BFormGroup,
-  BFormInput,
-  BButton,
-  BCard,
-  BCardHeader,
-  BFormSelect,
-  BCardBody,
-  BDropdown,
-  BDropdownItem,
-} from 'bootstrap-vue'
-import { VueGoodTable } from 'vue-good-table'
+import { BTable, BRow, BCol, BButton, BCard, BCardHeader, BCardBody, BDropdown, BDropdownItem } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import store from '@/store'
-import router from '@/router'
-// import barangStoreModule from './barangStoreModule'
 
 export default {
   components: {
+    BTable,
     BDropdown,
     BDropdownItem,
-    BBadge,
     BRow,
     BCol,
-    VueGoodTable,
-    BPagination,
-    BFormGroup,
-    BFormInput,
     BButton,
-    BFormSelect,
     BCard,
     BCardHeader,
     BCardBody,
@@ -165,38 +115,10 @@ export default {
     Ripple,
   },
   data() {
-    return {
-      pageLength: 10,
-      dir: false,
-      columns: [
-        {
-          label: 'Nama Pelanggan',
-          field: 'pelanggan.nama',
-        },
-        {
-          label: 'Jumlah Item',
-          field: this.jumlahItem,
-        },
-        {
-          label: 'Total',
-          field: 'invoice.grandTotal',
-          formatFn: this.formatRupiah,
-        },
-
-        {
-          label: 'Action',
-          field: 'action',
-        },
-      ],
-      rows: '',
-      searchTerm: '',
-    }
+    return {}
   },
-  created() {
-    this.rows = store.getters['app-transaksi-penjualan/getListDraftPenjualan']
-    if (this.rows.length === 0) {
-      this.loadData()
-    }
+  mounted() {
+    this.loadData()
   },
   methods: {
     del(index) {
@@ -224,42 +146,8 @@ export default {
         }
       })
     },
-    /* eslint-disable */
-    view(nomor, index) {
-      router.push({
-        name: 'transaksi-penjualan-tambah',
-        params: {
-          id: index,
-          nomor: nomor,
-        },
-      })
-    },
-    /* eslint-disable */
-    jumlahItem(obj) {
-      return obj.orders.length
-    },
-    invoice(id) {
-      store.commit('app-transaksi-penjualan/SET_DATA_INVOICE_FROM_DAFTAR', id)
-      router.push({ name: 'transaksi-penjualan-invoice' })
-    },
     loadData() {
-      this.rows = store.getters['app-transaksi-penjualan/getListDraftPenjualan']
-    },
-    statusPembayaran(status) {
-      const statusColor = {
-        /* eslint-disable key-spacing */
-        0: 'light-success',
-        1: 'light-danger',
-        2: 'light-warning',
-        /* eslint-enable key-spacing */
-      }
-
-      return statusColor[status]
-    },
-    toTambahScreen() {
-      this.$router.push({
-        name: 'transaksi-penjualan-tambah',
-      })
+      this.listDraft = store.getters['app-transaksi-penjualan/getListDraftPenjualan']
     },
     formatDate(value) {
       return this.$moment(value).format('DD MMMM YYYY')
@@ -267,6 +155,36 @@ export default {
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
+  },
+  setup() {
+    const listDraft = ref([])
+    const tableColumns = [
+      { key: 'id', label: '#', sortable: true },
+      { key: 'nama_pelanggan', sortable: true },
+      { key: 'jumlah_item', sortable: true },
+      { key: 'total', sortable: true },
+      { key: 'actions' },
+    ]
+
+    const perPage = ref(10)
+    const totalDraft = ref(0)
+    const currentPage = ref(1)
+    const perPageOptions = [10, 25, 50, 100]
+    const sortBy = ref('id')
+    const isSortDirDesc = ref(true)
+    const statusFilter = ref(null)
+
+    return {
+      listDraft,
+      tableColumns,
+      perPage,
+      isSortDirDesc,
+      currentPage,
+      totalDraft,
+      perPageOptions,
+      sortBy,
+      statusFilter,
+    }
   },
 }
 </script>

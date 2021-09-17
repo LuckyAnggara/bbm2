@@ -84,21 +84,28 @@ export default {
       const loader = this.$loading.show({
         container: this.$refs.dd,
       })
-      store.dispatch('app-keuangan/fetchLabaRugi', this.tahun).then(res => {
-        loader.hide()
-        store.commit('app-keuangan/SET_LABA', res.data)
-        this.dataPendapatan = store.getters['app-keuangan/getPendapatan']
-        this.dataBeban = store.getters['app-keuangan/getBeban']
-        this.labaRugi = res.data.labaRugi
-      })
+      store
+        .dispatch('app-keuangan/fetchLabaRugi', {
+          tahun: this.tahun,
+          cabang_id: this.user.cabang_id,
+        })
+        .then(res => {
+          loader.hide()
+          store.commit('app-keuangan/SET_LABA', res.data)
+          this.dataPendapatan = store.getters['app-keuangan/getPendapatan']
+          this.dataBeban = store.getters['app-keuangan/getBeban']
+          this.labaRugi = res.data.labaRugi
+        })
     },
   },
 
   setup() {
     const dataPendapatan = ref([])
     const dataBeban = ref([])
+    const user = JSON.parse(localStorage.getItem('userData'))
 
     return {
+      user,
       dataPendapatan,
       dataBeban,
     }

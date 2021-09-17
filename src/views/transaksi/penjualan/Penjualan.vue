@@ -210,6 +210,7 @@ export default {
         })
     },
     load() {
+      console.info(router.currentRoute.params)
       if (router.currentRoute.params.id !== undefined) {
         this.dataOrder = store.getters['app-transaksi-penjualan/getDraftByID'](router.currentRoute.params.id)
         this.startIndex = 1
@@ -224,15 +225,13 @@ export default {
       tanggalTransaksi: '',
       nomor: 0,
       status: false, // untuk Status Draft atau Proses
-      sales: {
-        value: '',
-        nama: '',
-      }, // untuk Status Draft atau Proses
+      sales: null, // untuk Status Draft atau Proses
       pelanggan: {
         id: '',
         nama: '',
         alamat: '',
         nomorTelepon: '',
+        wic: true,
       },
       invoice: {
         total: 0,

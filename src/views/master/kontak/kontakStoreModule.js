@@ -42,10 +42,10 @@ export default {
     },
   },
   actions: {
-    fetchListKontak(ctx, queryParams) {
+    fetchListKontak(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}kontak/`, { params: queryParams })
+          .get(`${axios.defaults.baseURL}kontak/`, params)
           .then(response => {
             resolve(response)
           })

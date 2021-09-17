@@ -162,4 +162,68 @@ export default [
       ],
     },
   },
+  {
+    path: '/kas/cabang/',
+    name: 'kas-cabang',
+    component: () => import('@/views/keuangan/kas/Cabang.vue'),
+    meta: {
+      pageTitle: 'Kas Cabang',
+      breadcrumb: [
+        {
+          text: 'Detail',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/keuangan/utangpiutang/',
+    name: 'keuangan-utang-piutang',
+    component: () => import('@/views/keuangan/utang-piutang/UtangPiutang.vue'),
+    meta: {
+      pageTitle: 'Keuangan',
+      breadcrumb: [
+        {
+          text: 'Utang / Piutang',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/keuangan/utangpiutang/bulkpembayaranutang',
+    name: 'keuangan-bulk-pembayaran-utang',
+    component: () => import('@/views/keuangan/utang-piutang/BulkPembayaranUtang.vue'),
+    meta: {
+      pageTitle: 'Keuangan',
+      breadcrumb: [
+        {
+          text: 'Utang / Piutang',
+          to: '/keuangan/utangpiutang/',
+        },
+        {
+          text: 'Bulk Pembayaran Utang',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/keuangan/utangpiutang/bulkpembayaranpiutang',
+    name: 'keuangan-bulk-pembayaran-piutang',
+    component: () => import('@/views/keuangan/utang-piutang/BulkPembayaranPiutang.vue'),
+    meta: {
+      pageTitle: 'Keuangan',
+      breadcrumb: [
+        {
+          text: 'Utang / Piutang',
+          to: '/keuangan/utangpiutang/',
+        },
+        {
+          text: 'Bulk Pembayaran Piutang',
+          active: true,
+        },
+      ],
+    },
+  },
 ]

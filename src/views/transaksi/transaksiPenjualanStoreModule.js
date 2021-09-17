@@ -10,6 +10,8 @@ export default {
     activeOrder: '',
     listPenjualan: [],
     listPenjualanRetur: [],
+    // PEMBAYARAN
+    listPembayaran: [],
   },
   getters: {
     // PENJUALAN
@@ -25,6 +27,8 @@ export default {
     getListTransaksiPenjualan: state => state.listPenjualan,
     getListTransaksiPenjualanRetur: state => state.listPenjualanRetur,
     getTransaksiByBarang: state => kodeBarang => state.listPenjualan.filter(x => x.orders.kode_barang_id === kodeBarang),
+    // PEMBAYARAN
+    getListPembayaran: state => state.listPembayaran,
   },
   mutations: {
     // PENJUALAN TRANSAKSI
@@ -43,7 +47,6 @@ export default {
     ADD_ORDER_TO_ACTIVE_PENJUALAN(state, data) {
       state.activePenjualan.orders = data
     },
-
     // DATA DRAFT TRANSAKSI PENJUALAN
     ADD_DRAFT_PENJUALAN(state, data) {
       const exist = state.draftPenjualan.find(x => x.nomor === data.nomor)
@@ -75,7 +78,20 @@ export default {
     // PEMBAYARAN
     UPDATE_PEMBAYARAN(state, data) {
       const a = state.activeDataInvoice.pembayaran.sisaPembayaran
-      state.activeDataInvoice.pembayaran.sisaPembayaran = parseFloat(a) - parseFloat(data)
+      if (data.jenis === 'HAPUS') {
+        state.activeDataInvoice.pembayaran.sisaPembayaran = parseFloat(a) + parseFloat(data.nominal)
+      } else {
+        state.activeDataInvoice.pembayaran.sisaPembayaran = parseFloat(a) - parseFloat(data.nominal)
+      }
+    },
+    SET_LIST_PEMBAYARAN(state, data) {
+      state.listPembayaran = data
+    },
+    UPDATE_LIST_PEMBAYARAN(state, data) {
+      state.listPembayaran.push(data)
+    },
+    UPDATE_REMOVE_PEMBAYARAN(state, data) {
+      state.listPembayaran.splice(data, 1)
     },
   },
   actions: {
@@ -132,7 +148,7 @@ export default {
     fetchListTransaksiByBarang(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}penjualan/detail/barang/${params.kodeBarang}/cabang/${params.cabang}`)
+          .get(`${axios.defaults.baseURL}penjualan/detail/barang?id_barang=${params.idBarang}&cabang=${params.cabang}`)
           .then(response => {
             resolve(response)
           })
@@ -155,6 +171,14 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .post(`${axios.defaults.baseURL}pembayaran/store/piutang`, data)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
+    deletePembayaranPiutang(ctx, { id }) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`${axios.defaults.baseURL}pembayaran/delete/piutang/${id}`)
           .then(response => resolve(response))
           .catch(error => reject(error))
       })

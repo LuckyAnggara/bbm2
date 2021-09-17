@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-wrapper auth-v2" ref="loginDiv">
+  <div class="auth-wrapper auth-v2">
     <b-row class="auth-inner m-0">
       <!-- Brand logo-->
       <b-link class="brand-logo">
@@ -19,7 +19,7 @@
       <!-- /Left Text-->
 
       <!-- Login-->
-      <b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5">
+      <b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5" ref="loadingContainer">
         <b-col sm="8" md="6" lg="12" class="px-xl-2 mx-auto">
           <b-card-title title-tag="h2" class="font-weight-bold mb-1">
             Welcome to SIAP-BBM! 👋
@@ -147,7 +147,7 @@ export default {
     login() {
       const loader = this.$loading.show({
         // Optional parameters
-        container: this.$refs.loginDiv,
+        container: this.$refs.loadingContainer,
       })
       const data = this.form
       axios.post(`${axios.defaults.baseURL}auth/login`, data).then(res => {

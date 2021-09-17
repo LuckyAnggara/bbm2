@@ -61,7 +61,7 @@ export default {
     fetchKartuPersediaan(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}persediaan/${params.item.id}/gudang/${params.gudang_id}`)
+          .get(`${axios.defaults.baseURL}persediaan/${params.id}/gudang/${params.gudang_id}`)
           .then(response => resolve(response))
           .catch(error => reject(error))
       })

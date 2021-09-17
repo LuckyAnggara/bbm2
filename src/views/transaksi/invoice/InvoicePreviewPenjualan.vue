@@ -27,12 +27,11 @@
                   <logo />
                   <h3 class="text-primary invoice-logo">PT. Berkah Baja Makmur</h3>
                 </div>
+                <p class="card-text mb-25">Cabang {{ dataUser.cabang.nama }}</p>
                 <p class="card-text mb-25">
-                  Jl. Raya Limbangan Nomor xx Garut, Jawa Barat
+                  {{ dataUser.cabang.alamat }}
                 </p>
-                <p class="card-text mb-25">
-                  Nomor Telepon : 08211xxxx Fax : xxxxx Email : asdasd@gmail.com
-                </p>
+                <p class="card-text mb-25">Nomor Telepon : {{ dataUser.cabang.nomor_telepon }}</p>
                 <h3 v-if="typeRetur" class="text-danger">STATUS RETUR</h3>
               </div>
 
@@ -290,7 +289,7 @@
             </b-button>
 
             <!-- Button: Edit -->
-            <b-button
+            <!-- <b-button
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
               variant="outline-danger"
               class="mb-75"
@@ -298,7 +297,7 @@
               :to="{ name: 'transaksi-penjualan-edit', params: { id: dataInvoice.id } }"
             >
               Edit
-            </b-button>
+            </b-button> -->
             <hr />
           </div>
 
@@ -318,7 +317,7 @@
       </b-col>
 
       <modal-pembayaran :data-piutang="dataInvoice" />
-      <modal-daftar-pembayaran :data-id="dataInvoice.id" />
+      <modal-daftar-pembayaran />
     </b-row>
   </section>
 </template>
@@ -334,7 +333,7 @@ import Ripple from 'vue-ripple-directive'
 import store from '@/store'
 
 import ModalPembayaran from './component/ModalPembayaranPiutang.vue'
-import ModalDaftarPembayaran from './component/ModalDaftarPembayaran.vue'
+import ModalDaftarPembayaran from './component/ModalDaftarPembayaranPenjualan.vue'
 
 export default {
   directives: {
@@ -493,7 +492,7 @@ export default {
       this.$bvModal.show('modal-pembayaran-piutang')
     },
     showModalPembayaran() {
-      this.$bvModal.show('modal-daftar-pembayaran')
+      this.$bvModal.show('modal-daftar-pembayaran-penjualan')
     },
   },
   mounted() {
@@ -502,6 +501,7 @@ export default {
       store.dispatch('app-transaksi-penjualan/fetchTransaksi', id).then(res => {
         if (res.status === 200) {
           store.commit('app-transaksi-penjualan/SET_DATA_INVOICE', res.data)
+          store.commit('app-transaksi-penjualan/SET_LIST_PEMBAYARAN', res.data.pembayaran.listPembayaran)
           this.dataInvoice = store.getters['app-transaksi-penjualan/getDataInvoice']
         }
       })
@@ -509,8 +509,9 @@ export default {
   },
   setup() {
     const dataInvoice = ref()
-
+    const dataUser = JSON.parse(localStorage.getItem('userData'))
     return {
+      dataUser,
       dataInvoice,
     }
   },

@@ -15,6 +15,11 @@ export default [
         route: 'dashboard-analytics',
         resource: 'dashboard-kasir',
       },
+      {
+        title: 'Cabang',
+        route: 'dashboard-cabang',
+        icon: 'ActivityIcon',
+      },
     ],
   },
   {

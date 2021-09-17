@@ -51,6 +51,16 @@ export default {
     },
   },
   actions: {
+    fetchListCabang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}cabang/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
     fetchListJabatanDivisiCabang(ctx, data) {
       return new Promise((resolve, reject) => {
         axios

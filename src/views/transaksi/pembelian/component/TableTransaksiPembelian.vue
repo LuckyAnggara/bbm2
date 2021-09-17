@@ -13,7 +13,7 @@
         </b-col>
 
         <!-- Search -->
-        <b-col cols="12" md="6">
+        <b-col cols="12" md="6" v-show="components">
           <div class="d-flex align-items-center justify-content-end">
             <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Nomor Transaksi , Nama Pelanggan)" />
             <v-select v-model="filterQuery" :options="filterOptions" class="invoice-filter-select  mr-1" placeholder="Status Pembayaran">
@@ -49,7 +49,7 @@
 
       <!-- Column: Nomor Transaksi -->
       <template #cell(nomorTransaksi)="data">
-        <b-link :to="{ name: 'transaksi-penjualan-invoice', params: { id: data.item.id } }" class="font-weight-bold"> #{{ data.item.nomorTransaksi }} </b-link>
+        <b-link :to="{ name: 'transaksi-pembelian-invoice', params: { id: data.item.id } }" class="font-weight-bold"> #{{ data.item.nomorTransaksi }} </b-link>
       </template>
 
       <!-- Column: Issued Date -->
@@ -108,7 +108,7 @@
             class="mx-1"
             @click="
               $router.push({
-                name: 'transaksi-penjualan-invoice',
+                name: 'transaksi-pembelian-invoice',
                 params: { id: data.item.id },
               })
             "
@@ -122,9 +122,9 @@
               <feather-icon icon="CastIcon" />
               <span class="align-middle ml-50">Print Invoice</span>
             </b-dropdown-item>
-            <b-dropdown-item>
+            <b-dropdown-item v-show="data.item.pembayaran.statusPembayaran.value === 1" @click="showModalPembayaran(data.item.pembayaran)">
               <feather-icon icon="ActivityIcon" />
-              <span class="align-middle ml-50">Timeline</span>
+              <span class="align-middle ml-50">Pembayaran</span>
             </b-dropdown-item>
             <b-dropdown-item :to="{ name: 'akuntansi-jurnal-detail', params: { id: data.item.nomorJurnal } }">
               <feather-icon icon="BookIcon" />
@@ -147,7 +147,8 @@
       <b-row>
         <b-col cols="12" sm="6" class="d-flex align-items-center justify-content-center justify-content-sm-start">
           <span class="text-muted"
-            >Showing {{ dataMeta.from }} to {{ dataMeta.to }} of {{ dataMeta.of }} entries || From {{ tanggal.awal }} to {{ tanggal.akhir }}</span
+            >Showing {{ dataMeta.from }} to {{ dataMeta.to }} of {{ dataMeta.of }} entries || From {{ $moment(tanggal.awal).format('DD MMM YY') }} to
+            {{ $moment(tanggal.akhir).format('DD MMM YY') }}</span
           >
         </b-col>
         <!-- Pagination -->
@@ -172,6 +173,7 @@
         </b-col>
       </b-row>
     </div>
+    <modal-daftar-pembayaran />
   </section>
 </template>
 
@@ -180,6 +182,7 @@ import { ref } from '@vue/composition-api'
 
 import { BRow, BCol, BFormInput, BButton, BTable, BLink, BBadge, BDropdown, BDropdownItem, BPagination, BTooltip } from 'bootstrap-vue'
 import vSelect from 'vue-select'
+import ModalDaftarPembayaran from '@/views/transaksi/invoice/component/ModalDaftarPembayaranPembelian.vue'
 
 export default {
   components: {
@@ -195,6 +198,7 @@ export default {
     BPagination,
     BTooltip,
     vSelect,
+    ModalDaftarPembayaran,
   },
   data() {
     return {
@@ -230,6 +234,10 @@ export default {
       type: Object,
       required: true,
     },
+    components: {
+      type: Boolean,
+      required: true,
+    },
   },
   computed: {
     tanggal() {
@@ -259,6 +267,10 @@ export default {
     },
     formatRupiah(value) {
       return `Rp. ${value.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
+    },
+    showModalPembayaran(data) {
+      this.$store.commit('app-transaksi-pembelian/SET_LIST_PEMBAYARAN', data.listPembayaran)
+      this.$bvModal.show('modal-daftar-pembayaran')
     },
   },
   setup() {

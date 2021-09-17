@@ -28,7 +28,7 @@
         </b-col>
         <b-col cols="12" md="9" xl="9">
           <b-card>
-            <kartu-persediaan :data-persediaan="dataPersediaan" :id="id" />
+            <kartu-persediaan :list-data="dataPersediaan" />
           </b-card>
         </b-col>
       </b-row>
@@ -68,9 +68,7 @@ export default {
       if (!this.data) return null
       return this.data
     },
-    id() {
-      return router.currentRoute.params.id
-    },
+
     saldoRupiah() {
       if (this.dataItem.persediaan.saldo_rp === null) {
         return 'Rp. 0'

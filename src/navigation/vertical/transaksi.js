@@ -40,4 +40,19 @@ export default [
       },
     ],
   },
+  {
+    title: 'P.O',
+    icon: 'HomeIcon',
+    tagVariant: 'light-warning',
+    children: [
+      {
+        title: 'Daftar',
+        route: 'transaksi-po-daftar',
+      },
+      {
+        title: 'P.O Baru',
+        route: 'transaksi-po-tambah',
+      },
+    ],
+  },
 ]

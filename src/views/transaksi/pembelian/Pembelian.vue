@@ -88,7 +88,7 @@ export default {
     this.load()
   },
   methods: {
-    success() {
+    success(data) {
       this.$swal({
         title: 'Success!',
         text: 'Transaksi Sukses!!',
@@ -100,7 +100,8 @@ export default {
       })
 
       this.$router.push({
-        name: 'transaksi-pembelian-daftar',
+        name: 'transaksi-pembelian-invoice',
+        params: { id: data.id },
       })
     },
     error(error) {
@@ -129,6 +130,17 @@ export default {
       this.$swal({
         title: 'Error!',
         text: 'Tanggal transaksi masih kosong!!!',
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+        },
+        buttonsStyling: false,
+      })
+    },
+    errorTransaksi() {
+      this.$swal({
+        title: 'Error!',
+        text: 'Nomor Transaksi sudah ada !!!',
         icon: 'error',
         customClass: {
           confirmButton: 'btn btn-primary',
@@ -182,6 +194,8 @@ export default {
         this.errorNomor()
       } else if (this.dataOrder.tanggalTransaksi === '' || this.dataOrder.tanggalTransaksi === null) {
         this.errorTanggal()
+      } else if (this.dataOrder.isTransaksi.value === true) {
+        this.errorTransaksi()
       } else {
         const loader = this.$loading.show({
           // Optional parameters
@@ -198,7 +212,7 @@ export default {
               if (router.currentRoute.params.nomor !== undefined) {
                 store.commit('app-transaksi-pembelian/REMOVE_DRAFT_PEMBELIAN', router.currentRoute.params.nomor)
               }
-              this.success()
+              this.success(res.data)
             } else {
               this.error()
             }
@@ -243,6 +257,10 @@ export default {
         downPayment: 0,
         tanggalJatuhTempo: '',
         statusPembayaran: { title: 'Lunas', value: '0' },
+      },
+      isTransaksi: {
+        title: '',
+        value: false,
       },
       orders: [],
       user: JSON.parse(localStorage.getItem('userData')),

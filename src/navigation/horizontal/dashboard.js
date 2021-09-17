@@ -13,6 +13,11 @@ export default [
         route: 'dashboard-analytics',
         icon: 'ActivityIcon',
       },
+      {
+        title: 'Cabang',
+        route: 'dashboard-cabang',
+        icon: 'ActivityIcon',
+      },
     ],
   },
 ]

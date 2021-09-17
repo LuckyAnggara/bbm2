@@ -1,7 +1,7 @@
 <template>
   <section>
     <b-row class="match-height">
-      <b-col lg="9" cols="12">
+      <b-col lg="9" md="9" sm="12" cols="12">
         <b-card>
           <b-row>
             <b-col lg="12" cols="12">
@@ -27,7 +27,7 @@
           </b-row>
         </b-card>
       </b-col>
-      <b-col cols="12" md="3" xl="3">
+      <b-col cols="12" md="3" sm="12" xl="3">
         <b-card>
           <!-- Button: Tambah Beban -->
           <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" v-b-modal.modal-beban variant="primary" class="mb-75" block>
@@ -64,6 +64,7 @@
       ok-variant="primary"
       ok-title="Submit"
       modal-class="modal-primary"
+      size="lg"
       centered
       title="Tambah Beban"
       @hidden="resetFormBeban"
@@ -90,6 +91,19 @@
         <b-col lg="12" cols="12">
           <b-form-group label="Nominal" label-cols-md="3">
             <b-form-input type="number" v-model="formBeban.nominal" />
+          </b-form-group>
+          <hr />
+        </b-col>
+        <b-col>
+          <b-form-group label="Cara Pembayaran" label-cols-md="3">
+            <b-form-input value="TUNAI" readonly />
+            <!-- <v-select v-model="beban.caraPembayaran" placeholder="Cara Pembayaran" label="title" :options="caraPembayaran" :clearable="false" /> -->
+          </b-form-group>
+        </b-col>
+        <b-col cols="12" md="12">
+          <b-form-group label="Kas" label-cols-md="3">
+            <v-select v-model="formBeban.kas" placeholder="Kas yang digunakan" label="title" :options="kasTunai" :clearable="false" />
+            <!-- <small class="text-danger" v-show="beban.kas != ''">Uang akan mendebet {{ beban.kas.title }}</small> -->
           </b-form-group>
         </b-col>
         <b-col lg="12" cols="12">
@@ -163,6 +177,7 @@ export default {
         subAkun: '',
         nominal: 0,
         catatan: '',
+        kas: null,
         tanggal: new Date(),
       },
       formSubAkun: {
@@ -190,6 +205,14 @@ export default {
     },
   },
   computed: {
+    kasTunai() {
+      const userData = JSON.parse(localStorage.getItem('userData'))
+      console.info(userData)
+      return [
+        { title: `Kas - ${userData.cabang.nama}`, value: '0', kode_akun_id: userData.cabang.kode_akun_id },
+        { title: `Kas - ${userData.pegawai.nama}`, value: '1', kode_akun_id: userData.kode_akun_id },
+      ]
+    },
     saldo() {
       let saldo = 0
       this.dataDetailBeban.forEach(x => {
@@ -249,6 +272,7 @@ export default {
       this.formBeban.tanggal = ''
       this.formBeban.catatan = ''
       this.formBeban.subAkun = ''
+      this.formBeban.kas = null
     },
     loadOperasional(x = null) {
       let tahun = x
@@ -309,6 +333,7 @@ export default {
           nominal: this.formBeban.nominal,
           catatan: this.formBeban.catatan,
           tanggal: this.formBeban.tanggal,
+          kas: this.formBeban.kas,
         }
         store.dispatch('app-keuangan/storeBeban', output).then(res => {
           loader.hide()
