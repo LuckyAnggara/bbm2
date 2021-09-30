@@ -54,7 +54,7 @@ export default {
       store
         .dispatch('app-keuangan/fetchListAkun', {
           tahun: this.tahun,
-          cabang: user.cabang_id,
+          cabang_id: user.cabang_id,
         })
         .then(res => {
           store.commit('app-keuangan/SET_LIST_AKUN', res.data)

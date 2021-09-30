@@ -169,7 +169,7 @@
             <b-form-input v-model="qty" trim type="number" />
           </b-form-group>
         </b-col>
-        <b-col cols="12">
+        <!-- <b-col cols="12">
           <b-form-group label="Harga Satuan" label-for="nama-pelanggan-lama" class="mb-2">
             <v-select
               v-model="selectHarga"
@@ -180,7 +180,7 @@
               :value="selectHarga.id"
             />
           </b-form-group>
-        </b-col>
+        </b-col> -->
         <b-col cols="12">
           <b-form-group label="Harga Beli" label-for="harga-beli" class="mb-2">
             <b-form-input v-model="hargaBeli" trim type="number" />

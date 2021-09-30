@@ -1,34 +1,52 @@
 <template>
   <section>
-    <b-row class="match-height">
-      <b-col lg="12" cols="12">
+    <b-row>
+      <b-col lg="4" cols="4" sm="12">
         <b-card>
-          <b-col cols="12" md="6" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
-            <label>Tahun Buku</label>
-            <v-select v-model="tahun" :options="option" :clearable="false" @input="setSelected" class="per-page-selector d-inline-block ml-50 mr-1" />
-            <b-button variant="success" class="d-inline-block ml-50 mr-1">
-              Print Data
+          <b-col cols="12" md="12">
+            <b-form-group label="Tahunan" label-for="bank" label-cols-md="4">
+              <v-select v-model="tahun" placeholder="Berdasarkan Tahunan" :clearable="true" :options="tahunOption" @input="tahunChange()" />
+            </b-form-group>
+          </b-col>
+
+          <hr />
+          <b-col cols="12" md="12">
+            <b-form-group label="Bulanan" label-for="bank" label-cols-md="4">
+              <v-select v-model="bulan" placeholder="Berdasarkan Bulanan" label="title" :clearable="true" :options="bulanOption" @input="bulanChange()" />
+            </b-form-group>
+          </b-col>
+          <hr />
+          <b-col cols="12" md="12">
+            <b-form-group label="Harian" label-for="bank" label-cols-md="4">
+              <b-form-datepicker
+                placeholder="Berdasarkan Harian"
+                v-model="hari"
+                locale="id"
+                :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                @input="hariChange()"
+              />
+            </b-form-group>
+          </b-col>
+          <hr />
+          <b-col offset-md="4">
+            <b-button variant="outline-secondary">
+              Download
             </b-button>
           </b-col>
         </b-card>
       </b-col>
-    </b-row>
-
-    <div>
-      <b-row class="match-height">
-        <b-col lg="6" cols="12"> <table-component :title="`Pendapatan`" :dataItem="dataPendapatan" /> </b-col>
-        <b-col lg="6" cols="12">
-          <b-card title="Total Laba Berjalan" :footer="footerTitle" class="text-center" footer-class="text-muted">
-            <b-card-text>
+      <b-col lg="8" cols="8" sm="12">
+        <b-row>
+          <b-col lg="12" cols="12"> <table-component :title="`PENDAPATAN`" :dataItem="dataPendapatan" /> </b-col>
+          <b-col lg="12" cols="12"> <table-component :title="`BEBAN`" :dataItem="dataBeban" /> </b-col>
+          <b-col lg="12" cols="12">
+            <b-card title="Total Laba Berjalan" :footer="footerTitle" class="text-center" footer-class="text-muted">
               <h1 :class="labaRugiClass">{{ formatRupiah(labaRugi) }}</h1>
-            </b-card-text>
-          </b-card>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col lg="6" cols="12"> <table-component :title="`Beban`" :dataItem="dataBeban" /> </b-col>
-      </b-row>
-    </div>
+            </b-card>
+          </b-col>
+        </b-row>
+      </b-col>
+    </b-row>
   </section>
 </template>
 
@@ -36,30 +54,84 @@
 import store from '@/store'
 import { ref } from '@vue/composition-api'
 
-import { BButton, BCard, BCardText, BRow, BCol } from 'bootstrap-vue'
+import { BFormDatepicker, BFormGroup, BButton, BCard, BRow, BCol } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 import TableComponent from './component/Table.vue'
 
 export default {
   components: {
+    BFormDatepicker,
+    BFormGroup,
     TableComponent,
     vSelect,
     BButton,
     BCard,
-    BCardText,
     BRow,
     BCol,
   },
   data() {
     return {
-      tahun: '2021',
-      option: ['2021', '2022', '2023'],
+      title: 'Tahun 2021 Berjalan',
+      hari: '',
+      tahun: new Date().getFullYear(),
+      bulan: '',
+      tahunOption: ['2021', '2022', '2023'],
+      bulanOption: [
+        {
+          title: 'JANUARI',
+          value: 1,
+        },
+        {
+          title: 'FEBRUARI',
+          value: 2,
+        },
+        {
+          title: 'MARET',
+          value: 3,
+        },
+        {
+          title: 'APRIL',
+          value: 4,
+        },
+        {
+          title: 'MEI',
+          value: 5,
+        },
+        {
+          title: 'JUNI',
+          value: 6,
+        },
+        {
+          title: 'JULI',
+          value: 7,
+        },
+        {
+          title: 'AGUSTUS',
+          value: 8,
+        },
+        {
+          title: 'SEPTEMBER',
+          value: 9,
+        },
+        {
+          title: 'OKTOBER',
+          value: 10,
+        },
+        {
+          title: 'NOVEMBER',
+          value: 11,
+        },
+        {
+          title: 'DESEMBER',
+          value: 12,
+        },
+      ],
       labaRugi: 0,
     }
   },
   computed: {
     footerTitle() {
-      return `Berdasarkan Data Tahun ${this.tahun} berjalan`
+      return `Berdasarkan Data ${this.title}`
     },
     labaRugiClass() {
       if (this.labaRugi < 0) {
@@ -71,12 +143,28 @@ export default {
   mounted() {
     this.loadData()
   },
-
   methods: {
     setSelected() {
       this.loadData()
     },
-
+    tahunChange() {
+      this.hari = ''
+      this.bulan = ''
+      this.title = `Tahun ${this.tahun} Berjalan`
+      this.loadData()
+    },
+    bulanChange() {
+      this.hari = ''
+      this.tahun = ''
+      this.title = `Bulan ${this.bulan.title} Berjalan`
+      this.loadData()
+    },
+    hariChange() {
+      this.tahun = ''
+      this.bulan = ''
+      this.title = `Tanggal ${this.$moment(this.hari).format('LL')}`
+      this.loadData()
+    },
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
@@ -87,6 +175,8 @@ export default {
       store
         .dispatch('app-keuangan/fetchLabaRugi', {
           tahun: this.tahun,
+          bulan: this.bulan ? this.bulan.value : '',
+          hari: this.hari,
           cabang_id: this.user.cabang_id,
         })
         .then(res => {

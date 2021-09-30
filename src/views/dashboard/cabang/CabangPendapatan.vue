@@ -29,7 +29,7 @@
           </b-dropdown-item>
         </b-dropdown>
 
-        <h2 class="mb-25" v-if="data">{{ data.labeBersih != null ? formatRupiah(data.labaBersih) : 'Rp.0' }}</h2>
+        <h2 class="mb-25" v-if="data">{{ data.laba_bersih != null ? formatRupiah(data.laba_bersih) : 'Rp.0' }}</h2>
         <div class="d-flex justify-content-center mb-5">
           <span class="font-weight-bolder mr-25">Laba Bersih Bulan Ini</span>
         </div>

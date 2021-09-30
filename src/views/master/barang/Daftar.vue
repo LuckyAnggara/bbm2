@@ -22,13 +22,6 @@
               <b-col cols="12" md="6">
                 <div class="d-flex align-items-center justify-content-end">
                   <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Kode Barang, Nama Barang)" />
-                  <!-- <v-select v-model="filterQuery" :options="filterOptions" class="barang-filter-select  mr-1" placeholder="Merek Barang">
-                    <template #selected-option="{ label }">
-                      <span class="text-truncate overflow-hidden">
-                        {{ label }}
-                      </span>
-                    </template>
-                  </v-select> -->
                 </div>
               </b-col>
             </b-row>
@@ -58,6 +51,21 @@
                 {{ data.index + 1 }}
               </span>
             </template>
+            <template #cell(harga_1)="data">
+              <span>
+                {{ !data.item.harga_ritel ? 0 : formatRupiah(data.item.harga_ritel) }}
+              </span>
+            </template>
+            <template #cell(harga_2)="data">
+              <span>
+                {{ !data.item.harga_konsumen ? 0 : formatRupiah(data.item.harga_konsumen) }}
+              </span>
+            </template>
+            <template #cell(harga_3)="data">
+              <span>
+                {{ !data.item.harga_lainnya ? 0 : formatRupiah(data.item.harga_lainnya) }}
+              </span>
+            </template>
 
             <!-- Column: Actions -->
             <template #cell(actions)="data">
@@ -74,18 +82,6 @@
                     })
                   "
                 />
-                <b-tooltip title="Detail Barang" :target="`barang-row-${data.item.id}-preview-icon`" />
-
-                <b-dropdown variant="link" toggle-class="p-0" no-caret>
-                  <template #button-content>
-                    <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
-                  </template>
-
-                  <b-dropdown-item @click="del(data.item.id)">
-                    <feather-icon icon="TrashIcon" />
-                    <span class="align-middle ml-50">Delete</span>
-                  </b-dropdown-item>
-                </b-dropdown>
               </div>
             </template>
           </b-table>
@@ -125,27 +121,20 @@
 <script>
 import store from '@/store'
 import { ref } from '@vue/composition-api'
+import { formatRupiah } from '@core/utils/filter'
 
-import { BCard, BRow, BCol, BFormInput, BButton, BTable, BDropdown, BDropdownItem, BPagination, BTooltip } from 'bootstrap-vue'
+import { BCard, BRow, BCol, BFormInput, BButton, BTable, BPagination } from 'bootstrap-vue'
 import vSelect from 'vue-select'
-// import CardStatisticsGroup from './CardStatisticsGroup.vue'
 
 export default {
   components: {
-    // CardStatisticsGroup,
     BCard,
     BRow,
     BCol,
     BFormInput,
     BButton,
     BTable,
-    // BMedia,
-    // BAvatar,
-    BDropdown,
-    BDropdownItem,
     BPagination,
-    BTooltip,
-
     vSelect,
   },
   data() {
@@ -192,8 +181,9 @@ export default {
     },
   },
   methods: {
+    formatRupiah,
     loadbarang() {
-      store.dispatch('app-barang/fetchListBarang').then(res => {
+      store.dispatch('app-barang/fetchListBarang', { cabang_id: this.userData.cabang_id }).then(res => {
         store.commit('app-barang/SET_LIST_BARANG', res.data)
         this.dataBarang = store.getters['app-barang/getListBarang']
         this.dataTemp = store.getters['app-barang/getListBarang']
@@ -256,10 +246,11 @@ export default {
     const tableColumns = [
       { key: 'id', label: '#', sortable: true },
       { key: 'kode_barang', sortable: true },
-      { key: 'nama', sortable: true },
-      { label: 'jenis', key: 'nama_jenis', sortable: true },
-      { label: 'merek', key: 'nama_merek', sortable: true },
-      { label: 'gudang', key: 'rak', sortable: true },
+      { key: 'nama', label: 'Nama Barang', sortable: true },
+      { key: 'nama_merek', label: 'Merek Barang', sortable: true },
+      { key: 'harga_1', label: 'Harga Konsumen', sortable: true },
+      { key: 'harga_2', label: 'Harga Ritel', sortable: true },
+      { key: 'harga_3', label: 'Harga Lainnya', sortable: true },
       { key: 'actions' },
     ]
 
@@ -271,8 +262,10 @@ export default {
     const sortBy = ref('id')
     const isSortDirDesc = ref(true)
     const statusFilter = ref(null)
+    const userData = JSON.parse(localStorage.getItem('userData'))
 
     return {
+      userData,
       filterOptions,
       tableColumns,
       // searchQuery,

@@ -15,6 +15,7 @@ import transaksiPenjualanStoreModule from '@/views/transaksi/transaksiPenjualanS
 import transaksiPembelianStoreModule from '@/views/transaksi/transaksiPembelianStoreModule'
 import dashboardCabangStoreModule from '@/views/dashboard/dashboardCabangStoreModule'
 import poStoreModule from '@/views/transaksi/poStoreModule'
+import cabangStoreModule from '@/views/master/cabang/cabangStoreModule'
 import app from './app'
 import appConfig from './app-config'
 import verticalMenu from './vertical-menu'
@@ -39,6 +40,7 @@ export default new Vuex.Store({
     'app-transaksi-pembelian': transaksiPembelianStoreModule,
     'app-po': poStoreModule,
     'app-dashboard-cabang': dashboardCabangStoreModule,
+    'app-cabang': cabangStoreModule,
   },
   strict: process.env.DEV,
 })

@@ -5,16 +5,16 @@ export default [
     tag: '2',
     tagVariant: 'light-warning',
     children: [
-      {
-        title: 'eCommerce',
-        route: 'dashboard-ecommerce',
-        resource: 'dashboard-kasir',
-      },
-      {
-        title: 'Analytics',
-        route: 'dashboard-analytics',
-        resource: 'dashboard-kasir',
-      },
+      // {
+      //   title: 'eCommerce',
+      //   route: 'dashboard-ecommerce',
+      //   resource: 'dashboard-kasir',
+      // },
+      // {
+      //   title: 'Analytics',
+      //   route: 'dashboard-analytics',
+      //   resource: 'dashboard-kasir',
+      // },
       {
         title: 'Cabang',
         route: 'dashboard-cabang',
@@ -39,7 +39,12 @@ export default [
       },
       {
         title: 'Cabang',
-        route: 'laporan-cabang',
+        children: [
+          {
+            title: 'Performance',
+            route: 'laporan-cabang-performance',
+          },
+        ],
       },
       {
         title: 'Sales',
@@ -53,24 +58,17 @@ export default [
       },
       {
         title: 'Keuangan',
-        route: 'laporan-keuangan',
         children: [
           {
             title: 'Neraca',
-            route: 'laporan-persediaan',
+            route: 'laporan-neraca',
           },
           {
             title: 'Laba / Rugi',
-            route: 'laporan-transaksi',
+            route: 'laporan-laba-rugi',
           },
         ],
       },
     ],
-  },
-  {
-    title: 'Login',
-    route: 'auth-login-new',
-    icon: 'ShieldIcon',
-    // },
   },
 ]

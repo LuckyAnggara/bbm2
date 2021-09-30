@@ -162,7 +162,6 @@
 </template>
 
 <script>
-import router from '@/router'
 import store from '@/store'
 import { ref } from '@vue/composition-api'
 
@@ -284,11 +283,10 @@ export default {
       }
     },
     loadLedger(dateawal = null, dateakhir = null) {
-      const { id } = router.currentRoute.params
       store
         .dispatch('app-keuangan/fetchLedgerByAkun', {
           cabang_id: this.userData.cabang_id,
-          id,
+          id: 44,
           dateawal,
           dateakhir,
         })

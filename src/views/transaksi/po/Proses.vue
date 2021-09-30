@@ -79,7 +79,6 @@
             <hr />
             Grand Total :
             {{ formatRupiah(total) }}
-            {{ dataPO }}
           </div>
           <!-- submit and reset -->
           <div class="mt-2">
@@ -118,6 +117,7 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
+      id: null,
       catatan: 'asdasdasd',
       selectBarang: [],
       tambahBarang: {},
@@ -238,7 +238,7 @@ export default {
               loader.hide()
               if (res.status === 200) {
                 this.$store.dispatch('app-po/updateStatus', {
-                  id: this.dataPO.id,
+                  id: this.dataOrder.id,
                   status: 'DITERIMA',
                   nomorTransaksi: res.data.nomor_transaksi,
                 })
@@ -258,6 +258,8 @@ export default {
     },
   },
   setup() {
+    const d = new Date()
+    d.setMonth(d.getMonth() + 2)
     const formPenjualan = ref({
       catatan: '',
       startIndex: 0,
@@ -285,7 +287,7 @@ export default {
         jenisPembayaran: { title: 'Tunai', value: '0' },
         kredit: true,
         downPayment: 0,
-        tanggalJatuhTempo: '',
+        tanggalJatuhTempo: d,
         statusPembayaran: { title: 'Kredit', value: '1' },
       },
       orders: [],

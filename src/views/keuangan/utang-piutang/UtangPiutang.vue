@@ -6,7 +6,7 @@
         <!-- title -->
         <template #title>
           <feather-icon icon="DollarSignIcon" size="24" class="mr-50" />
-          <span class="font-weight-bold">Utang</span>
+          <span class="font-weight-bold">Utang Dagang</span>
         </template>
         <utang-table />
       </b-tab>
@@ -14,9 +14,17 @@
         <!-- title -->
         <template #title>
           <feather-icon icon="DatabaseIcon" size="24" class="mr-50" />
-          <span class="font-weight-bold">Piutang</span>
+          <span class="font-weight-bold">Piutang Dagang</span>
         </template>
         <piutang-table />
+      </b-tab>
+      <b-tab active>
+        <!-- title -->
+        <template #title>
+          <feather-icon icon="DollarSignIcon" size="24" class="mr-50" />
+          <span class="font-weight-bold">Utang P.O</span>
+        </template>
+        <utang-po />
       </b-tab>
     </b-tabs>
   </section>
@@ -26,6 +34,7 @@
 import { BTab, BTabs } from 'bootstrap-vue'
 import UtangTable from './component/UtangTable.vue'
 import PiutangTable from './component/PiutangTable.vue'
+import UtangPo from './component/UtangPO.vue'
 // import BulkPembayaran from './component/BulkPembayaran.vue'
 
 export default {
@@ -34,6 +43,7 @@ export default {
     BTabs,
     UtangTable,
     PiutangTable,
+    UtangPo,
     // BulkPembayaran,
   },
 }

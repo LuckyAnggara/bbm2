@@ -177,14 +177,14 @@
           </b-form-group>
         </b-col>
         <b-col cols="12">
-          <b-form-group label="Harga Satuan" label-for="nama-pelanggan-lama" class="mb-2">
+          <b-form-group label="Nama Harga" class="mb-2">
             <v-select
-              v-model="selectHarga"
+              v-model="namaHarga"
               placeholder="Satuan"
-              label="nama_satuan"
+              label="nama_harga"
               :options="select.harga"
               :reduce="harga => harga.id"
-              :value="selectHarga.id"
+              :value="namaHarga.id"
               @input="setHarga"
             />
           </b-form-group>
@@ -244,7 +244,7 @@ export default {
         barang: [],
         harga: [],
       },
-      selectHarga: {
+      namaHarga: {
         id: 0,
       },
       qty: 1,
@@ -318,7 +318,7 @@ export default {
     resetModal() {
       this.detailBarang.qty = 1
       this.diskon = 0
-      this.selectHarga = ''
+      this.namaHarga = ''
       this.hargaJual = 0
       this.qty = 1
     },
@@ -380,7 +380,7 @@ export default {
       if (id !== null) {
         this.detailBarang = this.select.barang.find(d => d.id === id)
         this.select.harga = this.detailBarang.harga
-        this.selectHarga = this.detailBarang.harga['0']
+        this.namaHarga = this.detailBarang.harga['0']
         this.$refs['my-modal'].show()
       }
     },

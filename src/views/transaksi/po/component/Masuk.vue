@@ -74,24 +74,6 @@
                     })
                   "
                 />
-                <b-dropdown variant="link" toggle-class="p-0" no-caret>
-                  <template #button-content>
-                    <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
-                  </template>
-
-                  <b-dropdown-item @click="terima(data.item)" v-if="data.item.status_po_masuk === 'DIBACA'">
-                    <feather-icon icon="" />
-                    <span class="align-middle ml-50">Terima</span>
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="tolak(data.item.id)" v-if="data.item.status_po_masuk === 'DIBACA'">
-                    <feather-icon icon="" />
-                    <span class="align-middle ml-50">Tolak</span>
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="kirim(data.item.id)" v-if="data.item.status_po_masuk === 'DITERIMA'">
-                    <feather-icon icon="" />
-                    <span class="align-middle ml-50">Kirim</span>
-                  </b-dropdown-item>
-                </b-dropdown>
               </div>
             </template>
           </b-table>
@@ -132,7 +114,7 @@
 import store from '@/store'
 import { ref } from '@vue/composition-api'
 
-import { BBadge, BCard, BRow, BCol, BFormInput, BTable, BDropdown, BDropdownItem, BPagination } from 'bootstrap-vue'
+import { BBadge, BCard, BRow, BCol, BFormInput, BTable, BPagination } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 
 export default {
@@ -143,8 +125,6 @@ export default {
     BCol,
     BFormInput,
     BTable,
-    BDropdown,
-    BDropdownItem,
     BPagination,
     vSelect,
   },
@@ -186,52 +166,6 @@ export default {
         store.commit('app-po/SET_LIST_PO_MASUK', res.data)
         this.dataTemp = store.getters['app-po/getListPOMasuk']
         this.dataPO = this.dataTemp
-      })
-    },
-    terima(dataPO) {
-      this.$swal({
-        title: 'Proses ?',
-        text: 'P.O ini akan di proses',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya!',
-        customClass: {
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-danger ml-1',
-        },
-        buttonsStyling: false,
-      }).then(result => {
-        if (result.value) {
-          // this.$store.dispatch('app-po/prosesPO', {
-          //   id: dataPO.id,
-          // })
-          this.$router.push({
-            name: 'transaksi-po-proses',
-            params: {
-              data: dataPO,
-            },
-          })
-        }
-      })
-    },
-    tolak(id) {
-      this.$swal({
-        title: 'Tolak ?',
-        text: 'P.O ini akan di tolak',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya!',
-        customClass: {
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-danger ml-1',
-        },
-        buttonsStyling: false,
-      }).then(result => {
-        if (result.value) {
-          this.$store.dispatch('app-po/tolakPO', {
-            id,
-          })
-        }
       })
     },
   },

@@ -29,4 +29,22 @@ export default [
       ],
     },
   },
+  {
+    path: '/laporan/cabang/performance',
+    name: 'laporan-cabang-performance',
+    component: () => import('@/views/laporan/cabang/Performance.vue'),
+    meta: {
+      resource: 'laporan-cabang-performance',
+      pageTitle: 'Laporan',
+      breadcrumb: [
+        {
+          text: 'Cabang',
+        },
+        {
+          text: 'Performance',
+          active: true,
+        },
+      ],
+    },
+  },
 ]

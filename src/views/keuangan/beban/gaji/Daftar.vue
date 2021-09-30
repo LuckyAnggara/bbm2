@@ -241,7 +241,8 @@ export default {
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
-    submit() {
+    submit(bvModalEvt) {
+      bvModalEvt.preventDefault()
       if (this.cekValidasiForm() === true) {
         const loader = this.$loading.show({})
         const user = JSON.parse(localStorage.getItem('userData'))
@@ -257,6 +258,8 @@ export default {
             loader.hide()
             if (res.status === 200) {
               store.commit('app-keuangan/SET_DATA_DETAIL_PENGGAJIAN', res.data)
+              this.$refs['modal-gaji'].hide()
+
               router.push({ name: 'beban-gaji-tambah-detail', params: { form: this.formGaji, data: res.data } })
             }
           })

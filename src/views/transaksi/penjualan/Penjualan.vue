@@ -185,29 +185,44 @@ export default {
       this.$refs['my-modal'].show()
     },
     store() {
-      const loader = this.$loading.show({
-        // Optional parameters
-        container: this.$refs.formContainer,
+      this.$swal({
+        title: 'Proses ?',
+        text: 'Silahkan cek kembali Pembelian sebelum memproses Pembelian',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Proses!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+      }).then(result => {
+        if (result.value) {
+          const loader = this.$loading.show({
+            // Optional parameters
+            container: this.$refs.formContainer,
+          })
+          store
+            .dispatch('app-transaksi-penjualan/addTransaksi', this.dataOrder)
+            .then(res => {
+              loader.hide()
+              if (res.status === 200) {
+                this.dataOrder.nomorTransaksi = res.data.nomor_transaksi
+                this.dataOrder.tanggalTransaksi = res.data.created_at
+                store.commit('app-transaksi-penjualan/SET_DATA_INVOICE', this.dataOrder)
+                if (router.currentRoute.params.nomor !== undefined) {
+                  store.commit('app-transaksi-penjualan/REMOVE_DRAFT_PENJUALAN', router.currentRoute.params.nomor)
+                }
+                this.success(res.data)
+              } else {
+                this.error()
+              }
+            })
+            .catch(error => {
+              this.error(error)
+            })
+        }
       })
-      store
-        .dispatch('app-transaksi-penjualan/addTransaksi', this.dataOrder)
-        .then(res => {
-          loader.hide()
-          if (res.status === 200) {
-            this.dataOrder.nomorTransaksi = res.data.nomor_transaksi
-            this.dataOrder.tanggalTransaksi = res.data.created_at
-            store.commit('app-transaksi-penjualan/SET_DATA_INVOICE', this.dataOrder)
-            if (router.currentRoute.params.nomor !== undefined) {
-              store.commit('app-transaksi-penjualan/REMOVE_DRAFT_PENJUALAN', router.currentRoute.params.nomor)
-            }
-            this.success(res.data)
-          } else {
-            this.error()
-          }
-        })
-        .catch(error => {
-          this.error(error)
-        })
     },
     load() {
       console.info(router.currentRoute.params)

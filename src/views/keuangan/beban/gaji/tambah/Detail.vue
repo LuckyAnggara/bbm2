@@ -56,6 +56,7 @@
 
           <b-form-group label="Akun Kredit" label-for="tipe" label-cols-md="4">
             <v-select v-model="akun_kredit" :clearable="false" label="nama" :options="dataAkun" />
+            <small>Saldo Akun {{ saldo === 0 ? 0 : formatRupiah(saldo) }}</small>
           </b-form-group>
 
           <b-button type="button" @click="proses" variant="primary" class="mr-1">
@@ -189,9 +190,16 @@ export default {
         },
       ],
       dataAkun: [],
+      userData: JSON.parse(localStorage.getItem('userData')),
     }
   },
   computed: {
+    saldo() {
+      if (!this.akun_kredit.saldo) {
+        return 0
+      }
+      return this.akun_kredit.saldo
+    },
     formGaji() {
       if (router.currentRoute.params.form === null || router.currentRoute.params.form === undefined) {
         router.push({ name: 'beban-gaji-daftar' })
@@ -270,10 +278,15 @@ export default {
       this.masterData.push(this.pilihPegawai)
     },
     loadAkun() {
-      store.dispatch('app-keuangan/fetchListAkun').then(res => {
-        store.commit('app-keuangan/SET_LIST_AKUN', res.data)
-        this.load(store.getters['app-keuangan/getListAkun'])
-      })
+      store
+        .dispatch('app-keuangan/fetchListAkun', {
+          tahun: '',
+          cabang_id: this.userData.cabang_id,
+        })
+        .then(res => {
+          store.commit('app-keuangan/SET_LIST_AKUN', res.data)
+          this.load(store.getters['app-keuangan/getListAkun'])
+        })
       if (this.formGaji.absensi.value !== 3) {
         this.masterData = router.currentRoute.params.data
       }
@@ -336,7 +349,6 @@ export default {
         })
         return
       }
-      const user = JSON.parse(localStorage.getItem('userData'))
       this.$swal({
         title: 'Proses ?',
         text: 'Pembayaran gaji akan di proses',
@@ -358,7 +370,7 @@ export default {
               form: this.formGaji,
               data: this.masterData,
               akun: this.akun_kredit,
-              user,
+              user: this.userData,
               total: {
                 jumlah_pegawai: this.total_pegawai,
                 grand_total: this.grand_total,

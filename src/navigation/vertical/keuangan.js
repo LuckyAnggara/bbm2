@@ -46,6 +46,10 @@ export default [
     tagVariant: 'light-warning',
     children: [
       {
+        title: 'Daftar',
+        route: 'kas-daftar',
+      },
+      {
         title: 'Kasir',
         route: 'kas-kasir',
       },

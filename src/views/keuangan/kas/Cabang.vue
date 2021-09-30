@@ -1,6 +1,6 @@
 <template>
   <section>
-    <b-tabs vertical content-class="col-12 col-md-9 mt-1 mt-md-0" pills nav-wrapper-class="col-md-3 col-12" nav-class="nav-left">
+    <b-tabs vertical content-class="col-12 col-md-10 mt-1 mt-md-0" pills nav-wrapper-class="col-md-2 col-12" nav-class="nav-left">
       <!-- general tab -->
       <b-tab active>
         <!-- title -->

@@ -4,11 +4,20 @@ export default [
   },
   {
     title: 'Barang',
-    route: 'master-barang',
     icon: 'ShieldIcon',
     // acl: {
-    resource: 'admin',
     // },
+    resource: 'admin',
+    children: [
+      {
+        title: 'Daftar',
+        route: 'master-barang-daftar',
+      },
+      {
+        title: 'Ubah Harga',
+        route: 'master-barang-harga',
+      },
+    ],
   },
   {
     title: 'Kontak',
@@ -41,6 +50,16 @@ export default [
     title: 'Cabang',
     route: 'master-persediaan',
     icon: 'ShieldIcon',
+    children: [
+      {
+        title: 'Performance',
+        route: 'master-cabang-performance',
+      },
+      {
+        title: 'Setoran',
+        route: 'master-cabang-setoran',
+      },
+    ],
     // acl: {
     // action: 'read',
     // resource: 'ACL',

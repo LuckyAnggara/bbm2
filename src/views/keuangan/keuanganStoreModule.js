@@ -114,10 +114,10 @@ export default {
       })
     },
     // NERACA
-    fetchNeraca(ctx, tahun) {
+    fetchNeraca(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.keuanganURL}neraca/tahun/${tahun}`)
+          .get(`${axios.defaults.keuanganURL}neraca?cabang_id=${data.cabang_id}&tahun=${data.tahun}&bulan=${data.bulan}&hari=${data.hari}`)
           .then(response => {
             resolve(response)
           })
@@ -127,7 +127,7 @@ export default {
     fetchLabaRugi(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.keuanganURL}labarugi?cabang_id=${data.cabang_id}&tahun=${data.tahun}`)
+          .get(`${axios.defaults.keuanganURL}labarugi?cabang_id=${data.cabang_id}&tahun=${data.tahun}&bulan=${data.bulan}&hari=${data.hari}`)
           .then(response => {
             resolve(response)
           })
@@ -137,7 +137,7 @@ export default {
     fetchListAkun(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.keuanganURL}akun/tahun/${params.tahun}/cabang/${params.cabang}`)
+          .get(`${axios.defaults.keuanganURL}akun?cabang_id=${params.cabang_id}&tahun=${params.tahun}`)
           .then(response => {
             resolve(response)
           })
@@ -168,7 +168,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           // .get(`${axios.defaults.keuanganURL}ledger/${id}`)
-          .get(`${axios.defaults.keuanganURL}ledger/${params.cabang}/${params.id}/${params.dateawal}/${params.dateakhir}`)
+          .get(`${axios.defaults.keuanganURL}ledger?cabang_id=${params.cabang_id}&akun_id=${params.id}&dd=${params.dateawal}&ddd=${params.dateakhir}`)
           .then(response => {
             resolve(response)
           })

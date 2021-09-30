@@ -124,6 +124,17 @@
           <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block>
             Print
           </b-button>
+          <!-- Button: Send Invoice -->
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="outline-primary"
+            class="mb-75"
+            @click="showModal(dataPO)"
+            block
+            v-if="dataPO.status_po_masuk === 'DITERIMA'"
+          >
+            Terima
+          </b-button>
           <hr />
           <!-- Button: Send Invoice -->
           <span class="mb-5"
@@ -134,6 +145,9 @@
             <b-badge pill variant="light-success" v-if="dataPO.status_po === 'DITERIMA'">
               {{ dataPO.status_po }}
             </b-badge>
+            <b-badge pill variant="light-success" v-if="dataPO.status_po === 'SELESAI'">
+              {{ dataPO.status_po }}
+            </b-badge>
             <b-badge pill variant="light-danger" v-if="dataPO.status_po === 'DITOLAK'">
               {{ dataPO.status_po }}
             </b-badge>
@@ -142,7 +156,7 @@
             </b-badge>
           </span>
 
-          <b-button
+          <!-- <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="warning"
             class="mb-75"
@@ -161,7 +175,7 @@
             @click="del(dataPO.id)"
           >
             Delete
-          </b-button>
+          </b-button> -->
         </b-card>
       </b-col>
 
@@ -204,6 +218,7 @@
         </b-card>
       </b-col>
     </b-row>
+    <terima-modal :data="dataIndividualPO" :id="dataId" />
   </section>
 </template>
 
@@ -213,8 +228,8 @@ import router from '@/router'
 import { ref } from '@vue/composition-api'
 
 import { BBadge, BRow, BCol, BCard, BCardBody, BTableLite, BButton } from 'bootstrap-vue'
-// import Logo from '@core/layouts/components/Logo.vue'
 import Ripple from 'vue-ripple-directive'
+import TerimaModal from './component/TerimaModal.vue'
 
 export default {
   directives: {
@@ -228,15 +243,23 @@ export default {
     BCardBody,
     BTableLite,
     BButton,
+    TerimaModal,
     // Logo,
   },
   data() {
     return {
       dibatalkan: false,
+      dataIndividualPO: null,
+      dataId: null,
     }
   },
 
   methods: {
+    showModal(x) {
+      this.dataIndividualPO = x
+      this.dataId = x.id
+      this.$bvModal.show('modal-terima')
+    },
     print() {},
     error(error) {
       this.$swal({
@@ -373,7 +396,7 @@ export default {
     this.dataPO = data
     if (this.dataPO.status_po_masuk === 'BELUM DIBACA') {
       if (this.dataUser.cabang_id === this.dataPO.cabang_tujuan.id) {
-        this.$store.dispatch('app-po/updateStatusMasuk', {
+        this.$store.dispatch('app-po/updateStatus', {
           id: this.dataPO.id,
           status: 'DIBACA',
         })

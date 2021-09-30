@@ -1,7 +1,7 @@
 <template>
   <section>
     <b-row>
-      <b-col lg="9" cols="12">
+      <b-col lg="10" cols="12">
         <b-card>
           <b-row>
             <b-col lg="12" cols="12">
@@ -36,7 +36,12 @@
               <b-row>
                 <b-col lg="6" cols="6">
                   <b-form-group label="Tanggal Data" label-cols-md="4">
-                    <b-form-datepicker id="tanggalKas" v-model="tanggalKas" locale="id" />
+                    <b-form-datepicker
+                      id="tanggalKas"
+                      v-model="tanggalKas"
+                      locale="id"
+                      :date-format-options="{ year: 'numeric', month: 'short', day: 'numeric' }"
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col lg="6" cols="6">
@@ -144,7 +149,7 @@
       </b-col>
 
       <!-- Right Col: Card -->
-      <b-col cols="12" md="3" xl="3">
+      <b-col cols="12" md="2" xl="2">
         <b-card>
           <!-- Button: Tarik -->
           <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="outline-primary" class="mb-75" @click="tarik()" block>
@@ -185,7 +190,7 @@
           <b-row>
             <b-col cosl="12" md="12">
               <b-form-group label="Tanggal" label-cols-md="4">
-                <b-form-datepicker id="tanggalKas" v-model="form.tanggal" locale="id" disabled />
+                <b-form-datepicker v-model="form.tanggal" locale="id" disabled />
               </b-form-group>
             </b-col>
           </b-row>
@@ -202,7 +207,7 @@
           <b-row>
             <b-col cosl="12" md="12">
               <b-form-group label="Jumlah" label-for="jumlah" label-cols-md="4">
-                <b-form-input id="jumlah" v-model="form.jumlah" placeholder="Jumlah" type="number" />
+                <b-form-input id="jumlah" v-model="form.jumlah" placeholder="Jumlah" type="number" @keyup="cek" />
                 <small class="text-danger">{{ subSmallText }}</small>
               </b-form-group>
             </b-col>
@@ -322,18 +327,21 @@ export default {
     tanggalKas(q) {
       const d = new Date()
       const y = d.getFullYear()
-      this.loadUser()
-      this.loadKas(this.$moment(new Date(y, 1, 1)), this.$moment(q))
+      this.loadKas(this.$moment(new Date(y, 0, 1)).format('Y-MM-DD'), this.$moment(q).format('Y-MM-DD'))
     },
   },
   mounted() {
     const d = new Date()
     const y = d.getFullYear()
-    this.loadUser()
-    this.loadKas(this.$moment(new Date(y, 1, 1)), this.$moment(Date.now()))
+    this.loadKas(this.$moment(new Date(y, 0, 1)).format('Y-MM-DD'), this.$moment(Date.now()).format('Y-MM-DD'))
     this.loadNomorAkun()
   },
   methods: {
+    cek() {
+      if (this.form.jumlah > this.dataAkun.saldo) {
+        this.form.jumlah = this.dataAkun.saldo
+      }
+    },
     storeModal() {
       if (this.form.jumlah <= 0) {
         this.$swal({
@@ -355,9 +363,8 @@ export default {
         })
         return
       }
-      const dataUser = JSON.parse(localStorage.getItem('userData'))
-      const id = dataUser.kode_akun_id
-      this.form.user = dataUser
+      const id = this.dataUser.kode_akun_id
+      this.form.user = this.dataUser
       this.form.kode_akun_id = id
       store.dispatch('app-keuangan/storeKas', this.form).then(res => {
         if (res.status === 200) {
@@ -368,7 +375,9 @@ export default {
               confirmButton: 'btn btn-success',
             },
           })
-          this.loadKas(this.loadKas(this.$moment(new Date(y, 1, 1)), this.$moment(this.tanggalKas)))
+          const d = new Date()
+          const y = d.getFullYear()
+          this.loadKas(this.$moment(new Date(y, 0, 1)).format('Y-MM-DD'), this.$moment(this.tanggalKas).format('Y-MM-DD'))
         }
       })
     },
@@ -394,10 +403,6 @@ export default {
       this.form.jenis = 'KREDIT'
       this.$refs['my-modal'].show()
     },
-    loadUser() {
-      const user = JSON.parse(localStorage.getItem('userData'))
-      this.dataUser = user
-    },
     clear() {
       this.date.value = null
       this.dateFilter(null)
@@ -409,13 +414,10 @@ export default {
       return this.$moment(value).format('DD MMMM YYYY')
     },
     loadKas(dateawal = null, dateakhir = null) {
-      const dataUser = JSON.parse(localStorage.getItem('userData'))
-      const cabang = dataUser.cabang_id
-      const id = dataUser.kode_akun_id
       store
         .dispatch('app-keuangan/fetchLedgerByAkun', {
-          cabang,
-          id,
+          cabang_id: this.dataUser.cabang_id,
+          id: this.dataUser.kode_akun_id,
           dateawal,
           dateakhir,
         })
@@ -426,29 +428,25 @@ export default {
         })
     },
     loadNomorAkun() {
-      const dataUser = JSON.parse(localStorage.getItem('userData'))
-      store.dispatch('app-keuangan/fetchListAkun', { tahun: null, cabang: dataUser.cabang_id }).then(res => {
+      store.dispatch('app-keuangan/fetchListAkun', { tahun: '', cabang_id: this.dataUser.cabang_id }).then(res => {
         store.commit('app-keuangan/SET_LIST_AKUN', res.data)
         this.load(store.getters['app-keuangan/getListAkun'])
       })
     },
     load(data) {
-      const dataUser = JSON.parse(localStorage.getItem('userData'))
-
       data.forEach(x => {
         x.subheader.forEach(y => {
           if (y.komponen.length !== 0) {
             y.komponen.forEach(a => {
               if (a.komponen == '1.1.2') {
                 if (a.kode_akun !== this.dataAkun.kode_akun) {
-                  if (a.cabang_id === dataUser.cabang_id) this.nomorAkun.push(a)
+                  if (a.cabang_id === this.dataUser.cabang_id) this.nomorAkun.push(a)
                 }
               }
             })
           }
         })
       })
-      console.info(this.nomorAkun)
       return this.nomorAkun
     },
     formatRupiah(value) {
@@ -456,6 +454,7 @@ export default {
     },
   },
   setup() {
+    const dataUser = JSON.parse(localStorage.getItem('userData'))
     const tableColumns = [
       {
         key: 'tanggal',
@@ -479,7 +478,6 @@ export default {
       jumlah: 0,
       catatan: '',
     })
-    const dataUser = ref({})
     const dataAkun = ref({})
     const nomorAkun = ref([])
     const perPage = ref(10)

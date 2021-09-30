@@ -12,7 +12,6 @@
                 <div class="logo-wrapper">
                   <!-- <logo /> -->
                   <h3 class="text-primary invoice-logo">Invoice Purchase Order</h3>
-                  >
                 </div>
               </div>
 
@@ -340,6 +339,10 @@ export default {
           store.dispatch('app-po/selesaiPO', { id, data_po: this.dataPO, data_invoice: this.dataInvoice, user: this.dataUser }).then(x => {
             loader.hide()
             if (x.status === 200) {
+              this.$store.dispatch('app-po/updateStatus', {
+                id,
+                status: 'SELESAI',
+              })
               this.$swal({
                 icon: 'success',
                 title: 'Transaksi selesai!',
@@ -347,6 +350,9 @@ export default {
                 customClass: {
                   confirmButton: 'btn btn-success',
                 },
+              })
+              this.$router.push({
+                name: 'master-persediaan',
               })
             } else {
               this.$swal({

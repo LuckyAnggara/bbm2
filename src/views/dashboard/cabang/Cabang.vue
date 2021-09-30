@@ -15,22 +15,11 @@
         />
         <cabang-kas
           :label="`Saldo Kas`"
-          :sub-title="`hari ini`"
+          :sub-title="`s/d hari ini`"
           :statistic="formatRupiah(dataKas)"
           :route="{
             name: 'kas-kasir',
           }"
-        />
-      </b-col>
-      <b-col lg="3" sm="6">
-        <statistic-card-with-area-chart
-          icon="DollarSignIcon"
-          color="warning"
-          :statistic="formatRupiah(dataLabaHarian.total)"
-          statistic-title="Laba Kotor Hari Ini"
-          :chart-data="dataLabaHarian.series"
-          :chartLabel="dataLabaHarian.label"
-          :label="true"
         />
       </b-col>
       <b-col lg="3" sm="6">
@@ -47,6 +36,18 @@
         <statistic-card-with-area-chart
           icon="DollarSignIcon"
           color="warning"
+          :statistic="formatRupiah(dataLabaHarian.total)"
+          statistic-title="Harga Pokok Penjualan Hari Ini"
+          :chart-data="dataLabaHarian.series"
+          :chartLabel="dataLabaHarian.label"
+          :label="true"
+        />
+      </b-col>
+
+      <b-col lg="3" sm="6">
+        <statistic-card-with-area-chart
+          icon="DollarSignIcon"
+          color="warning"
           :statistic="formatRupiah(dataBeban.total)"
           statistic-title="Beban Hari Ini"
           :chart-data="dataBeban.series"
@@ -58,10 +59,10 @@
         <statistic-card-with-area-chart
           icon="DollarSignIcon"
           color="warning"
-          :statistic="formatRupiah(dataBeban.total)"
+          :statistic="formatRupiah(dataPersediaan.total)"
           statistic-title="Persediaan Hari Ini"
-          :chart-data="dataBeban.series"
-          :chartLabel="dataBeban.label"
+          :chart-data="dataPersediaan.series"
+          :chartLabel="dataPersediaan.label"
           :label="true"
         />
       </b-col>
@@ -132,6 +133,11 @@ export default {
         label: [],
         total: 0,
       },
+      dataPersediaan: {
+        series: [],
+        label: [],
+        total: 0,
+      },
       dataKas: 0,
       dataUtangDagang: 0,
       tahunLabaBulanan: '2021',
@@ -147,6 +153,14 @@ export default {
     },
   },
   created() {
+    store.dispatch('app-dashboard-cabang/fetchPersediaanHarian', { cabang_id: this.user.cabang_id }).then(res => {
+      if (res.status === 200) {
+        // store.commit('app-dashboard-cabang/SET_LIST_OMSET_HARIAN', this.dataOrder)
+        this.dataPersediaan.series.push(res.data.series)
+        this.dataPersediaan.label = res.data.label
+        this.dataPersediaan.total = res.data.total
+      }
+    })
     store.dispatch('app-dashboard-cabang/fetchOmsetHarian', { cabang_id: this.user.cabang_id }).then(res => {
       if (res.status === 200) {
         // store.commit('app-dashboard-cabang/SET_LIST_OMSET_HARIAN', this.dataOrder)

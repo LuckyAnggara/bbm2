@@ -1,7 +1,7 @@
 <template>
   <section>
     <b-row class="match-height">
-      <b-col lg="6" cols="6">
+      <b-col lg="8" cols="8" sm="12">
         <b-card>
           <h5>Form Jurnal</h5>
           <hr />
@@ -9,7 +9,7 @@
             <v-select v-model="jenis" placeholder="Jenis" label="title" :clearable="true" :options="debitKredit" />
           </b-form-group>
           <b-form-group label="Nama Akun" label-for="nama-akun" label-cols-md="4">
-            <v-select v-model="akun" placeholder="Nama Akun" label="nama" :clearable="true" :options="dataAkun">
+            <v-select v-model="akun" placeholder="Nama Akun" label="nama" :clearable="true" :options="dataAkun" :selectable="option => option.sub_header !== 1">
               <template v-slot:option="option">
                 {{ option.kode_akun }} - <b>{{ option.nama }}</b>
               </template>
@@ -270,7 +270,6 @@ export default {
       return true
     },
     proses() {
-      const user = JSON.parse(localStorage.getItem('userData'))
       if (this.cekValidasi()) {
         this.$swal({
           title: 'Proses ?',
@@ -294,8 +293,8 @@ export default {
               catatan: this.catatan,
               tanggalTransaksi: this.$moment(this.tanggalTransaksi.value),
               jurnal: this.dataJurnal,
-              user_id: user.id,
-              cabang_id: user.cabang_id,
+              user_id: this.userData.id,
+              cabang_id: this.userData.cabang_id,
             }
             store.dispatch('app-keuangan/storeJurnal', output).then(res => {
               loader.hide()
@@ -319,10 +318,15 @@ export default {
       this.total()
     },
     loadAkun() {
-      store.dispatch('app-keuangan/fetchListAkun').then(res => {
-        store.commit('app-keuangan/SET_LIST_AKUN', res.data)
-        this.load(store.getters['app-keuangan/getListAkun'])
-      })
+      store
+        .dispatch('app-keuangan/fetchListAkun', {
+          tahun: '',
+          cabang_id: this.userData.cabang_id,
+        })
+        .then(res => {
+          store.commit('app-keuangan/SET_LIST_AKUN', res.data)
+          this.load(store.getters['app-keuangan/getListAkun'])
+        })
     },
     load(data) {
       data.forEach(x => {
@@ -339,6 +343,8 @@ export default {
     },
   },
   setup() {
+    const userData = JSON.parse(localStorage.getItem('userData'))
+    console.info(userData)
     const tableColumns = [
       { label: 'No', key: 'id', sortable: false },
       { key: 'kodeAkun', sortable: false },
@@ -360,6 +366,7 @@ export default {
       },
     ]
     return {
+      userData,
       dataJurnal,
       tableColumns,
       debitKredit,

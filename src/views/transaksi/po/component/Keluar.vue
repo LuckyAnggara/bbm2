@@ -58,7 +58,7 @@
             </template>
             <template #cell(status)="data">
               <div class="text-nowrap">
-                <b-badge pill variant="light-warning"> P.O {{ data.item.status_po }} </b-badge>
+                <b-badge pill variant="light-warning"> P.O {{ data.item.status_po_masuk }} </b-badge>
               </div>
             </template>
             <!-- Column: Actions -->
@@ -79,16 +79,16 @@
                   <template #button-content>
                     <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
                   </template>
-
-                  <b-dropdown-item @click="batal(data.item.id)" v-if="data.item.status_po === 'TERKIRIM'">
+                  <!--
+                  <b-dropdown-item @click="batal(data.item.id)" v-if="data.item.status_po_masuk === 'TERKIRIM'">
                     <feather-icon icon="" />
                     <span class="align-middle ml-50">Batalkan</span>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="del(data.item.id)" v-if="data.item.status_po === 'TERKIRIM'">
+                  <b-dropdown-item @click="del(data.item.id)" v-if="data.item.status_po_masuk === 'TERKIRIM'">
                     <feather-icon icon="TrashIcon" />
                     <span class="align-middle ml-50">Delete</span>
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="showModal(data.item)" v-if="data.item.status_po === 'DITERIMA'">
+                  </b-dropdown-item> -->
+                  <b-dropdown-item @click="showModal(data.item)" v-if="data.item.status_po_masuk === 'DITERIMA'">
                     <!-- <feather-icon icon="TrashIcon" /> -->
                     <span class="align-middle ml-50">Terima</span>
                   </b-dropdown-item>

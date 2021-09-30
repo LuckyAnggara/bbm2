@@ -32,7 +32,7 @@
           <b-form class="auth-login-form mt-2" @submit.prevent>
             <!-- email -->
             <b-form-group label="Username" label-for="login-email">
-              <b-form-input id="login-email" v-model="form.username" name="login-email" placeholder="john@example.com" />
+              <b-form-input id="login-email" v-model="form.username" name="login-email" placeholder="username" />
             </b-form-group>
 
             <!-- forgot password -->
@@ -122,8 +122,8 @@ export default {
   data() {
     return {
       form: {
-        password: '123456',
-        username: 'lucky',
+        password: '',
+        username: '',
       },
       sideImg: require('@/assets/images/pages/login-v2.svg'),
       // validation rulesimport store from '@/store/index'

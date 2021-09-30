@@ -24,7 +24,7 @@ export default {
     fetchListGudang(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}gudang/${params.cabang}`)
+          .get(`${axios.defaults.baseURL}gudang/cabang?cabang_id=${params.cabang}`)
           .then(response => {
             resolve(response)
           })

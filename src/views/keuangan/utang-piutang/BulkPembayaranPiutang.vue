@@ -26,7 +26,7 @@
                 @input="cekJenisPembayaran"
               />
             </b-form-group>
-            <b-form-group label="form.transfer ke" label-for="bank" label-cols-md="4" v-show="form.transfer">
+            <b-form-group label="Transfer Ke" label-for="bank" label-cols-md="4" v-show="form.transfer">
               <v-select v-model="form.bank" placeholder="Nama Bank" label="title" :clearable="false" :options="bankOption" />
             </b-form-group>
           </section>

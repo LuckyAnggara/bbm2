@@ -208,5 +208,13 @@ export default {
           .catch(error => reject(error))
       })
     },
+    ubahHargaBarangSemua(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}barang/ubah-harga-semua`, data)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
   },
 }

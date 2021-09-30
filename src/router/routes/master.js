@@ -19,8 +19,8 @@ export default [
     },
   },
   {
-    path: '/master/barang/',
-    name: 'master-barang',
+    path: '/master/barang/daftar',
+    name: 'master-barang-daftar',
     component: () => import('@/views/master/barang/Daftar.vue'),
     meta: {
       resource: 'ACL',
@@ -30,6 +30,36 @@ export default [
           active: true,
           text: 'Barang',
           to: '/master/barang/',
+        },
+        {
+          active: true,
+          text: 'Daftar',
+          to: '/master/barang/daftar',
+        },
+      ],
+    },
+  },
+  {
+    path: '/master/barang/harga',
+    name: 'master-barang-harga',
+    component: () => import('@/views/master/barang/Harga.vue'),
+    meta: {
+      resource: 'ACL',
+      pageTitle: 'Ubah Harga',
+      breadcrumb: [
+        {
+          active: true,
+          text: 'Barang',
+          to: '/master/barang/',
+        },
+        {
+          text: 'Daftar',
+          to: '/master/barang/daftar',
+        },
+        {
+          active: true,
+          text: 'Ubah Harga',
+          to: '/master/barang/daftar',
         },
       ],
     },
@@ -293,6 +323,37 @@ export default [
           active: true,
           text: 'Gudang',
           to: '/master/gudang/',
+        },
+      ],
+    },
+  },
+  // CABANG
+  {
+    path: '/master/cabang/performance',
+    name: 'master-cabang-performance',
+    component: () => import('@/views/master/cabang/Performance.vue'),
+    meta: {
+      resource: 'master-cabang-performance',
+      pageTitle: 'Cabang',
+      breadcrumb: [
+        {
+          text: 'Performance',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/master/cabang/setoran',
+    name: 'master-cabang-setoran',
+    component: () => import('@/views/master/cabang/Setoran.vue'),
+    meta: {
+      resource: 'master-cabang-setoran',
+      pageTitle: 'Cabang',
+      breadcrumb: [
+        {
+          text: 'Kas',
+          active: true,
         },
       ],
     },

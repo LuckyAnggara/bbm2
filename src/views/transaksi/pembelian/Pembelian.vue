@@ -197,29 +197,44 @@ export default {
       } else if (this.dataOrder.isTransaksi.value === true) {
         this.errorTransaksi()
       } else {
-        const loader = this.$loading.show({
-          // Optional parameters
-          container: this.$refs.formContainer,
+        this.$swal({
+          title: 'Proses ?',
+          text: 'Silahkan cek kembali Pembelian sebelum memproses Pembelian',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Proses!',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-outline-danger ml-1',
+          },
+          buttonsStyling: false,
+        }).then(result => {
+          if (result.value) {
+            const loader = this.$loading.show({
+              // Optional parameters
+              container: this.$refs.formContainer,
+            })
+            store
+              .dispatch('app-transaksi-pembelian/addTransaksi', this.dataOrder)
+              .then(res => {
+                if (res.status === 200) {
+                  loader.hide()
+                  this.dataOrder.nomorTransaksi = res.data.nomor_transaksi
+                  this.dataOrder.tanggalTransaksi = res.data.created_at
+                  store.commit('app-transaksi-pembelian/SET_DATA_INVOICE', this.dataOrder)
+                  if (router.currentRoute.params.nomor !== undefined) {
+                    store.commit('app-transaksi-pembelian/REMOVE_DRAFT_PEMBELIAN', router.currentRoute.params.nomor)
+                  }
+                  this.success(res.data)
+                } else {
+                  this.error()
+                }
+              })
+              .catch(error => {
+                this.error(error)
+              })
+          }
         })
-        store
-          .dispatch('app-transaksi-pembelian/addTransaksi', this.dataOrder)
-          .then(res => {
-            if (res.status === 200) {
-              loader.hide()
-              this.dataOrder.nomorTransaksi = res.data.nomor_transaksi
-              this.dataOrder.tanggalTransaksi = res.data.created_at
-              store.commit('app-transaksi-pembelian/SET_DATA_INVOICE', this.dataOrder)
-              if (router.currentRoute.params.nomor !== undefined) {
-                store.commit('app-transaksi-pembelian/REMOVE_DRAFT_PEMBELIAN', router.currentRoute.params.nomor)
-              }
-              this.success(res.data)
-            } else {
-              this.error()
-            }
-          })
-          .catch(error => {
-            this.error(error)
-          })
       }
     },
     load() {

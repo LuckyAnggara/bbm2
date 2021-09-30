@@ -50,6 +50,14 @@ export default {
           .catch(error => reject(error))
       })
     },
+    fetchPersediaanHarian(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.keuanganURL}dashboard-cabang/persediaan-harian?cabang_id=${data.cabang_id}&hari=${data.hari}`)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
     fetchKasHarian(ctx, data) {
       return new Promise((resolve, reject) => {
         axios

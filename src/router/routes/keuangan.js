@@ -149,6 +149,20 @@ export default [
     },
   },
   {
+    path: '/kas/daftar/',
+    name: 'kas-daftar',
+    component: () => import('@/views/keuangan/kas/Daftar.vue'),
+    meta: {
+      pageTitle: 'Daftar Kas',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/kas/kasir/',
     name: 'kas-kasir',
     component: () => import('@/views/keuangan/kas/Kasir.vue'),
