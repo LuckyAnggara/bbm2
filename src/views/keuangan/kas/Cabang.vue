@@ -6,9 +6,9 @@
         <!-- title -->
         <template #title>
           <feather-icon icon="DollarSignIcon" size="18" class="mr-50" />
-          <span class="font-weight-bold">Rincian Kas</span>
+          <span class="font-weight-bold">Kas Tunai</span>
         </template>
-        <kas-cabang />
+        <kas-tunai />
       </b-tab>
       <b-tab>
         <!-- title -->
@@ -18,31 +18,30 @@
         </template>
         <kirim-setor />
       </b-tab>
-      <b-tab>
-        <!-- title -->
+      <!-- <b-tab>
         <template #title>
           <feather-icon icon="DatabaseIcon" size="18" class="mr-50" />
           <span class="font-weight-bold">Terima</span>
         </template>
         <terima-setor />
-      </b-tab>
+      </b-tab>  -->
     </b-tabs>
   </section>
 </template>
 
 <script>
 import { BTab, BTabs } from 'bootstrap-vue'
-import KasCabang from './component/KasCabang.vue'
+import KasTunai from './component/KasTunai.vue'
 import KirimSetor from './component/KirimSetor.vue'
-import TerimaSetor from './component/TerimaSetor.vue'
+// import TerimaSetor from './component/TerimaSetor.vue'
 
 export default {
   components: {
     BTab,
     BTabs,
-    KasCabang,
+    KasTunai,
     KirimSetor,
-    TerimaSetor,
+    // TerimaSetor,
   },
 }
 </script>

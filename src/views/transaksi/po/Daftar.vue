@@ -39,7 +39,6 @@ export default {
   },
   created() {
     this.totalMasuk = this.$store.getters['app-po/getListPOMasuk'].filter(x => x.status_po_masuk === 'BELUM DIBACA').length
-    console.info(this.totalMasuk)
   },
   setup() {
     const totalMasuk = ref(0)

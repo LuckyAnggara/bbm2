@@ -34,25 +34,14 @@
 import { formatRupiah } from '@core/utils/filter'
 import { ref } from '@vue/composition-api'
 
-import {
-  BCard,
-  BRow,
-  BCol,
-  BLink,
-  BTable,
-  // BFormDatepicker,
-  // BButton,
-} from 'bootstrap-vue'
+import { BCard, BRow, BCol, BLink, BTable } from 'bootstrap-vue'
 
 export default {
   components: {
-    // BFormDatepicker,
-    // BButton,
     BCard,
     BRow,
     BCol,
     BLink,
-    // BFormInput,
     BTable,
   },
   mounted() {

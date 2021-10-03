@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section ref="loading">
     <b-row>
       <b-col lg="5" cols="5" sm="12">
         <b-card>
@@ -76,20 +76,32 @@
                 {{ data.item.nama }}
               </template>
               <template #cell(penjualan)="data">
-                {{ formatRupiah(data.item.penjualan) }}
+                <span :class="data.item.penjualan === 0 ? '' : data.item.penjualan < 0 ? 'text-danger' : 'text-success'"
+                  >{{ formatRupiah(data.item.penjualan) }}
+                </span>
               </template>
               <template #cell(pendapatan_lainnya)="data">
-                {{ formatRupiah(data.item.pendapatan_lainnya) }}
+                <span :class="data.item.pendapatan_lainnya === 0 ? '' : data.item.pendapatan_lainnya < 0 ? 'text-danger' : 'text-success'"
+                  >{{ formatRupiah(data.item.pendapatan_lainnya) }}
+                </span>
               </template>
               <template #cell(hpp)="data">
-                {{ formatRupiah(data.item.hpp) }}
+                <span :class="data.item.hpp === 0 ? '' : data.item.hpp > 0 ? 'text-danger' : 'text-success'">{{ formatRupiah(data.item.hpp) }} </span>
               </template>
-              <template #cell(gross_margin)="data"> {{ data.item.gross_margin }}% </template>
+              <template #cell(gross_margin)="data"
+                ><span :class="data.item.gross_margin === 0 ? '' : data.item.gross_margin < 0 ? 'text-danger' : 'text-success'"
+                  >{{ data.item.gross_margin }}%
+                </span></template
+              >
               <template #cell(beban)="data">
-                {{ formatRupiah(data.item.total_beban) }}
+                <span :class="data.item.total_beban === 0 ? '' : data.item.total_beban > 0 ? 'text-danger' : 'text-success'">{{
+                  formatRupiah(data.item.total_beban)
+                }}</span>
               </template>
               <template #cell(laba)="data">
-                {{ formatRupiah(data.item.laba_rugi) }}
+                <span :class="data.item.laba_rugi === 0 ? '' : data.item.laba_rugi < 0 ? 'text-danger' : 'text-success'">{{
+                  formatRupiah(data.item.laba_rugi)
+                }}</span>
               </template>
             </b-table>
           </b-card>

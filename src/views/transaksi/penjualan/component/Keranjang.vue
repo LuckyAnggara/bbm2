@@ -178,15 +178,7 @@
         </b-col>
         <b-col cols="12">
           <b-form-group label="Nama Harga" class="mb-2">
-            <v-select
-              v-model="namaHarga"
-              placeholder="Satuan"
-              label="nama_harga"
-              :options="select.harga"
-              :reduce="harga => harga.id"
-              :value="namaHarga.id"
-              @input="setHarga"
-            />
+            <v-select v-model="namaHarga" placeholder="Satuan" label="nama" :options="select.harga" @input="setHarga" />
           </b-form-group>
         </b-col>
         <b-col cols="12">
@@ -242,11 +234,13 @@ export default {
     return {
       select: {
         barang: [],
-        harga: [],
+        harga: [
+          { nama: 'RITEL', harga: 0 },
+          { nama: 'KONSUMEN', harga: 0 },
+          { nama: 'LAINNYA', harga: 0 },
+        ],
       },
-      namaHarga: {
-        id: 0,
-      },
+      namaHarga: {},
       qty: 1,
       diskon: 0,
       hargaJual: 0,
@@ -328,11 +322,8 @@ export default {
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
-    setHarga(id) {
-      if (id !== null) {
-        const data = this.detailBarang.harga.find(d => d.id === id)
-        this.hargaJual = data.harga
-      }
+    setHarga() {
+      this.hargaJual = this.namaHarga.harga
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -379,8 +370,10 @@ export default {
     showModal(id) {
       if (id !== null) {
         this.detailBarang = this.select.barang.find(d => d.id === id)
-        this.select.harga = this.detailBarang.harga
-        this.namaHarga = this.detailBarang.harga['0']
+        this.select.harga[0].harga = this.detailBarang.harga_ritel
+        this.select.harga[1].harga = this.detailBarang.harga_konsumen
+        this.select.harga[2].harga = this.detailBarang.harga_lainnya
+        // this.namaHarga = this.detailBarang.harga['0']
         this.$refs['my-modal'].show()
       }
     },

@@ -54,5 +54,15 @@ export default {
           .catch(error => reject(error))
       })
     },
+    fetchPelaporanSemua(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}setor/pelaporan?cabang_id=${params.cabang_id}&tahun=${params.tahun}&bulan=${params.bulan}&hari=${params.hari}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
   },
 }

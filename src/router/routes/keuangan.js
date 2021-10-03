@@ -170,6 +170,14 @@ export default [
       pageTitle: 'Kas Kasir',
       breadcrumb: [
         {
+          text: 'Daftar',
+          to: '/kas/daftar/',
+        },
+        {
+          text: 'Kasir',
+          active: true,
+        },
+        {
           text: 'Detail',
           active: true,
         },
@@ -181,8 +189,38 @@ export default [
     name: 'kas-cabang',
     component: () => import('@/views/keuangan/kas/Cabang.vue'),
     meta: {
-      pageTitle: 'Kas Cabang',
+      pageTitle: 'Kas',
       breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/kas/daftar/',
+        },
+        {
+          text: 'Cabang',
+          active: true,
+        },
+        {
+          text: 'Detail',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/kas/bank/',
+    name: 'kas-bank',
+    component: () => import('@/views/keuangan/kas/Bank.vue'),
+    meta: {
+      pageTitle: 'Kas',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/kas/daftar/',
+        },
+        {
+          text: 'Bank',
+          active: true,
+        },
         {
           text: 'Detail',
           active: true,

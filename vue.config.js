@@ -1,7 +1,7 @@
 const path = require('path')
 
 module.exports = {
-  publicPath: '/bdgtimur',
+  publicPath: '/bbm',
   css: {
     loaderOptions: {
       sass: {

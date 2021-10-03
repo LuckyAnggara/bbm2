@@ -30,7 +30,7 @@
             <!-- Column: Tanggal -->
             <template #cell(tanggal)="data">
               <span>
-                {{ $moment(data.item.created_at).format('Y-MMM-DD') }}
+                {{ $moment(data.item.created_at).format('DD-MMM-YYYY') }}
               </span>
             </template>
 
@@ -40,14 +40,9 @@
             </template>
 
             <!-- Column: DEBIT KREDIT SALDO-->
-            <template #cell(nomor_akun)="data">
-              <span>{{ data.item.kode_akun_id_ke.kode_akun }} - {{ data.item.kode_akun_id_ke.nama }}</span>
-            </template>
-
-            <!-- Column: DEBIT KREDIT SALDO-->
             <template #cell(status)="data">
-              <b-badge :variant="data.item.status_kirim == 'SEND' ? 'light-warning' : data.item.status_kirim == 'APPROVED' ? 'light-success' : 'light-danger'">
-                <span>{{ data.item.status_kirim }}</span>
+              <b-badge :variant="data.item.status == 'SEND' ? 'light-warning' : data.item.status == 'APPROVED' ? 'light-success' : 'light-danger'">
+                <span>{{ data.item.status }}</span>
               </b-badge>
             </template>
 
@@ -63,13 +58,13 @@
                   <template #button-content>
                     <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
                   </template>
-                  <b-dropdown-item @click="approved(data.item)" v-show="data.item.status_terima === 'SEND'">
+                  <b-dropdown-item @click="batal(data.item.id)" v-show="data.item.status === 'SEND'">
                     <feather-icon icon="TrashIcon" />
-                    <span class="align-middle ml-50">Delete</span>
+                    <span class="align-middle ml-50">Batalakan</span>
                   </b-dropdown-item>
                   <b-dropdown-item
                     :to="{ name: 'akuntansi-jurnal-detail', params: { id: data.item.nomor_jurnal_dari } }"
-                    v-show="data.item.status_terima === 'APPROVED'"
+                    v-show="data.item.status === 'APPROVED'"
                   >
                     <feather-icon icon="BookIcon" />
                     <span class="align-middle ml-50">Jurnal</span>
@@ -138,7 +133,6 @@ export default {
     BCard,
     BRow,
     BCol,
-    // BFormInput,
     BTable,
     BPagination,
     vSelect,
@@ -151,11 +145,11 @@ export default {
       filterQuery: '',
       searchQuery: '',
       refTable: null,
-      listData: [],
     }
   },
   mounted() {
     this.loadDataKirim()
+    this.listData = store.getters['app-keuangan/getListSetorCabang']
   },
   computed: {
     dataMeta() {
@@ -166,7 +160,6 @@ export default {
         of: this.totalData,
       }
     },
-
     saldo() {
       return this.formatRupiah(parseFloat(this.dataAkun.saldo))
     },
@@ -187,8 +180,42 @@ export default {
           dateakhir,
         })
         .then(res => {
-          this.listData = res.data
+          store.commit('app-keuangan/SET_LIST_SETOR_CABANG', res.data)
+          this.listData = store.getters['app-keuangan/getListSetorCabang']
         })
+    },
+    batal(id) {
+      this.$swal({
+        title: 'Batalkan Setoran ?',
+        text: 'Setoran ini akan di batalkan',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+      }).then(result => {
+        if (result.value) {
+          store
+            .dispatch('app-keuangan/batalSetor', {
+              id,
+            })
+            .then(res => {
+              if (res.status === 200) {
+                this.$swal({
+                  icon: 'success',
+                  title: 'Setoran Dibatalkan!',
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                  },
+                })
+                this.loadDataKirim()
+              }
+            })
+        }
+      })
     },
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
@@ -200,12 +227,13 @@ export default {
         key: 'tanggal',
       },
       { key: 'cabang_tujuan', sortable: false },
-      { key: 'nomor_akun', sortable: false },
       { label: 'nominal', key: 'nominal', sortable: false },
+      { label: 'cara penyetoran', key: 'tipe', sortable: false },
 
       { label: 'status', key: 'status', sortable: false },
       { label: 'action', key: 'action', sortable: false },
     ]
+    const listData = ref([])
 
     // const searchQuery = ref('')
     const form = ref({
@@ -228,6 +256,7 @@ export default {
     const isSortDirDesc = ref(true)
 
     return {
+      listData,
       form,
       nomorAkun,
       dataAkun,

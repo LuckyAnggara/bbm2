@@ -50,12 +50,16 @@ export default [
         route: 'kas-daftar',
       },
       {
+        title: 'Cabang',
+        route: 'kas-cabang',
+      },
+      {
         title: 'Kasir',
         route: 'kas-kasir',
       },
       {
-        title: 'Cabang',
-        route: 'kas-cabang',
+        title: 'Bank',
+        route: 'kas-bank',
       },
     ],
   },

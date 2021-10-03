@@ -20,6 +20,8 @@ export default {
     // UTANG
     listUtang: [],
     listPiutang: [],
+    // SETOR
+    listSetorCabang: [],
   },
   getters: {
     getListAkun: state => state.listAkun,
@@ -40,6 +42,8 @@ export default {
     // UTANG
     getListUtang: state => state.listUtang,
     getListPiutang: state => state.listPiutang,
+    // SETOR
+    getListSetorCabang: state => state.listSetorCabang,
   },
   mutations: {
     SET_LIST_AKUN(state, data) {
@@ -99,6 +103,10 @@ export default {
     },
     SET_DATA_PIUTANG(state, data) {
       state.listPiutang = data
+    },
+    // SETOR
+    SET_LIST_SETOR_CABANG(state, data) {
+      state.listSetorCabang = data
     },
   },
   actions: {
@@ -316,6 +324,16 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .post(`${axios.defaults.baseURL}setor/confirm/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    batalSetor(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}setor/batal?id=${params.id}`)
           .then(response => {
             resolve(response)
           })

@@ -187,7 +187,7 @@ export default {
     store() {
       this.$swal({
         title: 'Proses ?',
-        text: 'Silahkan cek kembali Pembelian sebelum memproses Pembelian',
+        text: 'Silahkan cek kembali Penjualan sebelum memproses',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Proses!',

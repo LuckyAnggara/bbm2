@@ -52,6 +52,10 @@ export default [
     icon: 'ShieldIcon',
     children: [
       {
+        title: 'Daftar',
+        route: 'master-cabang-daftar',
+      },
+      {
         title: 'Performance',
         route: 'master-cabang-performance',
       },

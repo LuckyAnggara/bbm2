@@ -5,20 +5,28 @@
         <cabang-nama />
       </b-col>
       <b-col lg="4" md="12">
-        <cabang-kas
+        <!-- <cabang-kas
           :sub-title="`s/d hari ini`"
           :label="`Saldo Utang`"
           :statistic="formatRupiah(dataUtangDagang)"
           :route="{
             name: 'keuangan-utang-piutang',
           }"
+        /> -->
+        <cabang-kas
+          :sub-title="`s/d hari ini`"
+          :label="`Saldo Kas Bank`"
+          :statistic="formatRupiah(dataKasBank)"
+          :route="{
+            name: 'kas-bank',
+          }"
         />
         <cabang-kas
-          :label="`Saldo Kas`"
+          :label="`Saldo Kas Tunai`"
           :sub-title="`s/d hari ini`"
-          :statistic="formatRupiah(dataKas)"
+          :statistic="formatRupiah(dataKasTunai)"
           :route="{
-            name: 'kas-kasir',
+            name: 'kas-cabang',
           }"
         />
       </b-col>
@@ -138,7 +146,8 @@ export default {
         label: [],
         total: 0,
       },
-      dataKas: 0,
+      dataKasTunai: 0,
+      dataKasBank: 0,
       dataUtangDagang: 0,
       tahunLabaBulanan: '2021',
     }
@@ -206,7 +215,8 @@ export default {
         cabang_id: this.user.cabang_id,
       })
       .then(res => {
-        this.dataKas = res.data
+        this.dataKasTunai = res.data.tunai
+        this.dataKasBank = res.data.bank
       })
     store
       .dispatch('app-dashboard-cabang/fetchUtang', {

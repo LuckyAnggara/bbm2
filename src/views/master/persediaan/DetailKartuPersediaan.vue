@@ -10,9 +10,7 @@
             <b-form-group label="Nama Barang" label-for="nama-barang" label-cols-md="4">
               <b-form-input placeholder="Nama Barang" v-model="dataItem.nama" type="text" readonly />
             </b-form-group>
-            <b-form-group label="Gudang" label-for="nama-barang" label-cols-md="4">
-              <b-form-textarea type="text" readonly :value="dataItem.nama_gudang" />
-            </b-form-group>
+
             <b-form-group label="Saldo (Qty)" label-for="saldo-qty" label-cols-md="4">
               <b-form-input placeholder="Saldo (Qty)" type="text" v-model="dataItem.persediaan.saldo" readonly />
             </b-form-group>
@@ -39,13 +37,12 @@
 <script>
 import store from '@/store'
 import router from '@/router'
-import { BFormGroup, BFormInput, BButton, BRow, BCol, BCard, BFormTextarea } from 'bootstrap-vue'
+import { BFormGroup, BFormInput, BButton, BRow, BCol, BCard } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import KartuPersediaan from './component/KartuPersediaan.vue'
 
 export default {
   components: {
-    BFormTextarea,
     BFormGroup,
     BFormInput,
     BButton,
