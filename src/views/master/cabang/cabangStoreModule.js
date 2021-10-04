@@ -5,9 +5,11 @@ export default {
   state: {
     listDataPerformance: [],
     listDataPerformanceSatuan: [],
+    listCabang: [],
     // listDataKas: [],
   },
   getters: {
+    getListCabang: state => state.listCabang,
     getListDataPerformance: state => state.listDataPerformance,
     getListDataPerformanceSatuan: state => state.listDataPerformanceSatuan,
     // getListDataKas: state => state.listDataKas,
@@ -19,11 +21,31 @@ export default {
     SET_LIST_DATA_PERFORMANCE_SATUAN(state, data) {
       state.listDataPerformanceSatuan = data
     },
-    // SET_LIST_DATA_KAS(state, data) {
-    //   state.listDataKas = data
-    // },
+    SET_LIST_CABANG(state, data) {
+      state.listCabang = data
+    },
   },
   actions: {
+    fetchDataCabang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}cabang/`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchDetailCabang(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}cabang/detail?cabang_id=${params.id}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
     fetchDataPerformanceAll(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
@@ -54,10 +76,30 @@ export default {
           .catch(error => reject(error))
       })
     },
-    fetchPelaporanSemua(ctx, params) {
+    confirmSetoran(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}setor/pelaporan?cabang_id=${params.cabang_id}&tahun=${params.tahun}&bulan=${params.bulan}&hari=${params.hari}`)
+          .post(`${axios.defaults.baseURL}setor/confirm`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    tambahCabang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}cabang/store`, data)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    updateCabang(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${axios.defaults.baseURL}cabang/update`, data)
           .then(response => {
             resolve(response)
           })

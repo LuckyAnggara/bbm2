@@ -149,8 +149,6 @@ export default {
       })
     },
     proses() {
-      const user = JSON.parse(localStorage.getItem('userData'))
-
       this.$swal({
         title: 'Proses ?',
         text: 'Data akan di proses',
@@ -169,7 +167,7 @@ export default {
           })
           this.$store
             .dispatch('app-persediaan/storePenyesuaianPersediaan', {
-              user,
+              user: this.userData,
               gudang: this.data.gudang,
               data: this.persediaan,
               jumlah_data: this.persediaan.length,
@@ -200,11 +198,9 @@ export default {
     },
     /* eslint-enable no-param-reassign */
     loadData() {
-      const user = JSON.parse(localStorage.getItem('userData'))
-      const cabang = user.cabang_id
       const gudang = this.data.gudang.id
       if (this.$store.getters['app-barang/getListBarang'].length === 0) {
-        this.$store.dispatch('app-barang/fetchListBarang').then(res => {
+        this.$store.dispatch('app-barang/fetchListBarang', { cabang_id: this.userData.cabang_id }).then(res => {
           this.$store.commit('app-barang/SET_LIST_BARANG', res.data)
           const data = this.$store.getters['app-barang/getListBarang']
           this.barang = data
@@ -215,7 +211,7 @@ export default {
       if (this.$store.getters['app-persediaan/getListPersediaan'].length === 0) {
         this.$store
           .dispatch('app-persediaan/fetchListPersediaan', {
-            cabang,
+            cabang_id: this.userData.cabang_id,
             gudang,
           })
           .then(res => {
@@ -258,6 +254,8 @@ export default {
     this.loadData()
   },
   setup() {
+    const userData = JSON.parse(localStorage.getItem('userData'))
+
     const persediaan = ref([])
 
     const barang = ref([])
@@ -271,6 +269,7 @@ export default {
       { key: 'action', sortable: false },
     ]
     return {
+      userData,
       persediaan,
       barang,
       idBarang,

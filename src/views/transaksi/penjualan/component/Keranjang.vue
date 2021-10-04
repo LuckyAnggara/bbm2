@@ -19,7 +19,7 @@
               label="nama"
               :filter-by="myFilter"
               :reduce="barang => barang.id"
-              :options="loadDataBarang()"
+              :options="select.barang"
               @input="showModal"
             >
               <template v-slot:option="option">
@@ -171,30 +171,40 @@
     >
       <!-- <b-modal id="modal-default" ref="my-modal" ok-only ok-title="Submit" centered :title="detailBarang.nama"> -->
       <b-card-body>
-        <b-col cols="12">
-          <b-form-group label="Quantity" label-for="quantity" class="mb-2">
-            <b-form-input v-model="qty" trim type="number" />
-          </b-form-group>
-        </b-col>
-        <b-col cols="12">
-          <b-form-group label="Nama Harga" class="mb-2">
-            <v-select v-model="namaHarga" placeholder="Satuan" label="nama" :options="select.harga" @input="setHarga" />
-          </b-form-group>
-        </b-col>
-        <b-col cols="12">
-          <b-form-group label="Harga Jual" label-for="harga-jual" class="mb-2">
-            <b-form-input v-model="hargaJual" trim type="number" />
-          </b-form-group>
-        </b-col>
-        <b-col cols="12">
-          <b-form-group label="Diskon" label-for="diskon" class="mb-2">
-            <b-form-input v-model="diskon" trim type="number" />
-          </b-form-group>
-        </b-col>
-        <small>
-          Persediaan {{ detailBarang.nama }} di {{ detailBarang.persediaan.gudang }} adalah <span class="text-danger">{{ detailBarang.persediaan.saldo }}</span
-          >, pastikan persediaan digudang sesuai dan lakukan <b-link :to="{ name: 'master-persediaan-penyesuaian' }"><i>Stok Opname</i></b-link> secara berkala
-        </small>
+        <b-row>
+          <b-col cols="9">
+            <b-form-group label="Quantity" label-for="quantity" class="mb-2">
+              <b-form-input v-model="qty" trim type="number" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="3">
+            <b-form-group label="Satuan" label-for="quantity" class="mb-2">
+              <b-form-input v-model="detailBarang.kode_satuan" trim type="text" readonly />
+            </b-form-group>
+          </b-col>
+
+          <b-col cols="12">
+            <b-form-group label="Nama Harga" class="mb-2">
+              <v-select v-model="namaHarga" placeholder="Satuan" label="nama" :options="select.harga" @input="setHarga" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
+            <b-form-group label="Harga Jual" label-for="harga-jual" class="mb-2">
+              <b-form-input v-model="hargaJual" trim type="number" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
+            <b-form-group label="Diskon" label-for="diskon" class="mb-2">
+              <b-form-input v-model="diskon" trim type="number" />
+            </b-form-group>
+          </b-col>
+          <small>
+            Persediaan {{ detailBarang.nama }} di {{ detailBarang.persediaan.gudang }} adalah
+            <span class="text-danger">{{ detailBarang.persediaan.saldo }}</span
+            >, pastikan persediaan digudang sesuai dan lakukan <b-link :to="{ name: 'master-persediaan-penyesuaian' }"><i>Stok Opname</i></b-link> secara
+            berkala
+          </small>
+        </b-row>
       </b-card-body>
     </b-modal>
   </div>
@@ -382,16 +392,10 @@ export default {
       return option.nama.toLowerCase().indexOf(temp) > -1 || option.kode_barang.toLowerCase().indexOf(temp) > -1
     },
     loadDataBarang() {
-      if (this.$store.getters['app-barang/getListBarang'].length === 0) {
-        this.$store.dispatch('app-barang/fetchListBarang', { cabang_id: this.user.cabang_id }).then(res => {
-          this.$store.commit('app-barang/SET_LIST_BARANG', res.data)
-          const data = this.$store.getters['app-barang/getListBarang']
-          this.select.barang = data
-          return data
-        })
-      }
-      this.select.barang = this.$store.getters['app-barang/getListBarang']
-      return this.$store.getters['app-barang/getListBarang']
+      this.$store.dispatch('app-barang/fetchListBarang', { cabang_id: this.user.cabang_id }).then(res => {
+        this.$store.commit('app-barang/SET_LIST_BARANG', res.data)
+        this.select.barang = this.$store.getters['app-barang/getListBarang']
+      })
     },
   },
 

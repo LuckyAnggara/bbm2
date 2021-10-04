@@ -68,10 +68,24 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col cols="12" lg="12" sm="12" ref="loading">
+      <b-col cols="12" lg="12" sm="12">
         <div v-if="cabang.id === 0 ? true : false">
           <b-card :title="title">
-            <b-table responsive :fields="tableColumnsAll" :items="listDataPerformanceAll" show-empty empty-text="Tidak ada data" class="position-relative">
+            <b-table
+              responsive
+              :fields="tableColumnsAll"
+              :items="listDataPerformanceAll"
+              :busy="isBusy"
+              show-empty
+              empty-text="Tidak ada data"
+              class="position-relative"
+            >
+              <template #table-busy>
+                <div class="text-center text-danger my-2">
+                  <b-spinner class="align-middle"></b-spinner>
+                  <strong>Mohon tunggu...</strong>
+                </div>
+              </template>
               <template #cell(nama_cabang)="data">
                 {{ data.item.nama }}
               </template>
@@ -112,11 +126,18 @@
               responsive
               :fields="tableColumnsSatuan"
               :items="listDataPerformanceSatuan"
+              :busy="isBusy"
               show-empty
               empty-text="Tidak ada data"
               class="position-relative"
               foot-clone
             >
+              <template #table-busy>
+                <div class="text-center text-danger my-2">
+                  <b-spinner class="align-middle"></b-spinner>
+                  <strong>Mohon tunggu...</strong>
+                </div>
+              </template>
               <template #cell(tanggal)="data">
                 {{ $moment(data.item.tanggal).format('DD-MM-YYYY') }}
               </template>
@@ -180,13 +201,14 @@
 </template>
 
 <script>
-import { BRow, BCol, BCard, BTable, BFormDatepicker, BFormGroup, BButton } from 'bootstrap-vue'
+import { BSpinner, BRow, BCol, BCard, BTable, BFormDatepicker, BFormGroup, BButton } from 'bootstrap-vue'
 import { formatRupiah } from '@core/utils/filter'
 import Ripple from 'vue-ripple-directive'
 import vSelect from 'vue-select'
 
 export default {
   components: {
+    BSpinner,
     vSelect,
     BRow,
     BCol,
@@ -198,6 +220,7 @@ export default {
   },
   data() {
     return {
+      isBusy: false,
       cabang: {
         nama: 'SEMUA',
         id: 0,
@@ -365,9 +388,10 @@ export default {
       })
     },
     loadDataSemua() {
-      const loader = this.$loading.show({
-        container: this.$refs.loading,
-      })
+      // const loader = this.$loading.show({
+      //   container: this.$refs.loading,
+      // })
+      this.isBusy = !this.isBusy
       this.$store
         .dispatch('app-cabang/fetchDataPerformanceAll', {
           tahun: this.tahun,
@@ -375,7 +399,8 @@ export default {
           hari: this.hari,
         })
         .then(res => {
-          loader.hide()
+          this.isBusy = !this.isBusy
+          // loader.hide()
           this.$store.commit('app-cabang/SET_LIST_DATA_PERFORMANCE', res.data)
           this.listDataPerformanceAll = this.$store.getters['app-cabang/getListDataPerformance']
         })
@@ -384,9 +409,10 @@ export default {
       this.title = `Performance Cabang ${this.cabang.nama} dari Tanggal ${this.$moment(this.satuan.tanggalAwal).format('DD-MM-YYYY')} s/d ${this.$moment(
         this.satuan.tanggalAkhir,
       ).format('DD-MM-YYYY')}`
-      const loader = this.$loading.show({
-        container: this.$refs.loading,
-      })
+      // const loader = this.$loading.show({
+      //   container: this.$refs.loading,
+      // })
+      this.isBusy = !this.isBusy
       this.$store
         .dispatch('app-cabang/fetchDataPerformanceSatuan', {
           cabang_id: this.cabang.id,
@@ -394,10 +420,10 @@ export default {
           akhir: this.$moment(this.satuan.tanggalAkhir).format('YYYY-M-D'),
         })
         .then(res => {
-          loader.hide()
+          this.isBusy = !this.isBusy
+          // loader.hide()
           this.$store.commit('app-cabang/SET_LIST_DATA_PERFORMANCE_SATUAN', res.data)
           this.listDataPerformanceSatuan = this.$store.getters['app-cabang/getListDataPerformanceSatuan']
-          console.info(res.data)
         })
     },
   },

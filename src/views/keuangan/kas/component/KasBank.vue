@@ -4,32 +4,22 @@
       <b-col lg="12" cols="12">
         <b-card>
           <b-row>
-            <b-col lg="10">
+            <b-col lg="10" sm="12">
               <b-row>
                 <b-col lg="6" cols="6">
                   <b-form-group label="Kode Akun" label-cols-md="4">
                     <b-form-input readonly v-model="dataAkun.kode_akun" />
                   </b-form-group>
                 </b-col>
-                <b-col lg="6" cols="6">
+                <b-col lg="6" cols="6" sm="12" md="6">
                   <b-form-group label="Nama Akun" label-cols-md="4">
-                    <b-form-input readonly v-model="dataAkun.nama" />
+                    <v-select v-model="akunId" label="nama" :clearable="true" :options="nomorAkun">
+                      <template v-slot:option="option">
+                        {{ option.kode_akun }} - <b>{{ option.nama }}</b>
+                      </template>
+                    </v-select>
                   </b-form-group>
                 </b-col>
-              </b-row>
-              <b-row>
-                <b-col lg="6" cols="6">
-                  <b-form-group label="Nama User" label-cols-md="4">
-                    <b-form-input readonly v-model="dataUser.username" />
-                  </b-form-group>
-                </b-col>
-                <b-col lg="6" cols="6">
-                  <b-form-group label="Jabatan" label-cols-md="4">
-                    <b-form-input readonly v-model="dataUser.role" />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
                 <b-col lg="6" cols="6">
                   <b-form-group label="Tanggal Data" label-cols-md="4">
                     <b-form-datepicker
@@ -47,6 +37,7 @@
                 </b-col>
               </b-row>
             </b-col>
+
             <b-col cols="2" md="6" xl="2" sm="6">
               <b-button v-ripple.400="'rgba(186, 191, 199, 0.15)'" variant="outline-danger" class="mb-75" @click="setor()" block>
                 Setor Cabang
@@ -152,8 +143,6 @@
           </div>
         </b-card>
       </b-col>
-
-      <!-- Right Col: Card -->
     </b-row>
 
     <b-modal
@@ -161,7 +150,7 @@
       ref="my-modal"
       centered
       size="lg"
-      title="SETOR KAS TUNAI"
+      title="PELAPORAN KAS BANK"
       ok-title="Proses"
       cancel-variant="outline-secondary"
       @hidden="resetModal"
@@ -201,25 +190,6 @@
               </b-form-group>
             </b-col>
           </b-row>
-
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-form-group label="Cara Penyetoran" label-for="cara-penyetoran" label-cols-md="4">
-                <v-select placeholder="Cara Penyetoran" label="title" :options="jenisPenyetoranOption" :clearable="false" v-model="form.jenis_penyetoran" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-
-          <section v-show="form.jenis_penyetoran.value === '1' ? true : false">
-            <b-row>
-              <b-col cosl="12" md="12">
-                <b-form-group label="Bank" label-for="" label-cols-md="4">
-                  <v-select placeholder="Nama Bank" label="title" :clearable="false" :options="bankOption" v-model="form.bank" />
-                </b-form-group>
-              </b-col>
-            </b-row>
-          </section>
-
           <b-row>
             <b-col cosl="12" md="12">
               <b-form-group label="Catatan" label-for="catatan" label-cols-md="4">
@@ -237,7 +207,6 @@
 import store from '@/store'
 import { ref } from '@vue/composition-api'
 import Ripple from 'vue-ripple-directive'
-import vSelect from 'vue-select'
 
 import {
   BCardBody,
@@ -254,12 +223,14 @@ import {
   BModal,
   BFormTextarea,
 } from 'bootstrap-vue'
+import vSelect from 'vue-select'
 
 export default {
   components: {
     BCardBody,
     BModal,
     BFormDatepicker,
+    vSelect,
     BButton,
     BCard,
     BRow,
@@ -270,23 +241,20 @@ export default {
     BPagination,
     BFormGroup,
     BFormTextarea,
-    vSelect,
   },
   directives: {
     Ripple,
   },
   data() {
     const today = new Date()
+
     return {
       bankOption: [],
+      akunId: null,
       filterQuery: '',
       searchQuery: '',
       refTable: null,
       tanggalKas: today,
-      jenisPenyetoranOption: [
-        { title: 'TUNAI', value: '0' },
-        { title: 'TRANSFER', value: '1' },
-      ],
     }
   },
   computed: {
@@ -306,6 +274,11 @@ export default {
     },
   },
   watch: {
+    akunId() {
+      const d = new Date()
+      const y = d.getFullYear()
+      this.loadKas(this.$moment(new Date(y, 0, 1)).format('Y-MM-DD'), this.$moment(Date.now()).format('Y-MM-DD'))
+    },
     /* eslint-disable */
     searchQuery(query) {
       if (query === '') {
@@ -319,7 +292,7 @@ export default {
         )
       }
     },
-    /* eslint-disable */
+    /* eslint-enable */
     tanggalKas(q) {
       const d = new Date()
       const y = d.getFullYear()
@@ -327,12 +300,41 @@ export default {
     },
   },
   mounted() {
-    const d = new Date()
-    const y = d.getFullYear()
-    this.loadKas(this.$moment(new Date(y, 0, 1)).format('Y-MM-DD'), this.$moment(Date.now()).format('Y-MM-DD'))
-    this.loadBank()
+    this.loadNomorAkun()
   },
   methods: {
+    storeModal(bvModalEvt) {
+      // Prevent modal from closing
+      bvModalEvt.preventDefault()
+      if (this.form.jumlah <= 0) {
+        this.$swal({
+          icon: 'error',
+          title: 'Oopss jumlah nominal masih kosong',
+          customClass: {
+            confirmButton: 'btn btn-success',
+          },
+        })
+        return
+      }
+      this.form.user = this.dataUser
+      this.form.bank = this.akunId
+      this.form.dari = 'BANK'
+      this.form.cabang_id_dari = this.dataUser.cabang_id
+      store.dispatch('app-keuangan/storeKasCabang', this.form).then(res => {
+        if (res.status === 200) {
+          this.$swal({
+            icon: 'success',
+            title: 'Transaksi berhasil',
+            customClass: {
+              confirmButton: 'btn btn-success',
+            },
+          })
+          this.$refs['my-modal'].hide()
+          this.loadDataKirim()
+          this.$emit('changetab')
+        }
+      })
+    },
     loadDataKirim(dateawal = null, dateakhir = null) {
       const dataUser = JSON.parse(localStorage.getItem('userData'))
       const cabang = dataUser.cabang_id
@@ -348,59 +350,38 @@ export default {
           store.commit('app-keuangan/SET_LIST_SETOR_CABANG', res.data)
         })
     },
-    storeModal(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault()
-      if (this.form.jumlah <= 0) {
+    resetModal() {
+      this.form.catatan = ''
+      this.form.jumlah = 0
+    },
+    setor() {
+      if (this.akunId === '' || this.akunId === null) {
         this.$swal({
           icon: 'error',
-          title: 'Oopss jumlah nominal masih kosong',
+          title: 'Pilih Akun terlebih dahulu',
           customClass: {
             confirmButton: 'btn btn-success',
           },
         })
-        return
+      } else {
+        this.$refs['my-modal'].show()
       }
-      this.form.user = this.dataUser
-      this.form.dari = 'TUNAI'
-      this.form.cabang_id_dari = this.dataUser.cabang_id
-      store.dispatch('app-keuangan/storeKasCabang', this.form).then(res => {
-        if (res.status === 200) {
-          this.$swal({
-            icon: 'success',
-            title: 'Transaksi berhasil',
-            customClass: {
-              confirmButton: 'btn btn-success',
-            },
-          })
-          this.loadDataKirim()
-        }
-      })
-    },
-    resetModal() {},
-    setor() {
-      this.$refs['my-modal'].show()
     },
     clear() {
       this.date.value = null
       this.dateFilter(null)
     },
     dateFilter(x) {
-      this.loadLedger(this.$moment(x[0]).format('Y-MM-DD'), this.$moment(x[1]).format('Y-MM-DD'))
+      this.loadLedger(this.$moment(x[0]), this.$moment(x[1]))
     },
     moment(value) {
       return this.$moment(value).format('DD MMMM YYYY')
-    },
-    loadBank() {
-      store.dispatch('app-transaksi-penjualan/fetchDataBank', this.dataOrder).then(res => {
-        this.bankOption = res.data
-      })
     },
     loadKas(dateawal = null, dateakhir = null) {
       store
         .dispatch('app-keuangan/fetchLedgerByAkun', {
           cabang_id: this.dataUser.cabang_id,
-          id: this.dataUser.cabang.kode_akun_id,
+          id: this.akunId.id,
           dateawal,
           dateakhir,
         })
@@ -413,14 +394,23 @@ export default {
     loadNomorAkun() {
       store.dispatch('app-keuangan/fetchListAkun', { tahun: '', cabang_id: this.dataUser.cabang_id }).then(res => {
         store.commit('app-keuangan/SET_LIST_AKUN', res.data)
-        if (this.transfer === false) {
-          this.loadTunai(store.getters['app-keuangan/getListAkun'])
-        } else {
-          this.loadTransfer(store.getters['app-keuangan/getListAkun'])
-        }
+        this.load(store.getters['app-keuangan/getListAkun'])
       })
     },
-
+    load(data) {
+      data.forEach(x => {
+        x.subheader.forEach(y => {
+          if (y.komponen.length !== 0) {
+            y.komponen.forEach(a => {
+              if (a.komponen === '1.1.3') {
+                this.nomorAkun.push(a)
+              }
+            })
+          }
+        })
+      })
+      return this.nomorAkun
+    },
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
@@ -445,7 +435,7 @@ export default {
     const form = ref({
       cabang_id_ke: 1,
       cabang_id_dari: dataUser.cabang_id,
-      jenis_penyetoran: { title: 'Tunai', value: '0' },
+      jenis_penyetoran: { title: 'TRANSFER', value: '0' },
       bank: null,
       tanggal: new Date(),
       jumlah: 0,

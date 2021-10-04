@@ -331,13 +331,51 @@ export default [
   {
     path: '/master/cabang/daftar',
     name: 'master-cabang-daftar',
-    component: () => import('@/views/master/cabang/Performance.vue'),
+    component: () => import('@/views/master/cabang/Daftar.vue'),
     meta: {
       resource: 'master-cabang-daftar',
       pageTitle: 'Cabang',
       breadcrumb: [
         {
           text: 'Daftar',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/master/cabang/tambah',
+    name: 'master-cabang-tambah',
+    component: () => import('@/views/master/cabang/Tambah.vue'),
+    meta: {
+      resource: 'master-cabang-daftar',
+      pageTitle: 'Cabang',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/master/cabang/daftar',
+        },
+        {
+          text: 'Tambah',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/master/cabang/detail/:id',
+    name: 'master-cabang-detail',
+    component: () => import('@/views/master/cabang/Detail.vue'),
+    meta: {
+      resource: 'master-cabang-detail',
+      pageTitle: 'Cabang',
+      breadcrumb: [
+        {
+          text: 'Daftar',
+          to: '/master/cabang/daftar',
+        },
+        {
+          text: 'Detail',
           active: true,
         },
       ],

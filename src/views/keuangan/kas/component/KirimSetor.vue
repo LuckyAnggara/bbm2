@@ -147,11 +147,14 @@ export default {
       refTable: null,
     }
   },
+
   mounted() {
     this.loadDataKirim()
-    this.listData = store.getters['app-keuangan/getListSetorCabang']
   },
   computed: {
+    listData() {
+      return store.getters['app-keuangan/getListSetorCabang']
+    },
     dataMeta() {
       const localItemsCount = this.$refs.refTable ? this.$refs.refTable.computedItems.length : 0
       return {
@@ -181,7 +184,6 @@ export default {
         })
         .then(res => {
           store.commit('app-keuangan/SET_LIST_SETOR_CABANG', res.data)
-          this.listData = store.getters['app-keuangan/getListSetorCabang']
         })
     },
     batal(id) {
@@ -233,7 +235,7 @@ export default {
       { label: 'status', key: 'status', sortable: false },
       { label: 'action', key: 'action', sortable: false },
     ]
-    const listData = ref([])
+    // const listData = ref([])
 
     // const searchQuery = ref('')
     const form = ref({
@@ -256,7 +258,7 @@ export default {
     const isSortDirDesc = ref(true)
 
     return {
-      listData,
+      // listData,
       form,
       nomorAkun,
       dataAkun,
