@@ -77,13 +77,20 @@
     </b-row>
     <b-row>
       <b-col lg="9" md="12">
+        <cabang-pendapatan :data="dataLabaBulanan" @tahunLaba="tahunLaba" />
+      </b-col>
+    </b-row>
+
+    <hr />
+    <b-row class="match-height">
+      <b-col lg="9" md="12">
         <cabang-daftar-penjualan :data-transaksi="dataTransaksi" />
       </b-col>
     </b-row>
     <hr />
-    <b-row>
-      <b-col lg="9" md="12">
-        <cabang-pendapatan :data="dataLabaBulanan" @tahunLaba="tahunLaba" />
+    <b-row v-if="userData.cabang.sales === 'YA'">
+      <b-col lg="6" md="12">
+        <cabang-sales-performance />
       </b-col>
     </b-row>
   </section>
@@ -101,6 +108,7 @@ import CabangNama from './CabangNama.vue'
 import CabangKas from './CabangKas.vue'
 import CabangDaftarPenjualan from './CabangDaftarPenjualan.vue'
 import CabangPendapatan from './CabangPendapatan.vue'
+import CabangSalesPerformance from './CabangSalesPerformance.vue'
 // import AnalyticsAvgSessions from './AnalyticsAvgSessions.vue'
 // import AnalyticsSupportTracker from './AnalyticsSupportTracker.vue'
 // import AnalyticsTimeline from './AnalyticsTimeline.vue'
@@ -115,6 +123,7 @@ export default {
     CabangKas,
     CabangDaftarPenjualan,
     CabangPendapatan,
+    CabangSalesPerformance,
     // AnalyticsAvgSessions,
     StatisticCardWithAreaChart,
     // AnalyticsSupportTracker,
@@ -154,7 +163,7 @@ export default {
   },
   watch: {
     tahunLabaBulanan() {
-      store.dispatch('app-dashboard-cabang/fetchLabaBulanan', { tahun: this.tahunLabaBulanan, cabang_id: this.user.cabang_id }).then(res => {
+      store.dispatch('app-dashboard-cabang/fetchLabaBulanan', { tahun: this.tahunLabaBulanan, cabang_id: this.userData.cabang_id }).then(res => {
         if (res.status === 200) {
           this.dataLabaBulanan = res.data
         }
@@ -162,7 +171,7 @@ export default {
     },
   },
   created() {
-    store.dispatch('app-dashboard-cabang/fetchPersediaanHarian', { cabang_id: this.user.cabang_id }).then(res => {
+    store.dispatch('app-dashboard-cabang/fetchPersediaanHarian', { cabang_id: this.userData.cabang_id }).then(res => {
       if (res.status === 200) {
         // store.commit('app-dashboard-cabang/SET_LIST_OMSET_HARIAN', this.dataOrder)
         this.dataPersediaan.series.push(res.data.series)
@@ -170,7 +179,7 @@ export default {
         this.dataPersediaan.total = res.data.total
       }
     })
-    store.dispatch('app-dashboard-cabang/fetchOmsetHarian', { cabang_id: this.user.cabang_id }).then(res => {
+    store.dispatch('app-dashboard-cabang/fetchOmsetHarian', { cabang_id: this.userData.cabang_id }).then(res => {
       if (res.status === 200) {
         // store.commit('app-dashboard-cabang/SET_LIST_OMSET_HARIAN', this.dataOrder)
         this.dataOmset.series.push(res.data.series)
@@ -178,7 +187,7 @@ export default {
         this.dataOmset.total = res.data.total
       }
     })
-    store.dispatch('app-dashboard-cabang/fetchLabaHarian', { hari: 5, cabang_id: this.user.cabang_id }).then(res => {
+    store.dispatch('app-dashboard-cabang/fetchLabaHarian', { hari: 5, cabang_id: this.userData.cabang_id }).then(res => {
       if (res.status === 200) {
         // store.commit('app-dashboard-cabang/SET_LIST_OMSET_HARIAN', this.dataOrder)
         this.dataLabaHarian.series.push(res.data.series)
@@ -186,12 +195,12 @@ export default {
         this.dataLabaHarian.total = res.data.total
       }
     })
-    store.dispatch('app-dashboard-cabang/fetchLabaBulanan', { tahun: this.tahunLabaBulanan, cabang_id: this.user.cabang_id }).then(res => {
+    store.dispatch('app-dashboard-cabang/fetchLabaBulanan', { tahun: this.tahunLabaBulanan, cabang_id: this.userData.cabang_id }).then(res => {
       if (res.status === 200) {
         this.dataLabaBulanan = res.data
       }
     })
-    store.dispatch('app-dashboard-cabang/fetchBebanHarian', { hari: 5, cabang_id: this.user.cabang_id }).then(res => {
+    store.dispatch('app-dashboard-cabang/fetchBebanHarian', { hari: 5, cabang_id: this.userData.cabang_id }).then(res => {
       if (res.status === 200) {
         // store.commit('app-dashboard-cabang/SET_LIST_OMSET_HARIAN', this.dataOrder)
         this.dataBeban.series.push(res.data.series)
@@ -201,7 +210,7 @@ export default {
     })
     store
       .dispatch('app-transaksi-penjualan/fetchListTransaksiPenjualan', {
-        cabang: this.user.cabang_id,
+        cabang: this.userData.cabang_id,
         dateawal: this.$moment(new Date()).format('YYYY-MM-DD'),
         dateakhir: this.$moment(new Date()).format('YYYY-MM-DD'),
       })
@@ -212,7 +221,7 @@ export default {
       })
     store
       .dispatch('app-dashboard-cabang/fetchKasHarian', {
-        cabang_id: this.user.cabang_id,
+        cabang_id: this.userData.cabang_id,
       })
       .then(res => {
         this.dataKasTunai = res.data.tunai
@@ -220,7 +229,7 @@ export default {
       })
     store
       .dispatch('app-dashboard-cabang/fetchUtang', {
-        cabang_id: this.user.cabang_id,
+        cabang_id: this.userData.cabang_id,
       })
       .then(res => {
         this.dataUtangDagang = res.data
@@ -236,11 +245,11 @@ export default {
 
   setup() {
     const dataTransaksi = ref([])
-    const user = JSON.parse(localStorage.getItem('userData'))
-
+    const userData = JSON.parse(localStorage.getItem('userData'))
+    console.info(userData)
     return {
       dataTransaksi,
-      user,
+      userData,
     }
   },
 }

@@ -1,9 +1,6 @@
 <template>
   <section>
     <b-card :title="header.nama">
-      <div class="d-flex mb-2">
-        <span> Saldo : {{ formatRupiah(header.saldo) }} </span>
-      </div>
       <b-table
         ref="refTable"
         responsive

@@ -4,7 +4,7 @@ export default [
     name: 'master-barang-tambah',
     component: () => import('@/views/master/barang/Tambah/Tambah.vue'),
     meta: {
-      resource: 'ACL',
+      resource: 'master_barang',
       pageTitle: 'Tambah',
       breadcrumb: [
         {
@@ -23,7 +23,7 @@ export default [
     name: 'master-barang-daftar',
     component: () => import('@/views/master/barang/Daftar.vue'),
     meta: {
-      resource: 'ACL',
+      resource: 'master_barang',
       pageTitle: 'Daftar',
       breadcrumb: [
         {
@@ -44,7 +44,7 @@ export default [
     name: 'master-barang-harga',
     component: () => import('@/views/master/barang/Harga.vue'),
     meta: {
-      resource: 'ACL',
+      resource: 'master_barang',
       pageTitle: 'Ubah Harga',
       breadcrumb: [
         {
@@ -69,6 +69,7 @@ export default [
     name: 'master-barang-detail',
     component: () => import('@/views/master/barang/Detail/Detail.vue'),
     meta: {
+      resource: 'master_barang',
       pageTitle: 'Daftar',
       breadcrumb: [
         {
@@ -87,6 +88,7 @@ export default [
     name: 'master-kontak',
     component: () => import('@/views/master/kontak/Daftar.vue'),
     meta: {
+      resource: 'master_kontak',
       pageTitle: 'Daftar',
       breadcrumb: [
         {
@@ -102,6 +104,7 @@ export default [
     name: 'master-kontak-tambah',
     component: () => import('@/views/master/kontak/Tambah/Tambah.vue'),
     meta: {
+      resource: 'master_kontak',
       pageTitle: 'Tambah',
       breadcrumb: [
         {
@@ -120,7 +123,9 @@ export default [
     name: 'master-persediaan',
     component: () => import('@/views/master/persediaan/Daftar.vue'),
     meta: {
-      pageTitle: 'Daftar',
+      resource: 'laporan_persediaan',
+      // resource: 'master_persediaan',
+      pageTitle: 'Laporan',
       breadcrumb: [
         {
           active: true,
@@ -135,6 +140,7 @@ export default [
     name: 'master-persediaan-transfer',
     component: () => import('@/views/master/persediaan/transfer/TransferPersediaan.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Transfer Persediaan',
       breadcrumb: [
         {
@@ -153,6 +159,7 @@ export default [
     name: 'master-persediaan-transfer-lanjut',
     component: () => import('@/views/master/persediaan/transfer/TransferPersediaanLanjut.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Transfer Persediaan Lanjut',
       breadcrumb: [
         {
@@ -175,6 +182,7 @@ export default [
     name: 'master-persediaan-transfer-detail',
     component: () => import('@/views/master/persediaan/transfer/DetailTransferPersediaan.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Detail Transfer Persediaan',
       breadcrumb: [
         {
@@ -197,6 +205,7 @@ export default [
     name: 'master-persediaan-tambah',
     component: () => import('@/views/master/persediaan/penyesuaian/Penyesuaian.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Penyesuaian',
       breadcrumb: [
         {
@@ -215,6 +224,7 @@ export default [
     name: 'master-persediaan-penyesuaian',
     component: () => import('@/views/master/persediaan/penyesuaian/Penyesuaian.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Penyesuaian',
       breadcrumb: [
         {
@@ -233,6 +243,7 @@ export default [
     name: 'master-persediaan-penyesuaian-perhitungan-stock',
     component: () => import('@/views/master/persediaan/penyesuaian/PerhitunganStock.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Perhitungan Stock',
       breadcrumb: [
         {
@@ -255,6 +266,7 @@ export default [
     name: 'master-persediaan-penyesuaian-masuk-keluar',
     component: () => import('@/views/master/persediaan/penyesuaian/MasukKeluar.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Stok Masuk / Keluar',
       breadcrumb: [
         {
@@ -277,6 +289,7 @@ export default [
     name: 'master-persediaan-penyesuaian-detail',
     component: () => import('@/views/master/persediaan/penyesuaian/DetailPenyesuaian.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Detail',
       breadcrumb: [
         {
@@ -299,6 +312,7 @@ export default [
     name: 'master-persediaan-detail',
     component: () => import('@/views/master/persediaan/DetailKartuPersediaan.vue'),
     meta: {
+      resource: 'laporan_persediaan',
       pageTitle: 'Daftar',
       breadcrumb: [
         {
@@ -317,6 +331,7 @@ export default [
     name: 'master-gudang',
     component: () => import('@/views/master/gudang/Daftar.vue'),
     meta: {
+      resource: 'master_gudang',
       pageTitle: 'Daftar',
       breadcrumb: [
         {
@@ -333,7 +348,7 @@ export default [
     name: 'master-cabang-daftar',
     component: () => import('@/views/master/cabang/Daftar.vue'),
     meta: {
-      resource: 'master-cabang-daftar',
+      resource: 'master_cabang',
       pageTitle: 'Cabang',
       breadcrumb: [
         {
@@ -348,7 +363,7 @@ export default [
     name: 'master-cabang-tambah',
     component: () => import('@/views/master/cabang/Tambah.vue'),
     meta: {
-      resource: 'master-cabang-daftar',
+      resource: 'master_cabang',
       pageTitle: 'Cabang',
       breadcrumb: [
         {
@@ -367,7 +382,7 @@ export default [
     name: 'master-cabang-detail',
     component: () => import('@/views/master/cabang/Detail.vue'),
     meta: {
-      resource: 'master-cabang-detail',
+      resource: 'master_cabang',
       pageTitle: 'Cabang',
       breadcrumb: [
         {
@@ -386,7 +401,7 @@ export default [
     name: 'master-cabang-performance',
     component: () => import('@/views/master/cabang/Performance.vue'),
     meta: {
-      resource: 'master-cabang-performance',
+      resource: 'master_cabang',
       pageTitle: 'Cabang',
       breadcrumb: [
         {
@@ -405,7 +420,7 @@ export default [
     name: 'master-cabang-setoran',
     component: () => import('@/views/master/cabang/Setoran.vue'),
     meta: {
-      resource: 'master-cabang-setoran',
+      resource: 'master_cabang',
       pageTitle: 'Cabang',
       breadcrumb: [
         {

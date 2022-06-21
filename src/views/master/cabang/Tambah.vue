@@ -1,7 +1,7 @@
 <template>
   <!-- <b-row class="match-height"> -->
   <b-form autocomplete="off" @submit.prevent @submit="store">
-    <b-row>
+    <b-row ref="loading">
       <b-col lg="9">
         <b-card title="Data Cabang">
           <b-row>
@@ -105,8 +105,13 @@ export default {
       })
     },
     store() {
+      const loader = this.$loading.show({
+        // Optional parameters
+        container: this.$refs.loading,
+      })
       store.dispatch('app-cabang/tambahCabang', this.form).then(res => {
         if (res.status === 200) {
+          loader.hide()
           this.success()
         } else {
           this.error()

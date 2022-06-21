@@ -35,6 +35,7 @@ import master from './master'
 import transaksi from './transaksi'
 import keuangan from './keuangan'
 import kepegawaian from './kepegawaian'
+import laporan from './laporan'
 
 // Array of sections
-export default [...dashboard, ...master, ...transaksi, ...keuangan, ...kepegawaian]
+export default [...dashboard, ...laporan, ...master, ...transaksi, ...keuangan, ...kepegawaian]

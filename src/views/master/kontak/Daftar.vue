@@ -75,36 +75,35 @@ export default {
     edit(id) {
       return id
     },
-    del(id) {
-      this.$swal({
-        title: 'Delete data ?',
-        text: 'Data barang akan di hapus',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        customClass: {
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-danger ml-1',
-        },
-        buttonsStyling: false,
-      }).then(result => {
-        if (result.value) {
-          console.info(id)
-          // axios.delete(`http://127.0.0.1:8000/api/barang/${id}`).then(res => {
-          //   if (res.status === 200) {
-          //     this.loadData()
-          //     this.$swal({
-          //       icon: 'success',
-          //       title: 'Deleted!',
-          //       customClass: {
-          //         confirmButton: 'btn btn-success',
-          //       },
-          //     })
-          //   }
-          // })
-        }
-      })
-    },
+    // del(id) {
+    //   this.$swal({
+    //     title: 'Delete data ?',
+    //     text: 'Data barang akan di hapus',
+    //     icon: 'warning',
+    //     showCancelButton: true,
+    //     confirmButtonText: 'Yes, delete it!',
+    //     customClass: {
+    //       confirmButton: 'btn btn-primary',
+    //       cancelButton: 'btn btn-outline-danger ml-1',
+    //     },
+    //     buttonsStyling: false,
+    //   }).then(result => {
+    //     if (result.value) {
+    //       axios.delete(`http://127.0.0.1:8000/api/barang/${id}`).then(res => {
+    //         if (res.status === 200) {
+    //           this.loadData()
+    //           this.$swal({
+    //             icon: 'success',
+    //             title: 'Deleted!',
+    //             customClass: {
+    //               confirmButton: 'btn btn-success',
+    //             },
+    //           })
+    //         }
+    //       })
+    //     }
+    //   })
+    // },
     toTambahScreen() {
       this.$router.push({
         name: 'master-kontak-tambah',

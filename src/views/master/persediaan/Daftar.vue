@@ -2,7 +2,7 @@
   <section ref="container">
     <b-row>
       <b-col cols="12" md="9" xl="9">
-        <b-card :title="gudang ? `Persediaan Gudang  ${gudang.nama}` : `Gudang belum di pilih`">
+        <b-card :title="gudang ? `Persediaan ${gudang.nama}` : `Gudang belum di pilih`" :sub-title="`s.d ${$moment().format('DD MMMM YYYY')}`">
           <div class="mb-2">
             <!-- Table Top -->
             <b-row>
@@ -21,6 +21,7 @@
           </div>
 
           <b-table
+            :busy="isBusy"
             ref="refTable"
             responsive
             primary-key="id"
@@ -32,6 +33,12 @@
             :current-page="currentPage"
             :per-page="perPage"
           >
+            <template #table-busy>
+              <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Loading...</strong>
+              </div>
+            </template>
             <!-- Column: Nomor -->
             <template #cell(no)="data">
               <span>
@@ -122,18 +129,18 @@
             <b-form-input :value="gudang.kode_akun" readonly />
           </b-form-group>
 
-          <b-form-group label="Kode Akun" label-for="gudang">
+          <b-form-group label="Saldo Akun" label-for="gudang">
             <b-form-input :value="gudang.saldo != null ? formatRupiah(gudang.saldo) : formatRupiah(0)" readonly />
           </b-form-group>
+
+          <hr />
+          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block v-if="gudang" @click="print">
+            Download
+          </b-button>
         </b-card>
 
         <b-card v-if="gudang">
           <!-- Button: Download -->
-          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block>
-            Download Data
-          </b-button>
-
-          <hr />
 
           <!-- Button: Penyesuaian Stok -->
           <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="outline-secondary" class="mb-75" block :to="{ name: 'master-persediaan-penyesuaian' }">
@@ -156,6 +163,7 @@
 <script>
 import { ref } from '@vue/composition-api'
 import {
+  BSpinner,
   BLink,
   BFormGroup,
   BButton,
@@ -178,6 +186,7 @@ import KartuHargaPersediaan from './component/KartuHargaPersediaan.vue'
 
 export default {
   components: {
+    BSpinner,
     BModal,
     BLink,
     BFormGroup,
@@ -198,16 +207,6 @@ export default {
   },
   data() {
     return {
-      date: {
-        value: Date.now(),
-        config: {
-          wrap: true, // set wrap to true only when using 'input-group'
-          altFormat: 'd F Y',
-          altInput: true,
-          dateFormat: 'Y-m-d',
-          mode: 'range',
-        },
-      },
       gudang: '',
       filterQuery: '',
       searchQuery: '',
@@ -246,34 +245,36 @@ export default {
     // this.loadData()
   },
   methods: {
+    print() {
+      const loader = this.$loading.show()
+      this.$store.dispatch('app-laporan/laporanPersediaan', {
+        cabang: this.userData.cabang_id,
+        tanggal: this.$moment().format('YYYY-MM-DD'),
+        gudang: this.gudang.id,
+      })
+      loader.hide()
+    },
     showModal(x) {
       this.dataHargaPersediaan = x
       this.$refs['my-modal'].show()
     },
     loadGudang() {
-      const loader = this.$loading.show({
-        container: this.$refs.formContainer,
-      })
-      const user = JSON.parse(localStorage.getItem('userData'))
-      const cabang = user.cabang_id
       store
         .dispatch('app-persediaan/fetchListGudang', {
-          cabang,
+          cabang: this.userData.cabang_id,
+          hari: this.$moment().format('YYYY-MM-DD'),
         })
         .then(res => {
           store.commit('app-persediaan/SET_LIST_GUDANG', res.data)
           this.listGudang = store.getters['app-persediaan/getListGudang']
           this.gudang = this.listGudang.find(x => x.utama === 1)
-          loader.hide()
         })
     },
     loadData(data) {
-      const user = JSON.parse(localStorage.getItem('userData'))
-      const cabang = user.cabang_id
       const gudang = data.id
       store
         .dispatch('app-persediaan/fetchListPersediaan', {
-          cabang,
+          cabang: this.userData.cabang_id,
           gudang,
         })
         .then(res => {
@@ -281,6 +282,7 @@ export default {
           this.dataTemp = store.getters['app-persediaan/getListPersediaan'].filter(
             x => x.persediaan.saldo !== 0 || x.persediaan.saldo_masuk !== 0 || x.persediaan.saldo_keluar !== 0,
           )
+          this.isBusy = false
           this.dataPersediaan = this.dataTemp
         })
     },
@@ -289,6 +291,8 @@ export default {
     },
   },
   setup() {
+    const isBusy = ref(true)
+    const userData = JSON.parse(localStorage.getItem('userData'))
     const tableColumns = [
       { key: 'no', sortable: true },
       { key: 'kode_barang', sortable: true },
@@ -308,6 +312,8 @@ export default {
     const statusFilter = ref(null)
 
     return {
+      isBusy,
+      userData,
       tableColumns,
       // searchQuery,
       perPage,

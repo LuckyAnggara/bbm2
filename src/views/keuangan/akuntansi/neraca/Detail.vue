@@ -14,6 +14,9 @@
             <b-form-group label="Bulanan" label-for="bank" label-cols-md="4">
               <v-select v-model="bulan" placeholder="Berdasarkan Bulanan" label="title" :clearable="true" :options="bulanOption" @input="bulanChange()" />
             </b-form-group>
+            <b-form-group label="Tahun" label-for="bank" label-cols-md="4">
+              <v-select v-model="tahun_bulanan" placeholder="Tahun" :clearable="true" :options="tahunOption" @input="bulanChange()" />
+            </b-form-group>
           </b-col>
           <hr />
           <b-col cols="12" md="12">
@@ -103,7 +106,8 @@ export default {
       hari: '',
       tahun: new Date().getFullYear(),
       bulan: '',
-      tahunOption: ['2021', '2022', '2023'],
+      tahun_bulanan: new Date().getFullYear(),
+      tahunOption: ['2021', '2022', '2023', '2024'],
       bulanOption: [
         {
           title: 'JANUARI',
@@ -186,6 +190,7 @@ export default {
       this.hari = ''
       this.bulan = ''
       this.title = `Tahun ${this.tahun} Berjalan`
+
       this.loadData()
     },
     bulanChange() {
@@ -210,7 +215,7 @@ export default {
       const loader = this.$loading.show({})
       store
         .dispatch('app-keuangan/fetchNeraca', {
-          tahun: this.tahun,
+          tahun: this.bulan ? this.tahun_bulanan : this.tahun,
           bulan: this.bulan ? this.bulan.value : '',
           hari: this.hari,
           cabang_id: this.userData.cabang_id,

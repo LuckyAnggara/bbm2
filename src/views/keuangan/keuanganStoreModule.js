@@ -19,6 +19,7 @@ export default {
     listDataDetailPenggajian: [],
     // UTANG
     listUtang: [],
+    listUtangPo: [],
     listPiutang: [],
     // SETOR
     listSetorCabang: [],
@@ -42,6 +43,7 @@ export default {
     // UTANG
     getListUtang: state => state.listUtang,
     getListPiutang: state => state.listPiutang,
+    getListUtangPo: state => state.listUtangPo,
     // SETOR
     getListSetorCabang: state => state.listSetorCabang,
   },
@@ -100,6 +102,9 @@ export default {
     // UTANG
     SET_DATA_UTANG(state, data) {
       state.listUtang = data
+    },
+    SET_DATA_UTANG_PO(state, data) {
+      state.listUtangPo = data
     },
     SET_DATA_PIUTANG(state, data) {
       state.listPiutang = data
@@ -175,8 +180,17 @@ export default {
     fetchLedgerByAkun(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          // .get(`${axios.defaults.keuanganURL}ledger/${id}`)
           .get(`${axios.defaults.keuanganURL}ledger?cabang_id=${params.cabang_id}&akun_id=${params.id}&dd=${params.dateawal}&ddd=${params.dateakhir}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchSaldoAkun(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.keuanganURL}ledger/saldo?cabang_id=${params.cabang_id}&akun_id=${params.akun_id}&tahun=${params.tahun}`)
           .then(response => {
             resolve(response)
           })
@@ -355,6 +369,16 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .get(`${axios.defaults.baseURL}utang-piutang/get-utang?cabang=${params.cabang}&dd=${params.dd}&ddd=${params.ddd}`)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    getUtangPo(ctx, params) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}utang-piutang/get-utang-po?cabang=${params.cabang}&dd=${params.dd}&ddd=${params.ddd}`)
           .then(response => {
             resolve(response)
           })

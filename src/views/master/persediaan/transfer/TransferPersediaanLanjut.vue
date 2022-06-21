@@ -188,7 +188,6 @@ export default {
     },
     /* eslint-enable no-param-reassign */
     loadDataBarang() {
-      console.info(this.data)
       const user = JSON.parse(localStorage.getItem('userData'))
       const cabang = user.cabang_id
       const gudang = this.data.dataGudang.dari.id

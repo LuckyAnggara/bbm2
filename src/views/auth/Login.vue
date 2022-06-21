@@ -39,9 +39,6 @@
             <b-form-group>
               <div class="d-flex justify-content-between">
                 <label for="login-password">Password</label>
-                <b-link :to="{ name: 'dashboard-analytics' }">
-                  <small>Lupa Password?</small>
-                </b-link>
               </div>
               <b-input-group class="input-group-merge">
                 <b-form-input id="login-password" v-model="form.password" class="form-control-merge" name="login-password" placeholder="············" />
@@ -163,10 +160,9 @@ export default {
         } else {
           const userData = res.data
           localStorage.setItem('userData', JSON.stringify(res.data))
-          console.info(userData)
-          this.$ability.update(userData.ability)
+          this.$ability.update(userData.role.ability)
           this.$router
-            .replace(getHomeRouteForLoggedInUser(userData.role))
+            .replace(getHomeRouteForLoggedInUser(userData.role.header))
             .then(() => {
               this.$toast({
                 component: ToastificationContent,
@@ -175,7 +171,7 @@ export default {
                   title: `Selamat Datang ${userData.pegawai.nama}`,
                   icon: 'CoffeeIcon',
                   variant: 'success',
-                  text: `Kamu berhasil login sebagai ${userData.role}. selamat bekerja!`,
+                  text: `Kamu berhasil login sebagai ${userData.role.nama}. selamat bekerja!`,
                 },
               })
             })

@@ -4,6 +4,7 @@ export default [
     name: 'akuntansi-akun-daftar',
     component: () => import('@/views/keuangan/akuntansi/akun/Daftar.vue'),
     meta: {
+      resource: 'keuangan_akuntansi_daftar',
       pageTitle: 'Akun',
       breadcrumb: [
         {
@@ -18,6 +19,7 @@ export default [
     name: 'akuntansi-jurnal-daftar',
     component: () => import('@/views/keuangan/akuntansi/jurnal/Daftar.vue'),
     meta: {
+      resource: 'keuangan_akuntansi_jurnal',
       pageTitle: 'Jurnal',
       breadcrumb: [
         {
@@ -32,6 +34,7 @@ export default [
     name: 'akuntansi-jurnal-tambah',
     component: () => import('@/views/keuangan/akuntansi/jurnal/Tambah.vue'),
     meta: {
+      resource: 'keuangan_akuntansi_jurnal',
       pageTitle: 'Jurnal',
       breadcrumb: [
         {
@@ -46,6 +49,7 @@ export default [
     name: 'akuntansi-jurnal-detail',
     component: () => import('@/views/keuangan/akuntansi/jurnal/Detail.vue'),
     meta: {
+      resource: 'keuangan_akuntansi',
       pageTitle: 'Jurnal',
       breadcrumb: [
         {
@@ -55,30 +59,32 @@ export default [
       ],
     },
   },
-  {
-    path: '/akuntansi/ledger/daftar',
-    name: 'akuntansi-ledger-daftar',
-    component: () => import('@/views/keuangan/akuntansi/jurnal/Daftar.vue'),
-    meta: {
-      resource: 'ACL',
-      pageTitle: 'Ledger',
-      breadcrumb: [
-        {
-          text: 'Daftar',
-          active: true,
-        },
-      ],
-    },
-  },
+  // {
+  //   path: '/akuntansi/ledger/daftar',
+  //   name: 'akuntansi-ledger-daftar',
+  //   component: () => import('@/views/keuangan/akuntansi/jurnal/Daftar.vue'),
+  //   meta: {
+  //     resource: 'keuangan_akuntansi',
+  //     pageTitle: 'Ledger',
+  //     breadcrumb: [
+  //       {
+  //         text: 'Daftar',
+  //         active: true,
+  //       },
+  //     ],
+  //   },
+  // },
   {
     path: '/akuntansi/ledger/detail/:id',
     name: 'akuntansi-ledger-detail',
     component: () => import('@/views/keuangan/akuntansi/ledger/Detail.vue'),
     meta: {
+      resource: 'keuangan_akuntansi',
       pageTitle: 'Ledger',
       breadcrumb: [
         {
           text: 'Daftar',
+          to: '/akuntansi/jurnal/daftar/',
         },
         {
           text: 'Detail',
@@ -92,6 +98,7 @@ export default [
     name: 'akuntansi-neraca',
     component: () => import('@/views/keuangan/akuntansi/neraca/Detail.vue'),
     meta: {
+      resource: 'keuangan_akuntansi_neraca',
       pageTitle: 'Neraca',
     },
   },
@@ -100,6 +107,7 @@ export default [
     name: 'akuntansi-laba-rugi',
     component: () => import('@/views/keuangan/akuntansi/laba-rugi/Detail.vue'),
     meta: {
+      resource: 'keuangan_akuntansi_laba_rugi',
       pageTitle: 'Laba Rugi',
     },
   },
@@ -108,6 +116,7 @@ export default [
     name: 'beban-operasional-daftar',
     component: () => import('@/views/keuangan/beban/operasional/Daftar.vue'),
     meta: {
+      resource: 'keuangan_beban',
       pageTitle: 'Operasional',
       breadcrumb: [
         {
@@ -118,10 +127,11 @@ export default [
     },
   },
   {
-    path: '/beban/gaji/',
+    path: '/beban/gaji/daftar',
     name: 'beban-gaji-daftar',
     component: () => import('@/views/keuangan/beban/gaji/Daftar.vue'),
     meta: {
+      resource: 'keuangan_beban',
       pageTitle: 'Gaji',
       breadcrumb: [
         {
@@ -136,10 +146,12 @@ export default [
     name: 'beban-gaji-tambah-detail',
     component: () => import('@/views/keuangan/beban/gaji/tambah/Detail.vue'),
     meta: {
+      resource: 'keuangan_beban',
       pageTitle: 'Gaji',
       breadcrumb: [
         {
           text: 'Daftar',
+          to: '/beban/gaji/daftar',
         },
         {
           text: 'Detail Penggajian',
@@ -153,6 +165,7 @@ export default [
     name: 'kas-daftar',
     component: () => import('@/views/keuangan/kas/Daftar.vue'),
     meta: {
+      resource: 'keuangan_kas',
       pageTitle: 'Daftar Kas',
       breadcrumb: [
         {
@@ -167,6 +180,7 @@ export default [
     name: 'kas-kasir',
     component: () => import('@/views/keuangan/kas/Kasir.vue'),
     meta: {
+      resource: 'keuangan_kas',
       pageTitle: 'Kas Kasir',
       breadcrumb: [
         {
@@ -177,10 +191,6 @@ export default [
           text: 'Kasir',
           active: true,
         },
-        {
-          text: 'Detail',
-          active: true,
-        },
       ],
     },
   },
@@ -189,6 +199,7 @@ export default [
     name: 'kas-cabang',
     component: () => import('@/views/keuangan/kas/Cabang.vue'),
     meta: {
+      resource: 'keuangan_kas',
       pageTitle: 'Kas',
       breadcrumb: [
         {
@@ -199,10 +210,6 @@ export default [
           text: 'Cabang',
           active: true,
         },
-        {
-          text: 'Detail',
-          active: true,
-        },
       ],
     },
   },
@@ -211,6 +218,7 @@ export default [
     name: 'kas-bank',
     component: () => import('@/views/keuangan/kas/Bank.vue'),
     meta: {
+      resource: 'keuangan_kas',
       pageTitle: 'Kas',
       breadcrumb: [
         {
@@ -221,10 +229,6 @@ export default [
           text: 'Bank',
           active: true,
         },
-        {
-          text: 'Detail',
-          active: true,
-        },
       ],
     },
   },
@@ -233,6 +237,7 @@ export default [
     name: 'keuangan-utang-piutang',
     component: () => import('@/views/keuangan/utang-piutang/UtangPiutang.vue'),
     meta: {
+      resource: 'keuangan_utang_piutang',
       pageTitle: 'Keuangan',
       breadcrumb: [
         {
@@ -247,6 +252,7 @@ export default [
     name: 'keuangan-bulk-pembayaran-utang',
     component: () => import('@/views/keuangan/utang-piutang/BulkPembayaranUtang.vue'),
     meta: {
+      resource: 'keuangan_utang_piutang',
       pageTitle: 'Keuangan',
       breadcrumb: [
         {
@@ -265,6 +271,7 @@ export default [
     name: 'keuangan-bulk-pembayaran-piutang',
     component: () => import('@/views/keuangan/utang-piutang/BulkPembayaranPiutang.vue'),
     meta: {
+      resource: 'keuangan_utang_piutang',
       pageTitle: 'Keuangan',
       breadcrumb: [
         {
@@ -273,6 +280,25 @@ export default [
         },
         {
           text: 'Bulk Pembayaran Piutang',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/keuangan/utangpiutang/pembayaranpo',
+    name: 'keuangan-bulk-pembayaran-utang-po',
+    component: () => import('@/views/keuangan/utang-piutang/PembayaranPo.vue'),
+    meta: {
+      resource: 'keuangan_utang_piutang',
+      pageTitle: 'Keuangan',
+      breadcrumb: [
+        {
+          text: 'Utang / Piutang',
+          to: '/keuangan/utangpiutang/',
+        },
+        {
+          text: 'Pembayaran Utang PO',
           active: true,
         },
       ],

@@ -100,11 +100,16 @@
             <!-- <v-select v-model="beban.caraPembayaran" placeholder="Cara Pembayaran" label="title" :options="caraPembayaran" :clearable="false" /> -->
           </b-form-group>
         </b-col>
-        <b-col cols="12" md="12">
+        <b-col cols="6" md="12">
           <b-form-group label="Kas" label-cols-md="3">
-            <v-select v-model="formBeban.kas" placeholder="Kas yang digunakan" label="title" :options="kasTunai" :clearable="false" />
-            <!-- <small class="text-danger" v-show="beban.kas != ''">Uang akan mendebet {{ beban.kas.title }}</small> -->
+            <v-select v-model="formBeban.kas" placeholder="Kas yang digunakan" label="nama" :options="kasTunai" :clearable="false" />
           </b-form-group>
+        </b-col>
+        <b-col lg="12" cols="12">
+          <b-form-group label="Saldo" label-cols-md="3" v-if="formBeban.kas !== null ? true : false">
+            <b-form-input type="text" :value="formBeban.kas.saldo !== null ? formatRupiah(formBeban.kas.saldo) : 0" readonly />
+          </b-form-group>
+          <hr />
         </b-col>
         <b-col lg="12" cols="12">
           <b-form-group label="Catatan" label-cols-md="3">
@@ -197,6 +202,8 @@ export default {
       dataMaster: {},
       dataKomponenBeban: [],
       dataDetailBeban: [],
+      kasTunai: [],
+      userData: JSON.parse(localStorage.getItem('userData')),
     }
   },
   watch: {
@@ -205,14 +212,6 @@ export default {
     },
   },
   computed: {
-    kasTunai() {
-      const userData = JSON.parse(localStorage.getItem('userData'))
-      console.info(userData)
-      return [
-        { title: `Kas - ${userData.cabang.nama}`, value: '0', kode_akun_id: userData.cabang.kode_akun_id },
-        { title: `Kas - ${userData.pegawai.nama}`, value: '1', kode_akun_id: userData.kode_akun_id },
-      ]
-    },
     saldo() {
       let saldo = 0
       this.dataDetailBeban.forEach(x => {
@@ -233,6 +232,7 @@ export default {
   },
   mounted() {
     this.loadAwal()
+    this.loadDataKas()
   },
   methods: {
     cekValidasiAkun(modal) {
@@ -246,6 +246,18 @@ export default {
     cekValidasiBeban(modal) {
       modal.preventDefault()
       const beban = this.formBeban
+      if (beban.kas.saldo < beban.nominal) {
+        this.$swal({
+          title: 'Error!',
+          text: `Saldo kas ${beban.kas.nama} kurang`,
+          icon: 'error',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+          },
+          buttonsStyling: false,
+        })
+        return false
+      }
       if (beban.subAkun === '' || beban.tanggal === '' || beban.catatan === '') {
         this.error('Beban')
         if (beban.nominal === 0) {
@@ -280,12 +292,10 @@ export default {
         const d = new Date()
         tahun = d.getFullYear()
       }
-      const user = JSON.parse(localStorage.getItem('userData'))
-      const cabang = user.cabang_id
       store
         .dispatch('app-keuangan/fetchOperasional', {
           tahun,
-          cabang,
+          cabang: this.userData.cabang_id,
         })
         .then(res => {
           store.commit('app-keuangan/SET_DATA_BEBAN_OPERASIONAL', res.data)
@@ -294,10 +304,19 @@ export default {
           this.dataDetailBeban = store.getters['app-keuangan/getDataBebanOperasional'].detail
         })
     },
+    loadDataKas() {
+      this.$store
+        .dispatch('app-cabang/fetchDataKas', {
+          cabang_id: this.userData.cabang_id,
+        })
+        .then(res => {
+          this.kasTunai = res.data.filter(x => x.komponen === '1.1.2')
+        })
+    },
     success() {
       this.$swal({
         title: 'Success!',
-        text: 'Jurnal berhasil di buat!!',
+        text: 'Beban berhasil di buat!!',
         icon: 'success',
         customClass: {
           confirmButton: 'btn btn-primary',
@@ -323,12 +342,11 @@ export default {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
     submitBeban(modal) {
-      const user = JSON.parse(localStorage.getItem('userData'))
       if (this.cekValidasiBeban(modal)) {
         const loader = this.$loading.show({})
         const output = {
-          user_id: user.id,
-          cabang_id: user.cabang_id,
+          user_id: this.userData.id,
+          cabang_id: this.userData.cabang_id,
           master_akun_id: this.formBeban.subAkun.id,
           nominal: this.formBeban.nominal,
           catatan: this.formBeban.catatan,
@@ -349,7 +367,6 @@ export default {
       return false
     },
     submitAkun(modal) {
-      const user = JSON.parse(localStorage.getItem('userData'))
       if (this.cekValidasiAkun(modal)) {
         const loader = this.$loading.show({})
         const output = {
@@ -358,7 +375,7 @@ export default {
           komponen: this.dataMaster.kode_akun,
           kode_akun: this.kodeAkun,
           nama: `${this.dataMaster.nama}-${this.formSubAkun.nama_akun}`,
-          cabang_id: user.cabang_id,
+          cabang_id: this.userData.cabang_id,
         }
         store.dispatch('app-keuangan/storeAkun', output).then(res => {
           loader.hide()

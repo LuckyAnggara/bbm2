@@ -384,13 +384,9 @@ export default {
     loadCabang() {
       this.$store.dispatch('app-pegawai/fetchListCabang').then(res => {
         this.cabangOption.push(...res.data)
-        console.info(this.cabangOption)
       })
     },
     loadDataSemua() {
-      // const loader = this.$loading.show({
-      //   container: this.$refs.loading,
-      // })
       this.isBusy = !this.isBusy
       this.$store
         .dispatch('app-cabang/fetchDataPerformanceAll', {

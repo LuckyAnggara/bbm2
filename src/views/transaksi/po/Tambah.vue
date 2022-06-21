@@ -112,27 +112,42 @@ export default {
       })
     },
     store() {
-      const loader = this.$loading.show({
-        // Optional parameters
-        container: this.$refs.formContainer,
-      })
-      store
-        .dispatch('app-po/storePO', this.form)
-        .then(res => {
-          loader.hide()
-          if (res.status === 200) {
-            this.success()
-            this.$router.push({
-              name: 'transaksi-po-detail',
-              params: { id: res.data.id, data: res.data },
+      this.$swal({
+        title: 'Proses ?',
+        text: 'Silahkan cek kembali P.O sebelum memproses',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Proses!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+      }).then(result => {
+        if (result) {
+          const loader = this.$loading.show({
+            // Optional parameters
+            container: this.$refs.formContainer,
+          })
+          store
+            .dispatch('app-po/storePO', this.form)
+            .then(res => {
+              loader.hide()
+              if (res.status === 200) {
+                this.success()
+                this.$router.push({
+                  name: 'transaksi-po-detail',
+                  params: { id: res.data.id, data: res.data },
+                })
+              } else {
+                this.error(res.message)
+              }
             })
-          } else {
-            this.error(res.message)
-          }
-        })
-        .catch(error => {
-          this.error(error)
-        })
+            .catch(error => {
+              this.error(error)
+            })
+        }
+      })
     },
   },
   setup() {

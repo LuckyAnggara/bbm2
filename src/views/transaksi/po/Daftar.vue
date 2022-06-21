@@ -6,7 +6,8 @@
         <!-- title -->
         <template #title>
           <feather-icon icon="DatabaseIcon" size="24" class="mr-50" />
-          <span class="font-weight-bold">P.O Keluar</span>
+          <span class="font-weight-bold mr-1">P.O Keluar</span>
+          <b-badge pill variant="danger" v-if="totalKeluar !== 0 ? true : false">{{ totalKeluar }}</b-badge>
         </template>
         <keluar />
       </b-tab>
@@ -15,7 +16,7 @@
         <template #title>
           <feather-icon icon="DatabaseIcon" size="24" class="mr-50" />
           <span class="font-weight-bold mr-1">P.O Masuk </span>
-          <b-badge pill variant="danger">{{ totalMasuk }}</b-badge>
+          <b-badge pill variant="danger" v-if="totalMasuk !== 0 ? true : false">{{ totalMasuk }}</b-badge>
         </template>
         <masuk />
       </b-tab>
@@ -24,7 +25,6 @@
 </template>
 
 <script>
-import { ref } from '@vue/composition-api'
 import { BBadge, BTab, BTabs } from 'bootstrap-vue'
 import Keluar from './component/Keluar.vue'
 import Masuk from './component/Masuk.vue'
@@ -37,15 +37,13 @@ export default {
     Keluar,
     Masuk,
   },
-  created() {
-    this.totalMasuk = this.$store.getters['app-po/getListPOMasuk'].filter(x => x.status_po_masuk === 'BELUM DIBACA').length
-  },
-  setup() {
-    const totalMasuk = ref(0)
-
-    return {
-      totalMasuk,
-    }
+  computed: {
+    totalMasuk() {
+      return this.$store.getters['app-po/getListPOMasuk'].filter(x => x.status === 'SEND').length
+    },
+    totalKeluar() {
+      return this.$store.getters['app-po/getListPOKeluar'].filter(x => x.status === 'SEND' || x.status === 'APPROVED').length
+    },
   },
 }
 </script>

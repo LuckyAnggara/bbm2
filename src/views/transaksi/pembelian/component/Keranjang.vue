@@ -164,33 +164,29 @@
     >
       <!-- <b-modal id="modal-default" ref="my-modal" ok-only ok-title="Submit" centered :title="detailBarang.nama"> -->
       <b-card-body>
-        <b-col cols="12">
-          <b-form-group label="Quantity" label-for="quantity" class="mb-2">
-            <b-form-input v-model="qty" trim type="number" />
-          </b-form-group>
-        </b-col>
-        <!-- <b-col cols="12">
-          <b-form-group label="Harga Satuan" label-for="nama-pelanggan-lama" class="mb-2">
-            <v-select
-              v-model="selectHarga"
-              placeholder="Satuan"
-              label="nama_satuan"
-              :options="select.harga"
-              :reduce="harga => harga.id"
-              :value="selectHarga.id"
-            />
-          </b-form-group>
-        </b-col> -->
-        <b-col cols="12">
-          <b-form-group label="Harga Beli" label-for="harga-beli" class="mb-2">
-            <b-form-input v-model="hargaBeli" trim type="number" />
-          </b-form-group>
-        </b-col>
-        <b-col cols="12">
-          <b-form-group label="Diskon" label-for="diskon" class="mb-2">
-            <b-form-input v-model="diskon" trim type="number" />
-          </b-form-group>
-        </b-col>
+        <b-row>
+          <b-col cols="9">
+            <b-form-group label="Quantity" label-for="quantity" class="mb-2">
+              <b-form-input v-model="qty" trim type="number" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="3">
+            <b-form-group label="Satuan" label-for="quantity" class="mb-2">
+              <b-form-input v-model="detailBarang.kode_satuan" trim type="text" readonly />
+            </b-form-group>
+          </b-col>
+
+          <b-col cols="12">
+            <b-form-group label="Harga Beli" label-for="harga-beli" class="mb-2">
+              <b-form-input v-model="hargaBeli" trim type="number" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
+            <b-form-group label="Diskon" label-for="diskon" class="mb-2">
+              <b-form-input v-model="diskon" trim type="number" />
+            </b-form-group>
+          </b-col>
+        </b-row>
       </b-card-body>
     </b-modal>
   </div>
@@ -243,9 +239,6 @@ export default {
       select: {
         barang: [],
         harga: [],
-      },
-      selectHarga: {
-        id: 0,
       },
       qty: 1,
       diskon: 0,
@@ -312,7 +305,6 @@ export default {
     resetModal() {
       this.detailBarang.qty = 1
       this.diskon = 0
-      this.selectHarga = ''
       this.hargaBeli = 0
       this.qty = 1
     },
@@ -364,8 +356,6 @@ export default {
     showModal(id) {
       if (id !== null) {
         this.detailBarang = this.select.barang.find(d => d.id === id)
-        this.select.harga = this.detailBarang.harga
-        this.selectHarga = this.detailBarang.harga['0']
         this.$refs['my-modal'].show()
       }
     },

@@ -219,18 +219,19 @@ export default {
     loadTransaksi(dateawal = null, dateakhir = null) {
       this.tanggal.awal = dateawal
       this.tanggal.akhir = dateakhir
-      const user = JSON.parse(localStorage.getItem('userData'))
-      const cabang = user.cabang_id
       store
         .dispatch('app-transaksi-penjualan/fetchListTransaksiPenjualan', {
-          cabang,
+          cabang: this.userData.cabang_id,
           dateawal,
           dateakhir,
         })
         .then(res => {
           store.commit('app-transaksi-penjualan/SET_LIST_TRANSAKSI_PENJUALAN', res.data)
-          this.dataTransaksi = store.getters['app-transaksi-penjualan/getListTransaksiPenjualan']
           this.dataTemp = store.getters['app-transaksi-penjualan/getListTransaksiPenjualan']
+          if (this.userData.role.nama === 'KASIR') {
+            this.dataTemp = store.getters['app-transaksi-penjualan/getListTransaksiPenjualan'].filter(x => x.user.id === this.userData.id)
+          }
+          this.dataTransaksi = this.dataTemp
         })
     },
     loadAwal() {
@@ -247,10 +248,12 @@ export default {
   setup() {
     const dataTransaksi = ref([])
     const dataTemp = ref([])
+    const userData = JSON.parse(localStorage.getItem('userData'))
 
     return {
       dataTransaksi,
       dataTemp,
+      userData,
     }
   },
 }

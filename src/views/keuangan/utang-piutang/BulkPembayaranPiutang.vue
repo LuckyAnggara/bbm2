@@ -118,7 +118,8 @@ export default {
       caraPembayaran: { title: 'Tunai', value: '0' },
       jenisPembayaranOption: [
         { title: 'Tunai', value: '0' },
-        { title: 'transfer', value: '1' },
+        { title: 'Transfer', value: '1' },
+        { title: 'Setoran Cabang', value: '2' },
       ],
       // total_pembayaran: 0,
       bankOption: [],
@@ -132,9 +133,7 @@ export default {
       },
     }
   },
-  mounted() {
-    console.info(this.$router.currentRoute)
-  },
+  mounted() {},
   computed: {
     listPelanggan() {
       return this.$router.currentRoute.params.pelanggan
@@ -261,7 +260,6 @@ export default {
           store.commit('app-keuangan/SET_DATA_PIUTANG', res.data)
           this.form.data_piutang = res.data.filter(x => x.kontak_id === this.form.pelanggan.id)
           this.form.data_piutang = res.data.filter(x => x.sisa_pembayaran > 0)
-          console.info(this.form.data_piutang.length)
           if (this.form.data_piutang.length < 1) {
             this.$swal({
               icon: 'error',

@@ -344,7 +344,6 @@ export default {
   },
   setup() {
     const userData = JSON.parse(localStorage.getItem('userData'))
-    console.info(userData)
     const tableColumns = [
       { label: 'No', key: 'id', sortable: false },
       { key: 'kodeAkun', sortable: false },

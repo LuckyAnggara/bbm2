@@ -285,7 +285,6 @@ export default {
         this.dataOrder.sales.id = ''
         this.dataOrder.sales.nama_lengkap = ''
       }
-      console.info(this.dataOrder.sales)
     },
     cekStatusPembayaran(id) {
       if (id.value === '1') {

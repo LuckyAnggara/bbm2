@@ -1,16 +1,10 @@
 <template>
   <section id="dashboard-ecommerce">
     <b-row class="match-height">
-      <b-col
-        xl="4"
-        md="6"
-      >
+      <b-col xl="4" md="6">
         <ecommerce-medal :data="data.congratulations" />
       </b-col>
-      <b-col
-        xl="8"
-        md="6"
-      >
+      <b-col xl="8" md="6">
         <ecommerce-statistics :data="data.statisticsItems" />
       </b-col>
     </b-row>
@@ -19,25 +13,14 @@
       <b-col lg="4">
         <b-row class="match-height">
           <!-- Bar Chart - Orders -->
-          <b-col
-            lg="6"
-            md="3"
-            cols="6"
-          >
+          <b-col lg="6" md="3" cols="6">
             <ecommerce-order-chart :data="data.statisticsOrder" />
           </b-col>
           <!--/ Bar Chart - Orders -->
-          <b-col
-            lg="6"
-            md="3"
-            cols="6"
-          >
+          <b-col lg="6" md="3" cols="6">
             <ecommerce-profit-chart :data="data.statisticsProfit" />
           </b-col>
-          <b-col
-            lg="12"
-            md="6"
-          >
+          <b-col lg="12" md="6">
             <ecommerce-earnings-chart :data="data.earningsChart" />
           </b-col>
         </b-row>
@@ -58,37 +41,25 @@
       <!--/ Company Table Card -->
 
       <!-- Developer Meetup Card -->
-      <b-col
-        lg="4"
-        md="6"
-      >
+      <b-col lg="4" md="6">
         <ecommerce-meetup :data="data.meetup" />
       </b-col>
       <!--/ Developer Meetup Card -->
 
       <!-- Browser States Card -->
-      <b-col
-        lg="4"
-        md="6"
-      >
+      <b-col lg="4" md="6">
         <ecommerce-browser-states />
       </b-col>
       <!--/ Browser States Card -->
 
       <!-- Goal Overview Card -->
-      <b-col
-        lg="4"
-        md="6"
-      >
+      <b-col lg="4" md="6">
         <ecommerce-goal-overview :data="data.goalOverview" />
       </b-col>
       <!--/ Goal Overview Card -->
 
       <!-- Transaction Card -->
-      <b-col
-        lg="4"
-        md="6"
-      >
+      <b-col lg="4" md="6">
         <ecommerce-transactions :data="data.transactionData" />
       </b-col>
       <!--/ Transaction Card -->
@@ -145,27 +116,8 @@ export default {
       const userData = getUserData()
       this.data.congratulations.name = userData.fullName.split(' ')[0] || userData.username
     })
-    this.loadData()
   },
-  methods: {
-    loadData() {
-      store.dispatch('app-barang/fetchListBarang').then(res => {
-        store.commit('app-barang/SET_LIST_BARANG', res.data)
-      })
-      store.dispatch('app-barang/fetchListGudang').then(res => {
-        store.commit('app-barang/SET_LIST_GUDANG', res.data)
-      })
-      store.dispatch('app-barang/fetchListJenis').then(res => {
-        store.commit('app-barang/SET_LIST_JENIS', res.data)
-      })
-      store.dispatch('app-barang/fetchListSatuan').then(res => {
-        store.commit('app-barang/SET_LIST_SATUAN', res.data)
-      })
-      store.dispatch('app-barang/fetchListMerek').then(res => {
-        store.commit('app-barang/SET_LIST_MEREK', res.data)
-      })
-    },
-  },
+  methods: {},
 }
 </script>
 

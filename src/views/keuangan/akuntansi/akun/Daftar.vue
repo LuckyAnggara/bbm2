@@ -38,8 +38,8 @@ export default {
   },
   data() {
     return {
-      tahun: '2021',
-      option: ['2021', '2022', '2023'],
+      tahun: new Date().getFullYear(),
+      option: ['2021', '2022', '2023', '2024'],
     }
   },
   mounted() {

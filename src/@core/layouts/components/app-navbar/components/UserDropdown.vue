@@ -5,7 +5,7 @@
         <p class="user-name font-weight-bolder mb-0">
           {{ userData.pegawai.nama }}
         </p>
-        <span class="user-status">{{ userData.role.toUpperCase() }}</span>
+        <span class="user-status">{{ userData.role.nama.toUpperCase() }}</span>
       </div>
       <b-avatar size="40" :src="userData.avatar" variant="light-primary" badge class="badge-minimal" badge-variant="success">
         <feather-icon v-if="!userData.pegawai.nama" icon="UserIcon" size="22" />

@@ -41,7 +41,7 @@ export default {
     fetchListGudang(ctx, params) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.baseURL}gudang/cabang?cabang_id=${params.cabang}`)
+          .get(`${axios.defaults.baseURL}gudang/cabang?cabang_id=${params.cabang}&hari=${params.hari}`)
           .then(response => {
             resolve(response)
           })

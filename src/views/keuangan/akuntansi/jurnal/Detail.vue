@@ -129,7 +129,6 @@ export default {
           saldoDebit += parseFloat(x.nominal)
         }
       })
-      console.log(saldoDebit)
       return saldoDebit
     },
     totalKredit() {

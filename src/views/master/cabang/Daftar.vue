@@ -172,13 +172,13 @@ export default {
       { key: 'nama' },
       { key: 'alamat' },
       { key: 'nomor_telepon' },
+      { key: 'sales' },
       { key: 'jumlah_pegawai' },
       { key: 'actions' },
     ]
 
     // const searchQuery = ref('')
     const perPage = ref(10)
-    const totalCabang = ref(0)
     const currentPage = ref(1)
     const perPageOptions = [10, 25, 50, 100]
     const sortBy = ref('id')
@@ -193,7 +193,6 @@ export default {
       perPage,
       isSortDirDesc,
       currentPage,
-      totalCabang,
       perPageOptions,
       sortBy,
       statusFilter,

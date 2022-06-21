@@ -225,7 +225,6 @@ export default {
       })
     },
     load() {
-      console.info(router.currentRoute.params)
       if (router.currentRoute.params.id !== undefined) {
         this.dataOrder = store.getters['app-transaksi-penjualan/getDraftByID'](router.currentRoute.params.id)
         this.startIndex = 1
@@ -247,6 +246,7 @@ export default {
         alamat: '',
         nomorTelepon: '',
         wic: true,
+        akun_piutang_id: null,
       },
       invoice: {
         total: 0,

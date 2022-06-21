@@ -340,7 +340,7 @@ export default {
             loader.hide()
             if (x.status === 200) {
               this.$store.dispatch('app-po/updateStatus', {
-                id,
+                id: this.dataPO.id,
                 status: 'SELESAI',
               })
               this.$swal({

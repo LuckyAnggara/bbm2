@@ -132,9 +132,7 @@ export default {
       },
     }
   },
-  mounted() {
-    console.info(this.$router.currentRoute)
-  },
+  mounted() {},
   computed: {
     listSupplier() {
       return this.$router.currentRoute.params.supplier
@@ -261,7 +259,6 @@ export default {
           store.commit('app-keuangan/SET_DATA_UTANG', res.data)
           this.form.data_utang = res.data.filter(x => x.kontak_id === this.form.supplier.id)
           this.form.data_utang = res.data.filter(x => x.sisa_pembayaran > 0)
-          console.info(this.form.data_utang.length)
           if (this.form.data_utang.length < 1) {
             this.$swal({
               icon: 'error',

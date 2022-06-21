@@ -69,9 +69,24 @@
       <b-col cols="9" lg="9" sm="12">
         <div v-if="cabang.id === 0 ? true : false">
           <b-card :title="title">
-            <b-table responsive :fields="tableColumnSemua" :items="listDataSetoranSemua" show-empty empty-text="Tidak ada data" class="position-relative" lazy>
+            <b-table
+              :busy="isBusy"
+              responsive
+              :fields="tableColumnSemua"
+              :items="listDataSetoranSemua"
+              show-empty
+              empty-text="Tidak ada data"
+              class="position-relative"
+              lazy
+            >
+              <template #table-busy>
+                <div class="text-center text-danger my-2">
+                  <b-spinner class="align-middle"></b-spinner>
+                  <strong>Mohon tunggu...</strong>
+                </div>
+              </template>
               <template #cell(nama_cabang)="data">
-                {{ data.item.nama }}
+                {{ data.item.nama.toUpperCase() }}
               </template>
               <template #cell(setoran)="data">
                 {{ terbuku(data.item) }}
@@ -96,7 +111,21 @@
         </div>
         <div v-if="cabang.id === 0 ? false : true">
           <b-card :title="title">
-            <b-table responsive :fields="tableColumnSatuan" :items="listDataSetoranSatuan" show-empty empty-text="Tidak ada data" class="position-relative">
+            <b-table
+              :busy="isBusy"
+              responsive
+              :fields="tableColumnSatuan"
+              :items="listDataSetoranSatuan"
+              show-empty
+              empty-text="Tidak ada data"
+              class="position-relative"
+            >
+              <template #table-busy>
+                <div class="text-center text-danger my-2">
+                  <b-spinner class="align-middle"></b-spinner>
+                  <strong>Mohon tunggu...</strong>
+                </div>
+              </template>
               <template #cell(tanggal)="data">
                 {{ $moment(data.item.tanggal).format('DD-MM-YYYY') }}
               </template>
@@ -126,7 +155,21 @@
       ok-title="Proses"
       cancel-variant="outline-secondary"
     >
-      <b-table responsive :fields="tableRincianSetoran" :items="listRincianSetoran" show-empty empty-text="Tidak ada data" class="position-relative">
+      <b-table
+        :busy="isBusy"
+        responsive
+        :fields="tableRincianSetoran"
+        :items="listRincianSetoran"
+        show-empty
+        empty-text="Tidak ada data"
+        class="position-relative"
+      >
+        <template #table-busy>
+          <div class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Mohon tunggu...</strong>
+          </div>
+        </template>
         <template #cell(tanggal)="data">
           {{ $moment(data.item.created_at).format('DD-MM-YYYY') }}
         </template>
@@ -157,13 +200,14 @@
 </template>
 
 <script>
-import { BDropdown, BDropdownItem, BModal, BRow, BCol, BCard, BTable, BFormDatepicker, BFormGroup, BButton } from 'bootstrap-vue'
+import { BSpinner, BDropdown, BDropdownItem, BModal, BRow, BCol, BCard, BTable, BFormDatepicker, BFormGroup, BButton } from 'bootstrap-vue'
 import { formatRupiah } from '@core/utils/filter'
 import Ripple from 'vue-ripple-directive'
 import vSelect from 'vue-select'
 
 export default {
   components: {
+    BSpinner,
     BDropdown,
     BDropdownItem,
     BModal,
@@ -178,6 +222,7 @@ export default {
   },
   data() {
     return {
+      isBusy: false,
       cabang: {
         nama: 'SEMUA',
         id: 0,
@@ -257,26 +302,25 @@ export default {
   },
   methods: {
     confirm(id, confirm) {
-      this.$store
-        .dispatch('app-cabang/confirmSetoran', {
-          id,
-          confirm,
-        })
-        .then(res => {
-          console.info(res)
-        })
+      this.$store.dispatch('app-cabang/confirmSetoran', {
+        id,
+        confirm,
+      })
+      // .then(res => {
+      //   console.info(res)
+      // })
     },
     showModal(x) {
       this.listRincianSetoran = x
       this.$refs['modal-setoran'].show()
     },
     sisa(x) {
-      const a = parseFloat(x.penjualan) + parseFloat(x.pendapatan_lainnya) - parseFloat(x.total_beban)
+      const a = parseFloat(x.penjualan) + parseFloat(x.pendapatan_lainnya) - parseFloat(x.total_beban) - parseFloat(x.total_piutang)
       const b = parseFloat(a) - parseFloat(x.setoran.terbuku.total)
       return this.formatRupiah(b)
     },
     terbuku(x) {
-      const a = parseFloat(x.penjualan) + parseFloat(x.pendapatan_lainnya) - parseFloat(x.total_beban)
+      const a = parseFloat(x.penjualan) + parseFloat(x.pendapatan_lainnya) - parseFloat(x.total_beban) - parseFloat(x.total_piutang)
       return this.formatRupiah(a)
     },
     TanggalAkhirChange() {
@@ -324,9 +368,7 @@ export default {
       })
     },
     loadDataSemua() {
-      const loader = this.$loading.show({
-        container: this.$refs.loading,
-      })
+      this.isBusy = !this.isBusy
       this.$store
         .dispatch('app-cabang/fetchDataPerformanceAll', {
           tahun: this.tahun,
@@ -334,18 +376,16 @@ export default {
           hari: this.hari,
         })
         .then(res => {
-          loader.hide()
+          this.isBusy = !this.isBusy
           this.$store.commit('app-cabang/SET_LIST_DATA_PERFORMANCE', res.data)
           this.listDataSetoranSemua = this.$store.getters['app-cabang/getListDataPerformance']
         })
     },
     loadDataSatuan() {
-      this.title = `Setoran Cabang ${this.cabang.nama} dari Tanggal ${this.$moment(this.satuan.tanggalAwal).format('DD-MM-YYYY')} s/d ${this.$moment(
-        this.satuan.tanggalAkhir,
-      ).format('DD-MM-YYYY')}`
-      const loader = this.$loading.show({
-        container: this.$refs.loading,
-      })
+      this.title = `Setoran Cabang ${this.cabang.nama.toUpperCase()} dari Tanggal ${this.$moment(this.satuan.tanggalAwal).format(
+        'DD-MM-YYYY',
+      )} s/d ${this.$moment(this.satuan.tanggalAkhir).format('DD-MM-YYYY')}`
+      this.isBusy = !this.isBusy
       this.$store
         .dispatch('app-cabang/fetchDataPerformanceSatuan', {
           cabang_id: this.cabang.id,
@@ -353,7 +393,7 @@ export default {
           akhir: this.$moment(this.satuan.tanggalAkhir).format('YYYY-M-D'),
         })
         .then(res => {
-          loader.hide()
+          this.isBusy = !this.isBusy
           this.$store.commit('app-cabang/SET_LIST_DATA_PERFORMANCE_SATUAN', res.data)
           this.listDataSetoranSatuan = this.$store.getters['app-cabang/getListDataPerformanceSatuan']
         })

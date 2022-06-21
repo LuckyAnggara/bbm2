@@ -2,72 +2,18 @@ export default [
   {
     title: 'Dashboards',
     icon: 'HomeIcon',
-    tag: '2',
-    tagVariant: 'light-warning',
     children: [
-      // {
-      //   title: 'eCommerce',
-      //   route: 'dashboard-ecommerce',
-      //   resource: 'dashboard-kasir',
-      // },
-      // {
-      //   title: 'Analytics',
-      //   route: 'dashboard-analytics',
-      //   resource: 'dashboard-kasir',
-      // },
       {
         title: 'Cabang',
         route: 'dashboard-cabang',
         icon: 'ActivityIcon',
-      },
-    ],
-  },
-  {
-    title: 'Laporan',
-    route: 'auth-login-new',
-    icon: 'ShieldIcon',
-    children: [
-      {
-        title: 'Persediaan',
-        route: 'laporan-persediaan',
-        resource: 'laporan-persediaan',
+        resource: 'dashboard_cabang',
       },
       {
         title: 'Kasir',
-        route: 'laporan-kasir',
-        resource: 'kasir',
-      },
-      {
-        title: 'Cabang',
-        children: [
-          {
-            title: 'Performance',
-            route: 'laporan-cabang-performance',
-          },
-        ],
-      },
-      {
-        title: 'Sales',
-        route: 'laporan-sales',
-      },
-
-      {
-        title: 'Transaksi',
-        route: 'laporan-transaksi',
-        resource: 'laporan-transaksi',
-      },
-      {
-        title: 'Keuangan',
-        children: [
-          {
-            title: 'Neraca',
-            route: 'laporan-neraca',
-          },
-          {
-            title: 'Laba / Rugi',
-            route: 'laporan-laba-rugi',
-          },
-        ],
+        route: 'dashboard-kasir',
+        icon: 'ActivityIcon',
+        resource: 'dashboard_kasir',
       },
     ],
   },

@@ -19,13 +19,13 @@
               </b-row>
               <b-row>
                 <b-col lg="6" cols="6">
-                  <b-form-group label="Nama User" label-cols-md="4">
-                    <b-form-input readonly v-model="dataUser.username" />
+                  <b-form-group label="Nama Pegawai" label-cols-md="4">
+                    <b-form-input readonly v-model="dataUser.pegawai.nama" />
                   </b-form-group>
                 </b-col>
                 <b-col lg="6" cols="6">
                   <b-form-group label="Jabatan" label-cols-md="4">
-                    <b-form-input readonly v-model="dataUser.role" />
+                    <b-form-input readonly v-model="dataUser.role.nama" />
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -373,7 +373,10 @@ export default {
               confirmButton: 'btn btn-success',
             },
           })
+          this.$refs['my-modal'].hide()
+
           this.loadDataKirim()
+          this.$emit('changetab')
         }
       })
     },

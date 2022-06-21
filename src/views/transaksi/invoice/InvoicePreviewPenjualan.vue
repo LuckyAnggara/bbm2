@@ -416,11 +416,16 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
+          const loader = this.$loading.show({
+            // Optional parameters
+            container: this.$refs.formContainer,
+          })
           store
             .dispatch('app-transaksi-penjualan/returTransaksi', {
               id,
             })
             .then(x => {
+              loader.hide()
               if (x.status === 200) {
                 store.commit('app-transaksi-penjualan/RETUR_DATA_PENJUALAN', id)
                 this.$swal({
@@ -458,11 +463,16 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
+          const loader = this.$loading.show({
+            // Optional parameters
+            container: this.$refs.formContainer,
+          })
           store
             .dispatch('app-transaksi-penjualan/deleteTransaksi', {
               id,
             })
             .then(x => {
+              loader.hide()
               if (x.status === 200) {
                 store.commit('app-transaksi-penjualan/REMOVE_DATA_PENJUALAN', id)
                 this.$swal({

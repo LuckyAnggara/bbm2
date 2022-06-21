@@ -139,24 +139,41 @@ export default {
   },
   computed: {
     total() {
-      let total = 0
-      this.dataPO.orders.forEach(x => {
-        total += x.harga * x.jumlah
-      })
-      return total
+      if (this.dataPO) {
+        let total = 0
+        this.dataPO.orders.forEach(x => {
+          total += x.harga * x.jumlah
+        })
+        return total
+      }
+      return 0
     },
     dataPO() {
-      const form = this.formPenjualan
-      form.orders = this.dataOrder.detail
-      form.pelanggan = this.dataOrder.cabang_asal.kontak
-      form.tanggalTransaksi = this.dataOrder.created_at
-      form.catatan = this.catatan
+      if (this.dataOrder) {
+        const form = this.formPenjualan
+        form.orders = this.dataOrder.detail
+        form.pelanggan = this.dataOrder.cabang_asal.kontak
+        form.tanggalTransaksi = this.dataOrder.created_at
+        form.catatan = this.catatan
 
-      return form
+        return form
+      }
+      return null
     },
   },
   methods: {
     formatRupiah,
+    error(error = null) {
+      this.$swal({
+        title: 'Error!',
+        text: `Oopss ada Masalah!${error}`,
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+        },
+        buttonsStyling: false,
+      })
+    },
     grandTotal(x, y) {
       return parseFloat(x) * parseFloat(y)
     },
@@ -176,16 +193,30 @@ export default {
       })
     },
     repeateAgain() {
-      this.dataOrder.detail.push({
-        id_barang: this.tambahBarang.id,
-        kode_barang: this.tambahBarang.kode_barang,
-        nama_barang: this.tambahBarang.nama,
-        jumlah: 0,
-        harga: 0,
-      })
-      this.$nextTick(() => {
-        this.trAddHeight(this.$refs.row[0].offsetHeight)
-      })
+      const { id } = this.tambahBarang
+      const count = this.dataOrder.detail.filter(x => x.id_barang === id).length
+      if (count > 0) {
+        this.dataOrder.detail.push({
+          id_barang: this.tambahBarang.id,
+          kode_barang: this.tambahBarang.kode_barang,
+          nama_barang: this.tambahBarang.nama,
+          jumlah: 0,
+          harga: 0,
+        })
+        this.$nextTick(() => {
+          this.trAddHeight(this.$refs.row[0].offsetHeight)
+        })
+      } else {
+        this.$swal({
+          title: 'Warning!',
+          text: 'Barang sudah ada',
+          icon: 'warning',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+          },
+          buttonsStyling: false,
+        })
+      }
     },
     removeItem(index) {
       this.dataOrder.detail.splice(index, 1)
@@ -217,10 +248,10 @@ export default {
       this.dataPO.invoice.grandTotal = this.total
       this.$swal({
         title: 'Proses ?',
-        text: 'P.O ini akan di proses',
+        text: 'Apa anda yakin? P.O akan di Proses!',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Ya!',
+        confirmButtonText: 'Proses!',
         customClass: {
           confirmButton: 'btn btn-primary',
           cancelButton: 'btn btn-outline-danger ml-1',
@@ -239,8 +270,9 @@ export default {
               if (res.status === 200) {
                 this.$store.dispatch('app-po/updateStatus', {
                   id: this.dataOrder.id,
-                  status: 'DITERIMA',
-                  nomorTransaksi: res.data.nomor_transaksi,
+                  status: 'APPROVED',
+                  nomor_transaksi: res.data.nomor_transaksi,
+                  master_penjualan_id: res.data.id,
                 })
                 this.dataOrder.nomorTransaksi = res.data.nomor_transaksi
                 this.dataOrder.tanggalTransaksi = res.data.created_at

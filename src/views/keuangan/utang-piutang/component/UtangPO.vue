@@ -1,59 +1,17 @@
 <template>
   <section>
     <b-row class="match-height">
-      <b-col lg="6" cols="12">
-        <b-card>
-          <b-row>
-            <b-col lg="6" cols="12">
-              <b-form-group label="Kode Akun" label-cols-md="4">
-                <b-form-input readonly v-model="dataAkun.kode_akun" />
-              </b-form-group>
-              <b-form-group label="Klasifikasi" label-cols-md="4">
-                <b-form-input readonly v-model="dataAkun.nama_jenis" />
-              </b-form-group>
-            </b-col>
-            <b-col lg="6" cols="12">
-              <b-form-group label="Saldo Akun" label-cols-md="4">
-                <b-form-input readonly v-model="saldo" />
-              </b-form-group>
-              <b-form-group label="Sifat Akun" label-cols-md="4">
-                <b-form-input readonly v-model="dataAkun.saldo_normal" />
-              </b-form-group>
-            </b-col>
-            <b-col lg="12" cols="12">
-              <b-form-group label="Nama Akun" label-cols-md="2">
-                <b-form-input readonly v-model="dataAkun.nama" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row v-if="dataAkun.komponen.length > 0 ? true : false">
-            <b-col lg="12" cols="12">
-              <b-form-group label="Sub Akun" label-cols-md="2">
-                <v-select v-model="subKomponen" label="nama" placeholder="Pilih Sub Akun" :reduce="x => x.id" :options="dataAkun.komponen">
-                  <template v-slot:option="option">
-                    {{ option.kode_akun }} - <b>{{ option.nama }}</b>
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col lg="12" cols="12">
-              <b-form-group label="Saldo Sub Akun" label-cols-md="2">
-                <b-form-input readonly v-model="saldoSub" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-col>
-      <b-col lg="6" cols="12">
+      <b-col lg="3" cols="12">
         <b-card>
           <b-form-group>
             <h5>Filter</h5>
             <hr />
             <h6 class="mb-1">Tanggal Transaksi</h6>
             <b-input-group>
-              <flat-pickr v-model="date.value" class="form-control" :config="date.config" placeholder="Filter By Tanggal" @on-close="dateFilter" />
+              <flat-pickr v-model="date.value" class="form-control" :config="date.config" placeholder="Filter By Tanggal" />
+              <!-- <b-form-datepicker v-model="tanggalFilter" locale="id" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" /> -->
               <b-input-group-append>
-                <b-button variant="outline-primary" @click="clear">
+                <b-button variant="outline-primary">
                   Clear
                 </b-button>
               </b-input-group-append>
@@ -61,20 +19,75 @@
           </b-form-group>
         </b-card>
       </b-col>
+      <b-col lg="6" cols="12">
+        <b-card title="Statistik Utang P.O">
+          <b-card-body>
+            <b-row>
+              <b-col md="5" sm="6" class="mb-2 mb-md-0 mb-xl-0">
+                <b-media no-body>
+                  <b-media-aside class="">
+                    <b-avatar size="48" variant="light-info">
+                      <feather-icon size="24" icon="ShoppingBagIcon" />
+                    </b-avatar>
+                  </b-media-aside>
+                  <b-media-body class="my-auto">
+                    <h4 class="font-weight-bolder mb-0">{{ totalData }} Trx</h4>
+                    <b-card-text class="font-small-3 mb-0">
+                      Jumlah Transaksi
+                    </b-card-text>
+                  </b-media-body>
+                </b-media>
+              </b-col>
+              <b-col md="7" sm="6" class="mb-2 mb-md-0 mb-xl-0">
+                <b-media no-body>
+                  <b-media-aside class="">
+                    <b-avatar size="48" variant="light-danger">
+                      <feather-icon size="24" icon="BoxIcon" />
+                    </b-avatar>
+                  </b-media-aside>
+                  <b-media-body class="my-auto">
+                    <h4 class="font-weight-bolder mb-0">{{ formatRupiah(totalTagihan) }}</h4>
+                    <b-card-text class="font-small-3 mb-0"> Total Tagihan </b-card-text>
+                  </b-media-body>
+                </b-media>
+              </b-col>
+            </b-row>
+          </b-card-body>
+        </b-card>
+      </b-col>
       <b-col lg="12" cols="12">
-        <b-card>
+        <b-card title="Data Utang PO">
           <div class="mb-2">
             <!-- Table Top -->
             <b-row>
-              <!-- Per Page -->
-              <b-col cols="12" md="6" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
-                <label>Entries</label>
-                <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class="per-page-selector d-inline-block ml-50 mr-1" />
+              <b-col cols="12" md="8" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
+                <label class="mr-2">Entries</label>
+                <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class=" mr-1" />
+                <label class="mr-2">Status</label>
+                <v-select
+                  class="mr-2"
+                  :clearable="false"
+                  v-model="statusFilter"
+                  :options="[
+                    { label: 'Semua', value: 0 },
+                    { label: 'Lunas', value: 1 },
+                    { label: 'Belum Lunas', value: 2 },
+                  ]"
+                />
+                <b-button variant="primary" class=" mr-1">
+                  Download
+                </b-button>
+                <!-- <b-button variant="success" @click="showBulkPembayaran()">
+                  Bulk Pembayaran
+                </b-button> -->
+                <b-button variant="success" :to="{ name: 'keuangan-bulk-pembayaran-utang-po' }">
+                  Pembayaran PO
+                </b-button>
               </b-col>
               <!-- Search -->
-              <b-col cols="12" md="6">
+              <b-col cols="12" md="4">
                 <div class="d-flex align-items-center justify-content-end">
-                  <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Nomor Jurnal, Nominal, Keterangan)" />
+                  <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="" />
                 </div>
               </b-col>
             </b-row>
@@ -84,47 +97,106 @@
             ref="refTable"
             responsive
             :fields="tableColumns"
-            :items="dataLedger"
+            :items="listData"
             :current-page="currentPage"
             :per-page="perPage"
-            :sort-desc="true"
-            sort-by="id"
             show-empty
-            :empty-text="emptyText"
+            :sort-by.sync="sortBy"
+            :sort-desc.sync="isSortDirDesc"
             class="position-relative"
           >
-            <!-- Column: Tanggal -->
-
-            <template #cell(tanggal)="data">
+            <!-- Column: Id -->
+            <template #cell(id)="data">
               <span>
-                {{ moment(data.item.created_at) }}
+                {{ data.index + 1 }}
               </span>
             </template>
-
-            <!-- Column: Nomor Jurnal -->
-            <template #cell(nomor_jurnal)="data">
-              <b-link :to="{ name: 'akuntansi-jurnal-detail', params: { id: data.item.nomor_jurnal } }" class="font-weight-bold">
-                {{ data.item.nomor_jurnal }}
+            <!-- Column: Issued Date -->
+            <template #cell(tanggal)="data">
+              <span class="text-nowrap">
+                {{ $moment(data.item.created_at).format('DD MMMM Y') }}
+              </span>
+            </template>
+            <template #cell(nomor_po)="data">
+              <b-link :to="{ name: 'transaksi-po-detail', params: { id: data.item.id, data: data.item } }" class="font-weight-bold">
+                {{ data.item.kode_po }}
               </b-link>
             </template>
-
-            <!-- Column: DEBIT KREDIT SALDO-->
-            <template #cell(debit)="data">
-              <span>
-                {{ data.item.jenis === 'DEBIT' ? formatRupiah(data.item.nominal) : '-' }}
+            <template #cell(cabang_tujuan)="data">
+              <span>{{ data.item.cabang_tujuan.nama }}</span>
+            </template>
+            <template #cell(nomor_transaksi)="data">
+              <span>#{{ data.item.transaksi.nomor_transaksi }}</span>
+            </template>
+            <!-- Column: Total -->
+            <template #cell(total)="data">
+              <span class="text-nowrap">
+                {{ formatRupiah(data.item.transaksi.grand_total) }}
               </span>
             </template>
 
-            <template #cell(kredit)="data">
-              <span>
-                {{ data.item.jenis === 'KREDIT' ? formatRupiah(data.item.nominal) : '-' }}
-              </span>
+            <!-- Column: Balance -->
+            <template #cell(sisa_saldo)="data">
+              <div class="text-nowrap">
+                <template v-if="data.item.sisa_pembayaran === null || data.item.sisa_pembayaran === 0">
+                  <b-badge pill variant="light-success">
+                    Lunas
+                  </b-badge>
+                </template>
+                <template v-else>
+                  <b-badge pill variant="light-danger">
+                    <span>{{ formatRupiah(data.item.transaksi.sisa_pembayaran) }}</span>
+                  </b-badge>
+                </template>
+              </div>
             </template>
 
-            <template #cell(saldo)="data">
-              <span>
-                {{ formatRupiah(data.item.saldo) }}
-              </span>
+            <!-- Column: Balance -->
+            <template #cell(jatuh_tempo)="data">
+              <div class="text-nowrap">
+                <template v-if="data.item.sisa_pembayaran === null || data.item.sisa_pembayaran === 0">
+                  <b-badge pill variant="success">
+                    {{ $moment(data.item.tanggal_jatuh_tempo).format('DD MMMM Y') }}
+                  </b-badge>
+                </template>
+                <template v-else>
+                  <b-badge pill :variant="cekJatuhTempo(data.item)">
+                    {{ $moment(data.item.tanggal_jatuh_tempo).format('DD MMMM Y') }}
+                  </b-badge>
+                </template>
+              </div>
+            </template>
+
+            <!-- Column: Actions -->
+            <template #cell(action)="data">
+              <div class="text-nowrap">
+                <feather-icon
+                  :id="`invoice-row-${data.item.id}-preview-icon`"
+                  icon="EyeIcon"
+                  size="16"
+                  class="mx-1"
+                  @click="
+                    $router.push({
+                      name: 'transaksi-penjualan-invoice',
+                      params: { id: data.item.id },
+                    })
+                  "
+                />
+                <b-dropdown variant="link" toggle-class="p-0" no-caret>
+                  <template #button-content>
+                    <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
+                  </template>
+
+                  <b-dropdown-item @click="showModalPembayaran(data.item)">
+                    <feather-icon icon="ActivityIcon" />
+                    <span class="align-middle ml-50">Pembayaran</span>
+                  </b-dropdown-item>
+                  <b-dropdown-item :to="{ name: 'akuntansi-jurnal-detail', params: { id: data.item.nomor_jurnal } }">
+                    <feather-icon icon="BookIcon" />
+                    <span class="align-middle ml-50">Jurnal</span>
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
             </template>
           </b-table>
           <div class="mx-2 mb-2">
@@ -136,9 +208,9 @@
               <b-col cols="12" sm="6" class="d-flex align-items-center justify-content-center justify-content-sm-end">
                 <b-pagination
                   v-model="currentPage"
-                  :total-rows="totalLedger"
+                  :sort-compare="true"
+                  :total-rows="totalData"
                   :per-page="perPage"
-                  sort-by.sync="id"
                   first-number
                   last-number
                   class="mb-0 mt-1 mt-sm-0"
@@ -158,196 +230,257 @@
         </b-card>
       </b-col>
     </b-row>
+
+    <!-- <modal-daftar-pembayaran /> -->
   </section>
 </template>
 
 <script>
 import store from '@/store'
 import { ref } from '@vue/composition-api'
-
-import { BCard, BFormGroup, BRow, BCol, BLink, BFormInput, BTable, BPagination, BButton, BInputGroupAppend, BInputGroup } from 'bootstrap-vue'
+import Ripple from 'vue-ripple-directive'
 import vSelect from 'vue-select'
+
+import {
+  BFormGroup,
+  BButton,
+  BDropdown,
+  BDropdownItem,
+  BInputGroup,
+  BInputGroupAppend,
+  // BFormDatepicker,
+  BLink,
+  BBadge,
+  BCardBody,
+  BCardText,
+  BCard,
+  BRow,
+  BCol,
+  BFormInput,
+  BTable,
+  BPagination,
+  BMedia,
+  BAvatar,
+  BMediaAside,
+  BMediaBody,
+} from 'bootstrap-vue'
 import flatPickr from 'vue-flatpickr-component'
 
 export default {
   components: {
-    vSelect,
+    BFormGroup,
     BButton,
+    BInputGroup,
+    BInputGroupAppend,
+    BLink,
+    BDropdown,
+    BDropdownItem,
+    // BFormDatepicker,
+    BBadge,
     BCard,
+    BCardText,
+    BCardBody,
     BRow,
     BCol,
-    BLink,
     BFormInput,
     BTable,
     BPagination,
+    vSelect,
+    BMedia,
+    BAvatar,
+    BMediaAside,
+    BMediaBody,
     flatPickr,
-    BInputGroupAppend,
-    BInputGroup,
-    BFormGroup,
+  },
+  directives: {
+    Ripple,
   },
   data() {
     return {
       date: {
-        value: Date.now(),
+        value: '',
         config: {
           wrap: true, // set wrap to true only when using 'input-group'
-          altFormat: 'd F Y',
+          altFormat: 'd F y',
           altInput: true,
           dateFormat: 'Y-m-d',
           mode: 'range',
         },
       },
+      statusFilter: {
+        label: 'SEMUA',
+        value: 0,
+      },
+      dataPembayaran: {},
       filterQuery: '',
       searchQuery: '',
       refTable: null,
-      subKomponen: '',
-      dataAkun: {
-        kode_akun: '',
-        nama_jenis: '',
-        nama: '',
-        saldo: 0,
-        komponen: [],
-      },
-      dataSubAkun: {
-        saldo: 0,
-      },
+
+      listPelanggan: [],
+      pelanggan: '',
     }
   },
+
   computed: {
+    dateFilter() {
+      return this.date.value
+    },
+    total() {
+      let total = 0
+      this.listData.forEach(v => {
+        total += v.transaksi.grand_total
+      })
+      return total
+    },
+    totalTagihan() {
+      let total = 0
+      this.listData.forEach(v => {
+        total += v.transaksi.sisa_pembayaran
+      })
+      return total
+    },
     dataMeta() {
       const localItemsCount = this.$refs.refTable ? this.$refs.refTable.computedItems.length : 0
       return {
         from: this.perPage * (this.currentPage - 1) + (localItemsCount ? 1 : 0),
         to: this.perPage * (this.currentPage - 1) + localItemsCount,
-        of: this.totalLedger,
+        of: this.totalData,
       }
     },
-    saldo() {
-      return this.formatRupiah(parseFloat(this.dataAkun.saldo))
-    },
-    saldoSub() {
-      return this.formatRupiah(parseFloat(this.dataSubAkun.saldo))
-    },
-    totalLedger() {
-      return this.dataLedger.length
-    },
-    emptyText() {
-      if (this.subKomponen === '') {
-        return 'Sub-Akun belum di pilih'
-      }
-      return 'Tidak ada data'
+    totalData() {
+      return this.listData.length
     },
   },
   watch: {
+    dateFilter(x) {
+      if (x === '') {
+        this.loadDataUtangPo()
+      } else {
+        const d = x.split(' to ')
+        if (d.length > 1) {
+          this.loadDataUtangPo(d[0], d[1])
+        } else {
+          this.loadDataUtangPo(d[0], d[0])
+        }
+      }
+    },
     /* eslint-disable */
     searchQuery(query) {
       if (query === '') {
-        this.dataLedger = this.dataTemp
+        this.listData = this.listTemp
       } else {
-        this.dataLedger = this.dataTemp.filter(
+        this.listData = this.listTemp.filter(
           item =>
-            item.nomor_jurnal.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
-            item.keterangan.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
-            item.saldo.toString().indexOf(query) > -1,
+            item.transaksi.nomor_transaksi.toLowerCase().indexOf(query.toLowerCase()) > -1 || item.kode_po.toLowerCase().indexOf(query.toLowerCase()) > -1,
         )
       }
     },
-    subKomponen(id) {
-      this.fetchSubAkun(id)
-    },
-    /* eslint-disable */
-  },
-  mounted() {
-    this.loadAwal()
-  },
-  methods: {
-    clear() {
-      this.date.value = null
-      this.dateFilter(null)
-    },
-    dateFilter(x) {
-      this.loadLedger(this.$moment(x[0]).format('Y-MM-DD'), this.$moment(x[1]).format('Y-MM-DD'))
-    },
-    moment(value) {
-      return this.$moment(value).format('DD MMMM YYYY || h:mm:ss')
-    },
-    fetchSubAkun(id = null) {
-      if (id === null) {
-        this.dataTemp = []
-        this.dataLedger = this.dataTemp
-        this.dataSubAkun.saldo = 0
+    /* eslint-enable */
+    statusFilter(y) {
+      if (y.value === 1) {
+        this.listData = this.listTemp.filter(x => x.transaksi.sisa_pembayaran === 0)
+      } else if (y.value === 2) {
+        this.listData = this.listTemp.filter(x => x.transaksi.sisa_pembayaran > 0)
       } else {
-        this.dataSubAkun = this.dataAkun.komponen.find(x => x.id === id)
-        this.dataTemp = this.dataSubAkun.ledger
-        this.dataLedger = this.dataTemp
+        this.listData = this.listTemp
       }
     },
-    loadLedger(dateawal = null, dateakhir = null) {
+  },
+  methods: {
+    showModalPembayaran(data) {
+      this.$store.commit('app-transaksi-penjualan/SET_LIST_PEMBAYARAN', data.list_pembayaran)
+      this.$bvModal.show('modal-daftar-pembayaran-penjualan')
+    },
+    showBulkPembayaran() {
+      this.$emit('bulkPembayaran', this.listPelanggan)
+    },
+    cekJatuhTempo(b) {
+      const x = this.$moment(b.created_at)
+      const y = this.$moment(b.tanggal_jatuh_tempo)
+      const duration = y.diff(x, 'days')
+      if (duration > 5) {
+        return 'warning'
+      }
+      return 'danger'
+    },
+    loadDataUtangPo(dd = null, ddd = null) {
       store
-        .dispatch('app-keuangan/fetchLedgerByAkun', {
-          cabang_id: this.userData.cabang_id,
-          id: 44,
-          dateawal,
-          dateakhir,
+        .dispatch('app-keuangan/getUtangPo', {
+          cabang: this.userData.cabang_id,
+          dd: dd === null ? '' : dd,
+          ddd: ddd === null ? '' : ddd,
         })
         .then(res => {
-          this.dataAkun = res.data
-          if (this.dataAkun.komponen.length < 1) {
-            this.dataTemp = this.dataAkun.ledger
-            this.dataLedger = this.dataTemp
-          }
-          if (this.subKomponen !== '') {
-            this.fetchSubAkun(this.subKomponen)
-          }
+          store.commit('app-keuangan/SET_DATA_UTANG_PO', res.data)
+          this.listTemp = res.data
+          this.listData = this.listTemp
         })
-    },
-    loadAwal() {
-      const d = new Date()
-      const m = d.getMonth()
-      const y = d.getFullYear()
-      this.loadLedger(this.$moment(new Date(y, 0, 1)).format('Y-MM-DD'), this.$moment(Date.now()).format('Y-MM-DD'))
     },
     formatRupiah(value) {
       return `Rp. ${value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`
     },
   },
+  mounted() {
+    this.loadDataUtangPo()
+  },
   setup() {
+    const userData = JSON.parse(localStorage.getItem('userData'))
+    const listTemp = ref([])
+    const listData = ref([])
     const tableColumns = [
       {
         key: 'id',
-        sortable: true,
+        label: '#',
       },
       {
         key: 'tanggal',
       },
-      { key: 'nomor_jurnal', sortable: false },
-      { label: 'debit', key: 'debit', sortable: false },
-      { label: 'kredit', key: 'kredit', sortable: false },
+      { key: 'nomor_po', sortable: false },
       {
-        label: 'saldo',
-        key: 'saldo',
+        key: 'cabang_tujuan',
       },
-      { label: 'keterangan', key: 'keterangan', sortable: false },
+      { key: 'nomor_transaksi', sortable: false },
+      { key: 'total', sortable: false },
+      { key: 'sisa_saldo', sortable: false },
+      {
+        key: 'jatuh_tempo',
+      },
+      { key: 'action', sortable: false },
     ]
-
     // const searchQuery = ref('')
+    const form = ref({
+      lawan_akun_id: '',
+      kode_akun_id: '',
+      tanggal: new Date(),
+      jenis: 1,
+      jumlah: 0,
+      catatan: '',
+    })
+    const dataAkun = ref({})
+    const nomorAkun = ref([])
     const perPage = ref(10)
-    const dataLedger = ref([])
+    const dataKas = ref([])
     const dataTemp = ref([])
     const currentPage = ref(1)
     const perPageOptions = [10, 25, 50, 100]
-    const statusFilter = ref(null)
-    const userData = JSON.parse(localStorage.getItem('userData'))
+    const sortBy = ref('nomor_jurnal')
+    const isSortDirDesc = ref(true)
 
     return {
       userData,
-      dataLedger,
+      listTemp,
+      listData,
+      form,
+      nomorAkun,
+      dataAkun,
+      dataKas,
       dataTemp,
       tableColumns,
       perPage,
+      isSortDirDesc,
       currentPage,
       perPageOptions,
-      statusFilter,
+      sortBy,
     }
   },
 }
@@ -361,5 +494,7 @@ export default {
 
 <style lang="scss">
 @import '@core/scss/vue/libs/vue-select.scss';
+</style>
+<style lang="scss">
 @import '@core/scss/vue/libs/vue-flatpicker.scss';
 </style>

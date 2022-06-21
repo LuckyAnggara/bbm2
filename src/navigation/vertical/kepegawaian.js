@@ -1,6 +1,7 @@
 export default [
   {
     header: 'Kepegawaian',
+    resource: 'header',
   },
   {
     title: 'Data Pegawai',

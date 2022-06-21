@@ -1,6 +1,6 @@
 <template>
   <section>
-    <b-tabs vertical content-class="col-12 col-md-10 mt-1 mt-md-0" pills nav-wrapper-class="col-md-2 col-12" nav-class="nav-left">
+    <b-tabs v-model="tabIndex" vertical content-class="col-12 col-md-10 mt-1 mt-md-0" pills nav-wrapper-class="col-md-2 col-12" nav-class="nav-left">
       <!-- general tab -->
       <b-tab active>
         <!-- title -->
@@ -8,7 +8,7 @@
           <feather-icon icon="DollarSignIcon" size="18" class="mr-50" />
           <span class="font-weight-bold">Kas Tunai</span>
         </template>
-        <kas-tunai />
+        <kas-tunai @changetab="changeTab" />
       </b-tab>
       <b-tab>
         <!-- title -->
@@ -42,6 +42,16 @@ export default {
     KasTunai,
     KirimSetor,
     // TerimaSetor,
+  },
+  data() {
+    return {
+      tabIndex: 0,
+    }
+  },
+  methods: {
+    changeTab() {
+      this.tabIndex = 1
+    },
   },
 }
 </script>

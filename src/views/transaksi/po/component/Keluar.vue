@@ -7,19 +7,25 @@
             <!-- Table Top -->
             <b-row>
               <!-- Per Page -->
-              <b-col cols="12" md="6" class="d-flex align-items-center justify-content-start mb-1 mb-md-0">
-                <label>Entries</label>
-                <v-select v-model="perPage" :options="perPageOptions" :clearable="false" class="per-page-selector d-inline-block ml-50 mr-1" />
+              <b-col cols="12" md="2" class="mt-2">
                 <b-button variant="primary" :to="{ name: 'transaksi-po-tambah' }">
                   Tambah Data
                 </b-button>
               </b-col>
+              <b-col cols="12" md="2">
+                <label>Entries</label>
+                <v-select v-model="perPage" :options="perPageOptions" :clearable="false" />
+              </b-col>
+
+              <b-col cols="12" md="2">
+                <label>Filter Status</label>
+                <v-select v-model="statusFilter" :options="filterOption" :clearable="true" />
+              </b-col>
 
               <!-- Search -->
               <b-col cols="12" md="6">
-                <div class="d-flex align-items-center justify-content-end">
-                  <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Kode P.O)" />
-                </div>
+                <label>Filter Status</label>
+                <b-form-input v-model="searchQuery" class="d-inline-block mr-1" placeholder="Cari data... (Kode P.O)" />
               </b-col>
             </b-row>
           </div>
@@ -58,7 +64,10 @@
             </template>
             <template #cell(status)="data">
               <div class="text-nowrap">
-                <b-badge pill variant="light-warning"> P.O {{ data.item.status_po_masuk }} </b-badge>
+                <b-badge pill variant="light-warning" v-if="data.item.status === 'SEND'"> {{ data.item.status }} </b-badge>
+                <b-badge pill variant="light-primary" v-if="data.item.status === 'APPROVED'"> {{ data.item.status }} </b-badge>
+                <b-badge pill variant="light-success" v-if="data.item.status === 'SELESAI'"> {{ data.item.status }} </b-badge>
+                <b-badge pill variant="light-danger" v-if="data.item.status === 'REJECT'"> {{ data.item.status }} </b-badge>
               </div>
             </template>
             <!-- Column: Actions -->
@@ -79,16 +88,16 @@
                   <template #button-content>
                     <feather-icon icon="MoreVerticalIcon" size="16" class="align-middle text-body" />
                   </template>
-                  <!--
-                  <b-dropdown-item @click="batal(data.item.id)" v-if="data.item.status_po_masuk === 'TERKIRIM'">
+
+                  <b-dropdown-item @click="batal(data.item.id)" v-if="data.item.status === 'SEND'">
                     <feather-icon icon="" />
                     <span class="align-middle ml-50">Batalkan</span>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="del(data.item.id)" v-if="data.item.status_po_masuk === 'TERKIRIM'">
+                  <!-- <b-dropdown-item @click="del(data.item.id)" v-if="data.item.status_po_masuk === 'TERKIRIM'">
                     <feather-icon icon="TrashIcon" />
                     <span class="align-middle ml-50">Delete</span>
                   </b-dropdown-item> -->
-                  <b-dropdown-item @click="showModal(data.item)" v-if="data.item.status_po_masuk === 'DITERIMA'">
+                  <b-dropdown-item @click="showModal(data.item)" v-if="data.item.status === 'APPROVED'">
                     <!-- <feather-icon icon="TrashIcon" /> -->
                     <span class="align-middle ml-50">Terima</span>
                   </b-dropdown-item>
@@ -171,6 +180,13 @@ export default {
         this.dataPO = this.dataTemp
       } else {
         this.dataPO = this.dataTemp.filter(item => item.kode_po.toLowerCase().indexOf(query) > -1)
+      }
+    },
+    statusFilter(x) {
+      if (x === null || x === '') {
+        this.dataPO = this.dataTemp
+      } else {
+        this.dataPO = this.dataTemp.filter(item => item.status === x)
       }
     },
   },
@@ -288,6 +304,7 @@ export default {
     const perPageOptions = [10, 25, 50, 100]
     const sortBy = ref('id')
     const isSortDirDesc = ref(true)
+    const filterOption = ref(['SEND', 'APPROVED', 'REJECT', 'SELESAI'])
     const statusFilter = ref(null)
 
     return {
@@ -299,6 +316,7 @@ export default {
       perPageOptions,
       sortBy,
       statusFilter,
+      filterOption,
     }
   },
 }

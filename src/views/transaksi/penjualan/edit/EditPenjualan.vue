@@ -154,11 +154,8 @@ export default {
         .then(res => {
           loader.hide()
           if (res.status === 200) {
-            console.info(res)
             this.success()
           } else {
-            console.info(res)
-
             this.error()
           }
         })
@@ -169,7 +166,6 @@ export default {
     load() {
       const { id } = router.currentRoute.params
       this.dataOrder = store.getters['app-transaksi-penjualan/getListTransaksiPenjualan'].find(x => x.id === id)
-      console.info(this.dataOrder)
     },
   },
   setup() {

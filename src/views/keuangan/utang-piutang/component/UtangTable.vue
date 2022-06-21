@@ -243,8 +243,6 @@
         </b-card>
       </b-col>
     </b-row>
-
-    <modal-daftar-pembayaran />
   </section>
 </template>
 
@@ -279,8 +277,6 @@ import {
 } from 'bootstrap-vue'
 import flatPickr from 'vue-flatpickr-component'
 
-import ModalDaftarPembayaran from '@/views/transaksi/invoice/component/ModalDaftarPembayaranPembelian.vue'
-
 export default {
   components: {
     BFormGroup,
@@ -306,7 +302,6 @@ export default {
     BMediaAside,
     BMediaBody,
     flatPickr,
-    ModalDaftarPembayaran,
   },
   directives: {
     Ripple,

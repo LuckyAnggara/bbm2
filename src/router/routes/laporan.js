@@ -4,7 +4,7 @@ export default [
     name: 'laporan-persediaan',
     component: () => import('@/views/laporan/persediaan/Master.vue'),
     meta: {
-      resource: 'laporan-persediaan',
+      resource: 'laporan_persediaan',
       pageTitle: 'Laporan',
       breadcrumb: [
         {
@@ -19,7 +19,7 @@ export default [
     name: 'laporan-transaksi',
     component: () => import('@/views/laporan/transaksi/Master.vue'),
     meta: {
-      resource: 'laporan-transaksi',
+      resource: 'laporan_transaksi',
       pageTitle: 'Laporan',
       breadcrumb: [
         {
@@ -30,19 +30,29 @@ export default [
     },
   },
   {
-    path: '/laporan/cabang/performance',
-    name: 'laporan-cabang-performance',
-    component: () => import('@/views/laporan/cabang/Performance.vue'),
+    path: '/laporan/cabang',
+    name: 'laporan-cabang',
+    component: () => import('@/views/laporan/cabang/Laporan.vue'),
     meta: {
-      resource: 'laporan-cabang-performance',
+      resource: 'laporan_cabang',
       pageTitle: 'Laporan',
       breadcrumb: [
         {
           text: 'Cabang',
         },
+      ],
+    },
+  },
+  {
+    path: '/laporan/kasir',
+    name: 'laporan-kasir',
+    component: () => import('@/views/laporan/kasir/Laporan.vue'),
+    meta: {
+      resource: 'laporan_kasir',
+      pageTitle: 'Laporan',
+      breadcrumb: [
         {
-          text: 'Performance',
-          active: true,
+          text: 'Kasir',
         },
       ],
     },

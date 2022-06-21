@@ -126,30 +126,42 @@ export default {
   data() {
     return {
       selectPelanggan: null,
-      option: [],
+      // option: [],
+      userData: JSON.parse(localStorage.getItem('userData')),
     }
   },
   beforeMount() {
     this.loadDataPelanggan()
   },
+  computed: {
+    option() {
+      return store.getters['app-kontak/getListPelanggan'].filter(x => x.cabang_id === this.userData.cabang_id)
+    },
+  },
   methods: {
+    aw() {
+      this.dataOrder.pelanggan = null
+      this.selectPelanggan = null
+    },
     updateKontak(e) {
-      this.selectPelanggan = this.option.find(item => item.id === parseInt(e.id, 10))
+      this.selectPelanggan = this.option.find(item => item.id === e.id)
       this.dataOrder.pelanggan.id = e.id
       this.dataOrder.pelanggan.nama = e.nama
       this.dataOrder.pelanggan.alamat = e.alamat
       this.dataOrder.pelanggan.telepon = e.telepon
+      this.dataOrder.pelanggan.wic = true
+      this.dataOrder.pelanggan.akun_piutang_id = e.akun_piutang_id
     },
     loadDataPelanggan() {
-      const user = JSON.parse(localStorage.getItem('userData'))
       if (store.getters['app-kontak/getListPelanggan'].length === 0) {
         store.dispatch('app-kontak/fetchListKontak').then(res => {
           store.commit('app-kontak/SET_LIST_KONTAK', res.data)
-          this.option = store.getters['app-kontak/getListPelanggan'].filter(x => x.cabang_id === user.cabang_id)
+          // this.option = store.getters['app-kontak/getListPelanggan'].filter(x => x.cabang_id === user.cabang_id)
         })
-      } else {
-        this.option = store.getters['app-kontak/getListPelanggan'].filter(x => x.cabang_id === user.cabang_id)
       }
+      // else {
+      //   this.option = store.getters['app-kontak/getListPelanggan'].filter(x => x.cabang_id === user.cabang_id)
+      // }
     },
     // choosePelanggan() {
     //   if (this.selectPelanggan.id !== null) {

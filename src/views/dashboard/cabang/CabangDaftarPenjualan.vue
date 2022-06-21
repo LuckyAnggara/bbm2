@@ -2,6 +2,7 @@
   <section>
     <b-card title="Data Transaksi Penjualan Hari ini">
       <b-table
+        small
         primary-key="id"
         ref="refTable"
         :fields="tableColumns"

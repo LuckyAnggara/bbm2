@@ -62,6 +62,7 @@ export default {
       nama: '',
       alamat: '',
       nomorTelepon: '',
+      userData: JSON.parse(localStorage.getItem('userData')),
     }
   },
   methods: {
@@ -91,6 +92,7 @@ export default {
             nama: this.nama,
             alamat: this.alamat,
             telepon: this.nomorTelepon,
+            user: this.userData,
           })
           .then(res => {
             if (res.status === 200) {
@@ -99,7 +101,7 @@ export default {
               this.$emit('update-kontak', res.data)
               this.suksesToast(res.data.nama)
               this.nama = ''
-              this.alamat_kontak = ''
+              this.alamat = ''
               this.nomorTelepon = ''
             } else {
               this.error()

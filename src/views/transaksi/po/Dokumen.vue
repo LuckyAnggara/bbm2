@@ -1,8 +1,8 @@
 <template>
   <section class="invoice-preview-wrapper">
-    <b-row class="invoice-preview" v-if="dataPO">
+    <b-row v-if="dataPO" class="invoice-preview">
       <!-- Col: Left (Invoice Container) -->
-      <b-col cols="12" xl="9" md="9">
+      <b-col cols="12" xl="9" md="8">
         <b-card no-body class="invoice-preview-card">
           <!-- Header -->
           <b-card-body class="invoice-padding pb-0">
@@ -42,18 +42,18 @@
                   Kepala Cabang
                 </h6>
                 <h6 class="mb-25">
-                  {{ dataPO.cabang_tujuan.nama }}
+                  {{ dataPO.cabang_tujuan.nama.toUpperCase() }}
                 </h6>
                 di
                 <p class="card-text mb-25">
-                  <span style="white-space: pre-line;"> - {{ dataPO.cabang_tujuan.alamat }}</span>
+                  <span> - Tempat</span>
                 </p>
               </b-col>
 
               <!-- Col: Payment Details -->
               <b-col xl="6" cols="12" class="p-0 mt-xl-0 mt-2 d-flex justify-content-xl-end">
                 <div>
-                  <h6 class="mb-1">
+                  <h6>
                     Dari :
                   </h6>
                   <table>
@@ -61,7 +61,14 @@
                       <tr>
                         <td>
                           <h6 class="mb-25">
-                            {{ dataPO.user.cabang.nama }}
+                            Cabang
+                          </h6>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h6 class="mb-25">
+                            {{ dataPO.user.cabang.nama.toUpperCase() }}
                           </h6>
                         </td>
                       </tr>
@@ -73,7 +80,7 @@
           </b-card-body>
 
           <!-- Invoice Description: Table -->
-          <b-table-lite responsive :items="dataPO.detail" :fields="['no', 'kode_barang', 'nama_barang', 'jumlah']">
+          <b-table-lite class="font-weight-bold mb-25" small responsive :items="dataPO.detail" :fields="['no', 'kode_barang', 'nama_barang', 'jumlah']">
             <template #cell(no)="data">{{ data.index + 1 }}</template>
           </b-table-lite>
 
@@ -121,11 +128,29 @@
       <b-col cols="12" md="3" xl="3" class="invoice-actions" v-show="dataPO.cabang_tujuan.id != dataUser.cabang_id">
         <b-card>
           <!-- Button: Send Invoice -->
-          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block>
+          <span class="mb-5"
+            >Status :
+            <b-badge pill variant="light-warning" v-if="dataPO.status === 'SEND'">
+              {{ dataPO.status }}
+            </b-badge>
+            <b-badge pill variant="light-success" v-if="dataPO.status === 'APPROVED'">
+              {{ dataPO.status }}
+            </b-badge>
+            <b-badge pill variant="light-success" v-if="dataPO.status === 'SELESAI'">
+              {{ dataPO.status }}
+            </b-badge>
+            <b-badge pill variant="light-danger" v-if="dataPO.status === 'REJECT'">
+              {{ dataPO.status }}
+            </b-badge>
+          </span>
+          <hr />
+
+          <!-- Button: Send Invoice -->
+          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block @click="printInvoice">
             Print
           </b-button>
           <!-- Button: Send Invoice -->
-          <b-button
+          <!-- <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="outline-primary"
             class="mb-75"
@@ -134,85 +159,39 @@
             v-if="dataPO.status_po_masuk === 'DITERIMA'"
           >
             Terima
-          </b-button>
-          <hr />
-          <!-- Button: Send Invoice -->
-          <span class="mb-5"
-            >Status :
-            <b-badge pill variant="light-warning" v-if="dataPO.status_po === 'TERKIRIM'">
-              {{ dataPO.status_po }}
-            </b-badge>
-            <b-badge pill variant="light-success" v-if="dataPO.status_po === 'DITERIMA'">
-              {{ dataPO.status_po }}
-            </b-badge>
-            <b-badge pill variant="light-success" v-if="dataPO.status_po === 'SELESAI'">
-              {{ dataPO.status_po }}
-            </b-badge>
-            <b-badge pill variant="light-danger" v-if="dataPO.status_po === 'DITOLAK'">
-              {{ dataPO.status_po }}
-            </b-badge>
-            <b-badge pill variant="light-danger" v-if="dataPO.status_po === 'DIBATALKAN'">
-              {{ dataPO.status_po }}
-            </b-badge>
-          </span>
+          </b-button> -->
 
-          <!-- <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="warning"
-            class="mb-75"
-            block
-            v-if="dataPO.status_po === 'TERKIRIM'"
-            @click="batal(dataPO.id)"
-          >
+          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="warning" class="mb-75" block v-if="dataPO.status === 'SEND'" @click="batal(dataPO.id)">
             Batalkan
           </b-button>
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="danger"
-            class="mb-75"
-            block
-            v-if="dataPO.status_po != 'DITERIMA'"
-            @click="del(dataPO.id)"
-          >
-            Delete
-          </b-button> -->
         </b-card>
       </b-col>
 
       <!-- Right Col: Card -->
       <b-col cols="12" md="3" xl="3" class="invoice-actions" v-show="dataPO.cabang_tujuan.id === dataUser.cabang_id">
         <b-card>
-          <!-- Button: Send Invoice -->
-          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block>
-            Print
-          </b-button>
-          <hr />
-          <!-- Button: Send Invoice -->
           <span class="mb-5"
             >Status :
-            <b-badge pill variant="light-warning">
-              {{ dataPO.status_po_masuk }}
+            <b-badge pill variant="light-warning" v-if="dataPO.status === 'SEND'">
+              {{ dataPO.status }}
+            </b-badge>
+            <b-badge pill variant="light-success" v-if="dataPO.status === 'APPROVED'">
+              {{ dataPO.status }}
+            </b-badge>
+            <b-badge pill variant="light-danger" v-if="dataPO.status === 'REJECT'">
+              {{ dataPO.status }}
             </b-badge>
           </span>
+          <hr />
+          <!-- Button: Send Invoice -->
+          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="mb-75" block @click="printInvoice">
+            Print
+          </b-button>
 
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="success"
-            class="mb-75"
-            block
-            v-if="dataPO.status_po === 'TERKIRIM'"
-            @click="proses(dataPO)"
-          >
+          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="success" class="mb-75" block v-if="dataPO.status === 'SEND'" @click="proses(dataPO)">
             Proses
           </b-button>
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="danger"
-            class="mb-75"
-            block
-            v-if="dataPO.status_po != 'DITERIMA'"
-            @click="tolak(dataPO.id)"
-          >
+          <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="danger" class="mb-75" block v-if="dataPO.status === 'SEND'" @click="tolak(dataPO.id)">
             Tolak
           </b-button>
         </b-card>
@@ -347,7 +326,7 @@ export default {
     proses(dataPO) {
       this.$swal({
         title: 'Proses ?',
-        text: 'P.O ini akan di proses',
+        text: 'P.O ini akan di Reviu sebelum di Proses',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Ya!',
@@ -407,9 +386,13 @@ export default {
     const dataPO = ref({})
     const dataUser = JSON.parse(localStorage.getItem('userData'))
 
+    const printInvoice = () => {
+      window.print()
+    }
     return {
       dataUser,
       dataPO,
+      printInvoice,
     }
   },
 }

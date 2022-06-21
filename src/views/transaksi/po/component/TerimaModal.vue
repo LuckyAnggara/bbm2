@@ -4,6 +4,7 @@
       <section>
         <b-row>
           <b-col cosl="12" md="12">
+            <p>Input Nomor Transaksi / Invoice dari Cabang Tujuan untuk Verifikasi Kecocokan P.O</p>
             <b-form-group label="Nomor Transaksi" label-cols-md="5">
               <b-form-input v-model="nomorTransaksi" placeholder="Input Nomor Transaksi di Invoice P.O" type="text" />
             </b-form-group>

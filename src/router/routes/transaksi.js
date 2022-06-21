@@ -4,6 +4,7 @@ export default [
     name: 'transaksi-penjualan-daftar',
     component: () => import('@/views/transaksi/penjualan/DaftarTransaksi.vue'),
     meta: {
+      resource: 'transaksi_penjualan',
       pageTitle: 'Transaksi',
       breadcrumb: [
         {
@@ -21,6 +22,7 @@ export default [
     name: 'transaksi-penjualan-draft',
     component: () => import('@/views/transaksi/penjualan/DaftarDraft.vue'),
     meta: {
+      resource: 'transaksi_penjualan',
       pageTitle: 'Transaksi',
       breadcrumb: [
         {
@@ -38,6 +40,7 @@ export default [
     name: 'transaksi-penjualan-tambah',
     component: () => import('@/views/transaksi/penjualan/Penjualan.vue'),
     meta: {
+      resource: 'transaksi_penjualan',
       pageTitle: 'Penjualan',
       breadcrumb: [
         {
@@ -56,6 +59,7 @@ export default [
     name: 'transaksi-penjualan-edit',
     component: () => import('@/views/transaksi/penjualan/edit/EditPenjualan.vue'),
     meta: {
+      resource: 'transaksi_penjualan',
       pageTitle: 'Penjualan',
       breadcrumb: [
         {
@@ -77,6 +81,7 @@ export default [
     name: 'transaksi-penjualan-invoice',
     component: () => import('@/views/transaksi/invoice/InvoicePreviewPenjualan.vue'),
     meta: {
+      resource: 'transaksi_penjualan',
       pageTitle: 'Penjualan',
       breadcrumb: [
         {
@@ -95,6 +100,7 @@ export default [
     name: 'transaksi-pembelian-daftar',
     component: () => import('@/views/transaksi/pembelian/DaftarTransaksi.vue'),
     meta: {
+      resource: 'transaksi_pembelian',
       pageTitle: 'Transaksi',
       breadcrumb: [
         {
@@ -112,6 +118,7 @@ export default [
     name: 'transaksi-pembelian-draft',
     component: () => import('@/views/transaksi/pembelian/DaftarDraft.vue'),
     meta: {
+      resource: 'transaksi_pembelian',
       pageTitle: 'Transaksi',
       breadcrumb: [
         {
@@ -129,6 +136,7 @@ export default [
     name: 'transaksi-pembelian-tambah',
     component: () => import('@/views/transaksi/pembelian/Pembelian.vue'),
     meta: {
+      resource: 'transaksi_pembelian',
       pageTitle: 'Pembelian',
       breadcrumb: [
         {
@@ -147,6 +155,7 @@ export default [
     name: 'transaksi-pembelian-invoice',
     component: () => import('@/views/transaksi/invoice/InvoicePreviewPembelian.vue'),
     meta: {
+      resource: 'transaksi_pembelian',
       pageTitle: 'Pembelian',
       breadcrumb: [
         {
@@ -165,6 +174,7 @@ export default [
     name: 'transaksi-po-daftar',
     component: () => import('@/views/transaksi/po/Daftar.vue'),
     meta: {
+      resource: 'transaksi_po',
       pageTitle: 'Purchase Order',
       breadcrumb: [
         {
@@ -179,6 +189,7 @@ export default [
     name: 'transaksi-po-tambah',
     component: () => import('@/views/transaksi/po/Tambah.vue'),
     meta: {
+      resource: 'transaksi_po',
       pageTitle: 'Purchase Order',
       breadcrumb: [
         {
@@ -197,17 +208,7 @@ export default [
     name: 'transaksi-po-detail',
     component: () => import('@/views/transaksi/po/Dokumen.vue'),
     meta: {
-      pageTitle: 'Detail',
-      breadcrumb: [
-        {
-          text: 'Daftar',
-          to: '/transaksi/po/daftar/',
-        },
-        {
-          text: 'Detail',
-          active: true,
-        },
-      ],
+      resource: 'transaksi_po',
     },
   },
   {
@@ -215,6 +216,7 @@ export default [
     name: 'transaksi-po-proses',
     component: () => import('@/views/transaksi/po/Proses.vue'),
     meta: {
+      resource: 'transaksi_po',
       pageTitle: 'Proses',
       breadcrumb: [
         {
@@ -233,6 +235,7 @@ export default [
     name: 'transaksi-po-invoice',
     component: () => import('@/views/transaksi/po/component/InvoicePO.vue'),
     meta: {
+      resource: 'transaksi_po',
       pageTitle: 'Proses',
       breadcrumb: [
         {

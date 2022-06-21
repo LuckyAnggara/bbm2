@@ -61,7 +61,7 @@ export default {
     fetchKasHarian(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${axios.defaults.keuanganURL}dashboard-cabang/kas-harian?cabang_id=${data.cabang_id}`)
+          .get(`${axios.defaults.keuanganURL}dashboard-cabang/kas-harian?cabang_id=${data.cabang_id}&akun_id=${data.akun_id}`)
           .then(response => resolve(response))
           .catch(error => reject(error))
       })
@@ -70,6 +70,15 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .get(`${axios.defaults.keuanganURL}dashboard-cabang/utang-harian?cabang_id=${data.cabang_id}`)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
+    // SALES
+    fetchAllPerformanceSales(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${axios.defaults.baseURL}sales/all-performance?cabang_id=${data.cabang_id}&tahun=${data.tahun}&bulan=${data.bulan}&hari=${data.hari}`)
           .then(response => resolve(response))
           .catch(error => reject(error))
       })

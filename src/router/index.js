@@ -31,7 +31,7 @@ const router = new VueRouter({
     ...kepegawaian,
     {
       path: '*',
-      redirect: 'error-404',
+      redirect: 'auth-not-authorized',
     },
   ],
 })
@@ -43,14 +43,14 @@ router.beforeEach((to, _, next) => {
     // Redirect to login if not logged in
     if (!isLoggedIn) return next({ name: 'auth-login' })
     // If logged in => not authorized
-    return next({ name: 'laporan-transaksi' })
+    return next({ name: 'auth-not-authorized' })
   }
 
   // // Redirect if logged in
   if (to.meta.redirectIfLoggedIn && isLoggedIn) {
     const userData = getUserData()
 
-    next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
+    next(getHomeRouteForLoggedInUser(userData ? userData.role.nama : null))
   }
 
   return next()

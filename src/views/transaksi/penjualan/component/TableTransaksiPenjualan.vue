@@ -36,6 +36,7 @@
     </div>
 
     <b-table
+      small
       id="my-table"
       ref="refTable"
       primary-key="id"
@@ -294,7 +295,6 @@ export default {
       this.$emit('retur', data)
     },
     download() {
-      console.info('click')
       const doc = jsPDF()
       autoTable(doc, { html: '#my-table' })
       doc.save('table.pdf')

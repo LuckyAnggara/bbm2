@@ -214,7 +214,6 @@ export default {
           saldoDebit += parseFloat(x.nominal)
         }
       })
-      console.log(saldoDebit)
       return saldoDebit
     },
     totalKredit() {
@@ -258,9 +257,7 @@ export default {
       this.date.value = null
       this.dateFilter(null)
     },
-    detail(x) {
-      console.info(x)
-    },
+    detail(x) {},
     dateFilter(x) {
       this.loadJurnal(this.moment(x[0]), this.moment(x[1]))
       this.totalJurnal = this.dataJurnal.length

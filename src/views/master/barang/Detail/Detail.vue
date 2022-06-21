@@ -144,7 +144,6 @@ export default {
         container: this.$refs.container,
       })
       store.dispatch('app-barang/fetchBarangById', { id }).then(res => {
-        console.info('aa')
         this.dataBarang = res.data
         this.loadData()
         loader.hide()

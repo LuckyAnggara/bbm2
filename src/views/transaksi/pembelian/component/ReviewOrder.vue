@@ -271,7 +271,6 @@ export default {
         })
         .then(res => {
           if (res.status === 200) {
-            console.info(res)
             this.dataOrder.isTransaksi = res.data
             loader.hide()
           }

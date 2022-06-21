@@ -184,8 +184,8 @@
           </b-col>
 
           <b-col cols="12">
-            <b-form-group label="Nama Harga" class="mb-2">
-              <v-select v-model="namaHarga" placeholder="Satuan" label="nama" :options="select.harga" @input="setHarga" />
+            <b-form-group label="Nama Harga" label-for="quantity" class="mb-2">
+              <v-select v-model="namaHarga" placeholder="Harga" label="nama" :options="select.harga" @input="setHarga" />
             </b-form-group>
           </b-col>
           <b-col cols="12">
